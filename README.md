@@ -29,3 +29,6 @@ Pertanto, se si tenta di leggere/recuperare o scrivere/inviare in un qualsiasi d
 - Testate il vostro server. Deve rimanere disponibile a tutti i costi.
 - Il server deve essere in grado di ascoltare più porte (vedere il file di configurazione).
 
+LINK UTILI
+
+- https://github.com/cclaude42/webserv
