@@ -24,9 +24,8 @@ Pertanto, se si tenta di leggere/recuperare o scrivere/inviare in un qualsiasi d
 - Il server deve avere pagine di errore predefinite, se non ne vengono fornite.
 - Non si può usare il fork per qualcosa di diverso da CGI (come PHP, Python e così via).
 - Dovete essere in grado di servire un sito web completamente statico.
-- I clienti devono essere in grado di caricare i file.
+- I client devono essere in grado di caricare i file.
 - Sono necessari almeno i metodi GET, POST e DELETE.
 - Testate il vostro server. Deve rimanere disponibile a tutti i costi.
 - Il server deve essere in grado di ascoltare più porte (vedere il file di configurazione).
 
-Tradotto con www.DeepL.com/Translator (versione gratuita)
