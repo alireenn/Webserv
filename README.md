@@ -31,4 +31,5 @@ Pertanto, se si tenta di leggere/recuperare o scrivere/inviare in un qualsiasi d
 
 <h2>LINK UTILI</h2>
 
-- https://github.com/cclaude42/webserv
+- https://github.com/cclaude42/webserv  utile per studiare la teoria
+- https://github.com/Mounadi05/42-Webserv  unica repo che va su linux da 125 che sono riuscito a far fungere
