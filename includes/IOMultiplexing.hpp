@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   IOMultiplexing.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/10 10:25:28 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/10 14:48:34 by mruizzo          ###   ########.fr       */
+/*   Created: 2023/05/10 14:48:24 by mruizzo           #+#    #+#             */
+/*   Updated: 2023/05/10 15:01:43 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-#define WEBSERV_HPP
-
-#include <iostream>
-#include <signal.h>
+#ifndef IOMULTIPLEXING_HPP
+#define IOMULTIPLEXING_HPP
 
 #include "Config.hpp"
-#include "IOMultiplexing.hpp"
+
+class IOMultiplexing
+{
+private:
+	/* data */
+public:
+	IOMultiplexing(/* args */);
+	~IOMultiplexing();
+	void SetupServers(Config &conf);
+};
+
+
 
 #endif
