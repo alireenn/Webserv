@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/11 20:40:11 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:42:50 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ Socket::Socket(int port)
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
-		if (!check_port_repetition(&_fd, port, socketList, *this))
+		if (!check_port_repetition(port, socketList, *this))
 			throw PortRepetitionException();
 		_fd = init_socket(_fd, &_addr);
 		if (_fd < 0)
