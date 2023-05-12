@@ -12,8 +12,24 @@
 
 #include "Socket.hpp"
 
-static int	init_socket(int fd, struct sockaddr_in *addr)
+static bool	check_port_repetition(int *fd, int port,
+			std::vector<Socket &> &socketList, Socket &new_socket)
 {
+	for (Socket &s: socketList)
+	{
+		if (s.getPort() == port)
+		{
+			*fd = s.getFd();
+			socketList.push_back(new_socket);
+			return (false);
+		}
+	}
+	return (true);
+}
+
+static int	init_socket(struct sockaddr_in *addr)
+{
+	int			fd;
 	int			val;
 
 	fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -28,7 +44,7 @@ static int	init_socket(int fd, struct sockaddr_in *addr)
 		return (-1);
 	}
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-	if (bind(fd, static_cast<struct sockaddr *>(_addr), sizeof(*_addr) == -1)
+	if (bind(fd, static_cast<struct sockaddr *>(_addr), sizeof(*_addr)) == -1)
 	{
 		std::cerr << "bind() ";
 		return (-1);
@@ -41,22 +57,6 @@ static int	init_socket(int fd, struct sockaddr_in *addr)
 	return (fd);
 }
 
-static bool	check_port_repetition(int port,
-			std::vector<Socket &> &socketList, Socket &new_socket)
-{
-	for (Socket &s: socketList)
-	{
-		if (s.getPort() == port)
-		{
-			new_socket._fd = s.getFd();
-			socketList.push_back(new_socket);
-			return (false);
-		}
-	}
-	return (true);
-}
-
-
 Socket::Socket(int port)
 {
 	std::vector<Socket &>	&socketList = #@%$::getSocketList(); // da definire
@@ -67,9 +67,9 @@ Socket::Socket(int port)
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
-		if (!check_port_repetition(port, socketList, *this))
+		if (!check_port_repetition(&_fd, port, socketList, *this))
 			throw PortRepetitionException();
-		_fd = init_socket(_fd, &_addr);
+		_fd = init_socket(&_addr);
 		if (_fd < 0)
 			throw SocketFailException();
 		_running = true;
@@ -79,6 +79,7 @@ Socket::Socket(int port)
 		io.setFdMax(fd); // da definire
 	}
 	catch (PortRepetitionException &e) {
+		_running = true;
 		std::cerr << e.what() << port << "." << std::endl;
 	}
 	catch (SocketFailException &e) {
