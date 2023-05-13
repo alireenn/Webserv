@@ -25,7 +25,9 @@ class	Socket
 	public:
 				/* after creation, make sure to
 				** check that getFd() != -1.
-				** if it == -1, delete immediately
+				** if it == -1, delete immediately.
+				** Alternatively, you can check that
+				** isRunning() == true. Same same.
 				*/
 					Socket(int port);
 					Socket(Socket &toCopy);
@@ -42,7 +44,7 @@ class	Socket
 				PortRepetitionException(void);
 				virtual const char	*what(void) const throw()
 				{
-					return ("Port reepeted. Port nbr: ");
+					return ("Port repeted. Port nbr: ");
 				}
 		};
 		class SocketFailException: public std::exception
