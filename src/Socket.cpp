@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/11 20:42:50 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:00:09 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ Socket::Socket(Socket &toCopy)
 
 Socket::~Socket
 {
-	;
+	close(_fd);
 }
 
 Socket	&Socket::operator=(Socket &toCopy)

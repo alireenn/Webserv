@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:15:07 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/11 20:36:48 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:00:49 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
+# include <fcntl.h>
 //# include "Da dovunque venga la socketList che serve al costruttore"
 
 class	Socket
