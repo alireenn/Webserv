@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/13 18:06:00 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:20:09 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ Socket::Socket(int port)
 	std::vector<Socket &>	&socketList = #@%$::getSocketList(); // da definire
 
 	_running = false;
+	memset(&_addr, '\0', sizeof(_addr));
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_port = htons(port);
 	this->_addr.sin_addr.s_addr = INADDR_ANY;

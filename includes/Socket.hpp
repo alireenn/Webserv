@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:15:07 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/13 18:00:49 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:22:59 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SOCKET_H
 
 # include <iostream>
+# include <cstring>
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
@@ -25,7 +26,6 @@ class	Socket
 	public:
 				/* after creation, make sure to
 				** check that getFd() != -1.
-				** if it == -1, delete immediately.
 				** Alternatively, you can check that
 				** isRunning() == true. Same same.
 				*/
