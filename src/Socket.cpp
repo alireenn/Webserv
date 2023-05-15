@@ -10,27 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Socket.hpp"
-
-static bool	check_port_repetition(int *fd, int port,
-			std::vector<Socket &> &socketList, Socket &new_socket)
-{
-	for (Socket &s: socketList)
-	{
-		if (s.getPort() == port)
-		{
-			*fd = s.getFd();
-			socketList.push_back(new_socket);
-			return (false);
-		}
-	}
-	return (true);
-}
+#include "Socket.hpp"
 
 static int	init_socket(struct sockaddr_in *addr)
 {
 	int			fd;
-	int			val;
+	int			val	= 1;
 
 	fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd == -1)
@@ -38,13 +23,13 @@ static int	init_socket(struct sockaddr_in *addr)
 		std::cerr << "Socket creation ";
 		return (-1);
 	}
-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, 1) == -1)
+	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val)) == -1)
 	{
 		std::cerr << "setsockopt() ";
 		return (-1);
 	}
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-	if (bind(fd, static_cast<struct sockaddr *>(_addr), sizeof(*_addr)) == -1)
+	if (bind(fd, (struct sockaddr *)addr, sizeof(*addr)) == -1)
 	{
 		std::cerr << "bind() ";
 		return (-1);
@@ -59,7 +44,6 @@ static int	init_socket(struct sockaddr_in *addr)
 
 Socket::Socket(int port)
 {
-	std::vector<Socket &>	&socketList = #@%$::getSocketList(); // da definire
 
 	_running = false;
 	memset(&_addr, '\0', sizeof(_addr));
@@ -68,20 +52,13 @@ Socket::Socket(int port)
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
-		if (!check_port_repetition(&_fd, port, socketList, *this))
-			throw PortRepetitionException();
 		_fd = init_socket(&_addr);
 		if (_fd < 0)
 			throw SocketFailException();
 		_running = true;
 		std::cout << "New server started listening on port " << port << std::endl;
-		socketList.push_back(*this);
-		io.setFdRead(fd); // da definire
-		io.setFdMax(fd); // da definire
-	}
-	catch (PortRepetitionException &e) {
-		_running = true;
-		std::cerr << e.what() << port << "." << std::endl;
+		//io.setFdRead(fd); // da risistemare
+		//io.setFdMax(fd); // da risistemare
 	}
 	catch (SocketFailException &e) {
 		std::cerr << e.what() << port << "." << std::endl;
@@ -95,7 +72,7 @@ Socket::Socket(Socket &toCopy)
 	this->_port = toCopy._port;
 }
 
-Socket::~Socket
+Socket::~Socket(void)
 {
 	close(_fd);
 }
@@ -108,7 +85,7 @@ Socket	&Socket::operator=(Socket &toCopy)
 	return (*this);
 }
 
-struct sockaddr_in	&Socket::getAddr(void) const
+struct sockaddr_in	&Socket::getAddr(void)
 {
 	return (_addr);
 }

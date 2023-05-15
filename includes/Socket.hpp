@@ -15,11 +15,11 @@
 
 # include <iostream>
 # include <cstring>
+# include <unistd.h>
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <fcntl.h>
-//# include "Da dovunque venga la socketList che serve al costruttore"
 
 class	Socket
 {
@@ -33,24 +33,15 @@ class	Socket
 					Socket(Socket &toCopy);
 					~Socket(void);
 		Socket			&operator=(Socket &toCopy);
-		struct sockaddr_in	&getAddr(void) const;
-		int			&getFd(void) const;
-		int			&getPort(void) const;
+		struct sockaddr_in	&getAddr(void);
+		int			getFd(void) const;
+		int			getPort(void) const;
 		bool			isRunning(void) const;
 
-		class	PortRepetitionException: public std::exception
-		{
-			public:
-				PortRepetitionException(void);
-				virtual const char	*what(void) const throw()
-				{
-					return ("Port repeted. Port nbr: ");
-				}
-		};
 		class SocketFailException: public std::exception
 		{
 			public:
-				SocketFailException(void);
+							SocketFailException(void) {}
 				virtual const char	*what(void) const throw()
 				{
 					return (" failed. Port nbr: ");
