@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/13 18:20:09 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/16 17:13:54 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	init_socket(struct sockaddr_in *addr)
 Socket::Socket(int port)
 {
 
-	_running = false;
+	this->_running = false;
 	memset(&_addr, '\0', sizeof(_addr));
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_port = htons(port);
@@ -55,8 +55,8 @@ Socket::Socket(int port)
 		_fd = init_socket(&_addr);
 		if (_fd < 0)
 			throw SocketFailException();
-		_running = true;
-		std::cout << "New server started listening on port " << port << std::endl;
+		this->_port = port;
+		this->_running = true;
 		//io.setFdRead(fd); // da risistemare
 		//io.setFdMax(fd); // da risistemare
 	}

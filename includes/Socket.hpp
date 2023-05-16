@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:15:07 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/13 18:22:59 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/16 15:13:37 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,9 @@
 class	Socket
 {
 	public:
-				/* after creation, make sure to
-				** check that getFd() != -1.
-				** Alternatively, you can check that
-				** isRunning() == true. Same same.
+				/*
+				** After creation, make sure to
+				** check that isRunning() == true.
 				*/
 					Socket(int port);
 					Socket(Socket &toCopy);
@@ -41,8 +40,7 @@ class	Socket
 		class SocketFailException: public std::exception
 		{
 			public:
-							SocketFailException(void) {}
-				virtual const char	*what(void) const throw()
+				const char	*what(void) const throw()
 				{
 					return (" failed. Port nbr: ");
 				}

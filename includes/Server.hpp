@@ -22,12 +22,17 @@ class Server
 							Server(void);
 
 	public:
+			/*
+			** After creation, make sure to
+			** check that isRunning() == true.
+			*/
 			Server(int socketPort); // --> Server(int socketPort, std::ifstream configFile);
 			~Server(void);
 			Server(Server &toCopy);
 		Server	&operator=(Server &toCopy);
 
 		Socket	&getSocket(void);
+		int	getFd(void) const;
 		bool	isRunning(void) const;
 };
 
