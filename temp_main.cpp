@@ -44,10 +44,10 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	server_deleter(testServer);
-    	memset( &sa, 0, sizeof(sa) );
-    	sa.sa_handler = sigint_handler;
-    	sigfillset(&sa.sa_mask);
-    	sigaction(SIGINT,&sa,NULL);
+	memset( &sa, 0, sizeof(sa) );
+	sa.sa_handler = sigint_handler;
+	sigfillset(&sa.sa_mask);
+	sigaction(SIGINT,&sa,NULL);
 	clientAddrSize = sizeof(clientAddr);
 	std::cout << testServer->getSocket().getPort() << " "
 				<< testServer->getFd() << std::endl;
