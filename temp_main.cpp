@@ -32,7 +32,7 @@ void sendHTMLPage(int clientSocket)
 	std::string content((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 	std::stringstream ss;
 	ss << content.size();
-std::string response = "HTTP/1.1 200 OK\r\nContent-Length: " + ss.str() + "\r\n\r\n" + content;
+	std::string response = "HTTP/1.1 200 OK\r\nContent-Length: " + ss.str() + "\r\n\r\n" + content;
 	write(clientSocket, response.c_str(), response.size());
 }
 
