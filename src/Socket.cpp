@@ -6,31 +6,16 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/13 18:20:09 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/16 17:13:54 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Socket.hpp"
 
-static bool	check_port_repetition(int *fd, int port,
-			std::vector<Socket &> &socketList, Socket &new_socket)
-{
-	for (Socket &s: socketList)
-	{
-		if (s.getPort() == port)
-		{
-			*fd = s.getFd();
-			socketList.push_back(new_socket);
-			return (false);
-		}
-	}
-	return (true);
-}
-
 static int	init_socket(struct sockaddr_in *addr)
 {
 	int			fd;
-	int			val;
+	int			val	= 1;
 
 	fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd == -1)
@@ -38,13 +23,13 @@ static int	init_socket(struct sockaddr_in *addr)
 		std::cerr << "Socket creation ";
 		return (-1);
 	}
-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, 1) == -1)
+	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val)) == -1)
 	{
 		std::cerr << "setsockopt() ";
 		return (-1);
 	}
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-	if (bind(fd, static_cast<struct sockaddr *>(_addr), sizeof(*_addr)) == -1)
+	if (bind(fd, (struct sockaddr *)addr, sizeof(*addr)) == -1)
 	{
 		std::cerr << "bind() ";
 		return (-1);
@@ -59,29 +44,21 @@ static int	init_socket(struct sockaddr_in *addr)
 
 Socket::Socket(int port)
 {
-	std::vector<Socket &>	&socketList = #@%$::getSocketList(); // da definire
 
-	_running = false;
+	this->_running = false;
 	memset(&_addr, '\0', sizeof(_addr));
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_port = htons(port);
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
-		if (!check_port_repetition(&_fd, port, socketList, *this))
-			throw PortRepetitionException();
 		_fd = init_socket(&_addr);
 		if (_fd < 0)
 			throw SocketFailException();
-		_running = true;
-		std::cout << "New server started listening on port " << port << std::endl;
-		socketList.push_back(*this);
-		io.setFdRead(fd); // da definire
-		io.setFdMax(fd); // da definire
-	}
-	catch (PortRepetitionException &e) {
-		_running = true;
-		std::cerr << e.what() << port << "." << std::endl;
+		this->_port = port;
+		this->_running = true;
+		//io.setFdRead(fd); // da risistemare
+		//io.setFdMax(fd); // da risistemare
 	}
 	catch (SocketFailException &e) {
 		std::cerr << e.what() << port << "." << std::endl;
@@ -95,7 +72,7 @@ Socket::Socket(Socket &toCopy)
 	this->_port = toCopy._port;
 }
 
-Socket::~Socket
+Socket::~Socket(void)
 {
 	close(_fd);
 }
@@ -108,7 +85,7 @@ Socket	&Socket::operator=(Socket &toCopy)
 	return (*this);
 }
 
-struct sockaddr_in	&Socket::getAddr(void) const
+struct sockaddr_in	&Socket::getAddr(void)
 {
 	return (_addr);
 }
