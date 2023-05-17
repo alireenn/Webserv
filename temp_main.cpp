@@ -74,7 +74,7 @@ int	main(int argc, char **argv)
 			exit(0);
 		}
 		else
-			close(temp_sock);}
+			close(temp_sock);
 	}
 	delete (testServer);
 	return (0);
