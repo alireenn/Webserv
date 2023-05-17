@@ -21,6 +21,21 @@
 #include <signal.h>
 #include <stdio.h>
 #include <sys/wait.h>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+
+void sendHTMLPage(int clientSocket)
+{
+	std::ifstream file("index.html");
+	std::string content((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+	std::stringstream ss;
+	ss << content.size();
+std::string response = "HTTP/1.1 200 OK\r\nContent-Length: " + ss.str() + "\r\n\r\n" + content;
+	write(clientSocket, response.c_str(), response.size());
+}
+
 
 /* Queste due funzioni servono a liberare la roba in caso di
 ** Ctrl + C, che sarà una causa abbastanza comune di interruzione
@@ -83,10 +98,6 @@ int	main(int argc, char **argv)
 		pid = fork();
 		if (pid == 0)
 		{
-			close(temp_sock);
-		}
-		else
-		{
 						// std::cerr << "fork() failed" << std::endl;
 			std::string	str;
 			char		buff[1];
@@ -99,6 +110,11 @@ int	main(int argc, char **argv)
 			write(temp_sock, str.c_str(), str.size());
 			std::cout << temp_sock << std::endl;
 			exit(0);
+		}
+		else
+		{
+			sendHTMLPage(temp_sock);
+			close(temp_sock);
 		}
 		    // Raccolta dei processi figli completati
 		while (waitpid(-1, NULL, WNOHANG) > 0)
