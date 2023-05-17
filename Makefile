@@ -26,7 +26,7 @@ $(OBJS): $(OBJDIR)/%.o: %.cpp
 clean:
 	rm -rf $(OBJDIR)
 
-fclean:
+fclean: clean
 	rm $(NAME)
 
 kill: clean fclean
