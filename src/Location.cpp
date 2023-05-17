@@ -2,6 +2,7 @@
 
 Location::Location()
 {
+
 }
 
 Location::~Location()
