@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/16 17:13:54 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/17 13:05:43 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	init_socket(struct sockaddr_in *addr)
 	int			val	= 1;
 
 	fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (fd == -1)
+	if (fd == 0)
         {
 		std::cerr << "Socket creation ";
 		return (-1);
