@@ -47,7 +47,7 @@ int	main(int argc, char **argv)
 	memset( &sa, 0, sizeof(sa) );
 	sa.sa_handler = sigint_handler;
 	sigfillset(&sa.sa_mask);
-	sigaction(SIGINT,&sa,NULL);
+	sigaction(SIGINT, &sa, NULL);
 	clientAddrSize = sizeof(clientAddr);
 	std::cout << testServer->getSocket().getPort() << " "
 				<< testServer->getFd() << std::endl;
