@@ -58,8 +58,6 @@ int	main(int argc, char **argv)
 		if (temp_sock < 0)
 		{
 			std::cerr << "accept() failed." << std::endl;
-			//continue ;
-			perror("accept");
 			exit(0);
 		}
 		pid = fork();
@@ -76,6 +74,7 @@ int	main(int argc, char **argv)
 			while (read(temp_sock, buff, 1) == 1)
 				str.push_back(*buff);
 			write(temp_sock, str.c_str(), str.size());
+			std::cout << temp_sock << std::endl;
 			exit(0);
 		}
 		else

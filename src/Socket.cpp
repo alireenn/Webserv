@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/17 13:05:43 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/17 14:42:59 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	init_socket(struct sockaddr_in *addr)
 		std::cerr << "setsockopt() ";
 		return (-1);
 	}
-	fcntl(fd, F_SETFL, O_NONBLOCK);
+	//fcntl(fd, F_SETFL, O_NONBLOCK);
 	if (bind(fd, (struct sockaddr *)addr, sizeof(*addr)) == -1)
 	{
 		std::cerr << "bind() ";
