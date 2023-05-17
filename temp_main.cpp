@@ -5,23 +5,23 @@
 
 /* Queste due funzioni servono a liberare la roba in caso di
 ** Ctrl + C, che sarà una causa abbastanza comune di interruzione
-*/								//
-void	server_deleter(Server *toDelete)			//
-{								//
-	static Server	*server;				//
-								//
-	if (toDelete)						//
-		server = toDelete;				//
-	else							//
-		delete (server);				//
-}								//
-								//
-void	sigint_handler(int signum)				//
-{								//
-	(void)signum;						//
-	server_deleter(NULL);					//
-	exit(EXIT_SUCCESS);					//
-}					/////////////////////////
+*/                                                              //
+void	server_deleter(Server *toDelete)                        //
+{                                                               //
+	static Server	*server;                                //
+                                                                //
+	if (toDelete)                                           //
+		server = toDelete;                              //
+	else                                                    //
+		delete (server);                                //
+}                                                               //
+                                                                //
+void	sigint_handler(int signum)                              //
+{                                                               //
+	(void)signum;                                           //
+	server_deleter(NULL);                                   //
+	exit(EXIT_SUCCESS);                                     //
+}                                        /////////////////////////
 
 int	main(int argc, char **argv)
 {
