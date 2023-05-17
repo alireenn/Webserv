@@ -57,29 +57,32 @@ int	main(int argc, char **argv)
 				(struct sockaddr *)&clientAddr, &clientAddrSize);
 		if (temp_sock < 0)
 		{
-			std::cerr << "accept() failed." << std::endl;
-			//continue ;
-			perror("accept");
-			exit(0);
-		}
-		pid = fork();
-		if (pid < 0)
-		{
-			std::cerr << "fork() failed" << std::endl;
+			// std::cerr << "accept() failed." << std::endl;
 			continue ;
-		}
-		else if (pid == 0)
-		{
-			std::string	str;
-			char		buff[1];
-			delete (testServer);
-			while (read(temp_sock, buff, 1) == 1)
-				str.push_back(*buff);
-			write(temp_sock, str.c_str(), str.size());
-			exit(0);
+			// perror("accept");
+			// exit(0);
 		}
 		else
-			close(temp_sock);
+		{
+			pid = fork();
+			if (pid < 0)
+			{
+				std::cerr << "fork() failed" << std::endl;
+				continue ;
+			}
+			else if (pid == 0)
+			{
+				std::cout << temp_sock << std::endl;
+				std::string	str;
+				char		buff[1];
+				delete (testServer);
+				while (read(temp_sock, buff, 1) == 1)
+					str.push_back(*buff);
+				write(temp_sock, str.c_str(), str.size());
+				exit(0);
+		}
+		else
+			close(temp_sock);}
 	}
 	delete (testServer);
 	return (0);
