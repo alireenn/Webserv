@@ -2,6 +2,7 @@ CC		=		g++
 FLAGS		=		-Wall -Wextra -Werror -std=c++98
 
 NAME		=		test
+TEST_PORT	=		8080
 
 SRC		=		temp_main.cpp \
 				src/Socket.cpp \
@@ -17,7 +18,7 @@ all: $(NAME)
 
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -o $@
+	$(CC) -g $(OBJS) -o $@
 
 $(OBJS): $(OBJDIR)/%.o: %.cpp
 	mkdir -p $(@D)
@@ -34,5 +35,9 @@ kill: clean fclean
 
 re: kill
 	make
+
+r:
+	make
+	./$(NAME) $(TEST_PORT)
 
 .PHONY: all clean fclean kill re

@@ -112,7 +112,6 @@ int	main(int argc, char **argv)
 			char		buff[1];
 			int 		temp;
 
-			delete (testServer);
 			while ((temp = read(temp_sock, buff, 1)) == 1)
 				str.push_back(*buff);
 

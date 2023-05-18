@@ -31,9 +31,10 @@ Pertanto, se si tenta di leggere/recuperare o scrivere/inviare in un qualsiasi d
 
 <h2>LINK UTILI</h2>
 
-- https://github.com/cclaude42/webserv  utile per studiare la teoria
-- https://github.com/Mounadi05/42-Webserv  unica repo che va su linux da 125 che sono riuscito a far fungere
+- https://github.com/cclaude42/webserv  Utile per studiare la teoria
+- https://github.com/Mounadi05/42-Webserv  Unica repo che va su linux da 125 che sono riuscito a far fungere
 - https://www.youtube.com/watch?v=YwHErWJIh6Y Il tipo che implementa in C++ le cose che sono in [questo](https://medium.com/from-the-scratch/http-server-what-do-you-need-to-know-to-build-a-simple-http-server-from-scratch-d1ef8945e4fa "Ma che fico, si possono far apparire cose quando ci passi sopra con il mouse!") articolo
+- https://www.tutorialspoint.com/unix_sockets/index.htm Guida molto fica sui socket
 
 <h3>HTTP</h3>
 
