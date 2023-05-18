@@ -69,3 +69,35 @@ bool	Server::isRunning(void) const
 {
 	return (_running);
 }
+
+
+void	Server::setPort(size_t port)
+{
+	this->_port = port;
+}
+
+void	Server::setUploadPath(std::string uploadPath)
+{
+	this->_uploadPath = uploadPath;
+}
+
+void	Server::setLocations(std::vector<Location> locations)
+{
+	this->_locations = locations;
+}
+
+void	Server::setServerNames(std::vector<std::string> serverNames)
+{
+	this->_serverNames = serverNames;
+}
+
+void	Server::setMimeTypes(std::vector<std::string> mimeTypes)
+{
+	this->_mimeTypes = mimeTypes;
+}
+
+void	Server::setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages)
+{
+	this->_errorPages = errorPages;
+}
+

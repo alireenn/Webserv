@@ -33,6 +33,14 @@ class Server
 		Socket	&getSocket(void);
 		int		getFd(void) const;
 		bool	isRunning(void) const;
+
+		void	setPort(size_t port);
+		void	setUploadPath(std::string uploadPath);
+		void	setLocations(std::vector<Location> locations);
+		void	setServerNames(std::vector<std::string> serverNames);
+		void	setMimeTypes(std::vector<std::string> mimeTypes);
+		void	setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages);
+
 };
 
 #endif
