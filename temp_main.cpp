@@ -108,19 +108,12 @@ int	main(int argc, char **argv)
 		}
 		else if (pid == 0)
 		{
-			std::string	str;
-			char		buff[1];
-			int 		temp;
-
-			while ((temp = read(temp_sock, buff, 1)) == 1)
-				str.push_back(*buff);
-
-			write(temp_sock, str.c_str(), str.size());
+			close(testServer->getFd());
+			sendHTMLPage(temp_sock);
 			exit(0);
 		}
 		else
 		{
-			sendHTMLPage(temp_sock);
 			close(temp_sock);
 		}
 	}
