@@ -1,4 +1,5 @@
 #include "../includes/Config.hpp"
+#include "Config.hpp"
 
 Config::Config(/* args */)
 {
@@ -6,6 +7,15 @@ Config::Config(/* args */)
 
 Config::~Config()
 {
+}
+
+void Config::setConfig(std::string filePath)
+{
+	this->_FilePath = filePath;
+	this->_Configfile.open(_FilePath.c_str());
+
+	if (!_Configfile.is_open() || !_Configfile)
+
 }
 
 void Config::setEnv(char **env)

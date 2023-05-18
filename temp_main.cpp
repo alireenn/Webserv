@@ -59,7 +59,7 @@ void	sigint_handler(int signum)                              //
 
 int	main(int argc, char **argv)
 {
-	Server			*testServer;
+	Server				*testServer;
 	socklen_t			clientAddrSize;
 	struct sockaddr_in	clientAddr;
 	struct sigaction 	sa;
@@ -101,9 +101,13 @@ int	main(int argc, char **argv)
 			// exit(0);
 		}
 		pid = fork();
-		if (pid == 0)
+		if (pid == -1)
 		{
-						// std::cerr << "fork() failed" << std::endl;
+			std::cerr << "fork() failed" << std::endl;
+			continue ;
+		}
+		else if (pid == 0)
+		{
 			std::string	str;
 			char		buff[1];
 			delete (testServer);
@@ -120,10 +124,6 @@ int	main(int argc, char **argv)
 			sendHTMLPage(temp_sock);
 			close(temp_sock);
 		}
-		    // Raccolta dei processi figli completati
-		while (waitpid(-1, NULL, WNOHANG) > 0)
-			;
-
 	}
 	delete (testServer);
 	return (0);
