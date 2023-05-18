@@ -13,10 +13,10 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-
+#include <iostream>
 #include <fstream>
 #include <vector>
-
+#include "Server.hpp"
 
 class Config
 {
@@ -28,7 +28,7 @@ private:
 	char **_env;
 	
 public:
-	Config(/* args */);
+	Config(char **env);
 	~Config();
 
 	void setConfig(std::string filePath);
