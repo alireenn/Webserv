@@ -16,9 +16,15 @@ int main(int argc, char** argv, char** env)
     }
 	else if (argc == 1)
 	{
-		// lettura file config
+		conf.setConfigPath("./config.d/default.conf");
 		conf.setEnv(env);
-		// creazione server
+		io.SetupServers(conf);
+	}
+	else if (argc == 2)
+	{
+		conf.setConfigPath(argv[1]);
+		conf.setEnv(env);
+		io.SetupServers(conf);
 	}
 	return 0;
 }
