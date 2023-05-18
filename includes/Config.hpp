@@ -34,6 +34,9 @@ public:
 	void setConfig(std::string filePath);
 	void setEnv(char **env);
 	char **getEnv(void) const;
+	void parse();
+	bool SkipEmptyLines(std::ifstream &file);
+
 };
 
 #endif	
