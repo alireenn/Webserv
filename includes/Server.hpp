@@ -9,9 +9,9 @@
 class Server
 {
 	private:
-		Socket					*_socket;
-		size_t 					_port;
-		bool					_running;
+		Socket							*_socket;
+		size_t 							_port;
+		bool							_running;
 		std::vector<std::string>		_serverNames;
 		std::vector<Location>			_locations;
 		std::vector<std::pair
