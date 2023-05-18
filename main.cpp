@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/18 13:04:09 by mruizzo           #+#    #+#             */
+/*   Updated: 2023/05/18 13:04:57 by mruizzo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "includes/Webserv.hpp"
 
 
@@ -16,13 +28,13 @@ int main(int argc, char** argv, char** env)
     }
 	else if (argc == 1)
 	{
-		conf.setConfigPath("./config.d/default.conf");
+		conf.setConfig("./config.d/default.conf");
 		conf.setEnv(env);
 		io.SetupServers(conf);
 	}
 	else if (argc == 2)
 	{
-		conf.setConfigPath(argv[1]);
+		conf.setConfig(argv[1]);
 		conf.setEnv(env);
 		io.SetupServers(conf);
 	}
