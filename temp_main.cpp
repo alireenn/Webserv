@@ -63,8 +63,8 @@ int	main(int argc, char **argv)
 	socklen_t			clientAddrSize;
 	struct sockaddr_in	clientAddr;
 	struct sigaction 	sa;
-	int			temp_sock;
-	int			pid;
+	int					temp_sock;
+	int					pid;
 
 	if (argc != 2)
 	{
@@ -90,7 +90,6 @@ int	main(int argc, char **argv)
 	{
 		temp_sock = accept(testServer->getFd(),
 				(struct sockaddr *)&clientAddr, &clientAddrSize);
-		std::cout << i++ << std::endl;
 		if (temp_sock < 0)
 		{
 			std::cerr << "accept() failed." << std::endl;
@@ -106,12 +105,12 @@ int	main(int argc, char **argv)
 		{
 			std::string	str;
 			char		buff[1];
+			int 		temp;
+
 			delete (testServer);
-			int temp;
 			while ((temp = read(temp_sock, buff, 1)) == 1)
-			{
 				str.push_back(*buff);
-			}
+
 			write(temp_sock, str.c_str(), str.size());
 			exit(0);
 		}
