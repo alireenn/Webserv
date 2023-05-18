@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:29:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/10 10:37:33 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/18 17:38:39 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ private:
 	
 public:
 	Config();
+	Config(char **env);
 	~Config();
 
 	void setConfig(std::string filePath);

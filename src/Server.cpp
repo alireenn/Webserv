@@ -1,6 +1,6 @@
 #include "../includes/Server.hpp"
 
-Server::Server(int socketPort)
+Server::Server(int socketPort)// --> Server(int socketPort, std::ifstream configFile);
 {
 	this->_socket = new Socket(socketPort);
 	if (this->_socket->isRunning())
@@ -100,4 +100,3 @@ void	Server::setErrorPages(std::vector<std::pair <std::string, std::string> > er
 {
 	this->_errorPages = errorPages;
 }
-

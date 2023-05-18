@@ -5,6 +5,10 @@ Config::Config()
 {
 }
 
+Config::Config(char **env): _env(env)
+{
+}
+
 Config::~Config()
 {
 }
@@ -72,12 +76,21 @@ std::string nextToken(std::string &fLine)
 	return (ret);
 }
 
+/*
+**	1) leggo il file una riga alla volta
+**	2) estraggo i token
+**	3) quando leggo la porta, creo un nuovo server e lo pusho nel vector di server
+      vector_di_server.push_back(*(new Server(porta)));
+**	4) aggiungo le info al server tramite i setter
+*/
+
 void Config::parse()
 {
 	int 						start = 0;
 	int							n_servers = 0; //conta i blocchi server
 	std::string					line; //per leggere il file
 	std::vector<std::string>	pg; //conta le parentesi graffe
+	
 
 	while (getline(_Configfile, line))
 	{

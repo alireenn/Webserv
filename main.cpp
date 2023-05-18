@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:04:09 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/18 13:04:57 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/18 17:58:50 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,27 @@
 
 int main(int argc, char** argv, char** env)
 {
-	Config conf;
+	Config conf(env);
 	IOMultiplexing io;
+
 
 	signal(SIGPIPE, SIG_IGN);//La chiamata a signal(SIGPIPE, SIG_IGN) 
 	//imposta il gestore dei segnali per il segnale SIGPIPE in modo da ignorare il segnale quando viene ricevuto,
 	//anziché gestirlo con il comportamento predefinito del sistema operativo, che di solito è terminare il processo.
+	
+	
 	if (argc != 1 && argc != 2)
     {
-        std::cout << "./webserv || ./webserv <path>" << std::endl;
+		std::cout << "./webserv || ./webserv <path>" << std::endl;
         return (1);
     }
 	else if (argc == 1)
-	{
 		conf.setConfig("./config.d/default.conf");
-		conf.setEnv(env);
-		io.SetupServers(conf);
-	}
 	else if (argc == 2)
-	{
 		conf.setConfig(argv[1]);
-		conf.setEnv(env);
-		io.SetupServers(conf);
-	}
+	
+		
+	io.SetupServers(conf);
+	
 	return 0;
 }
