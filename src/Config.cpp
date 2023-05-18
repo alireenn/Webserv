@@ -1,9 +1,8 @@
 #include "../includes/Config.hpp"
 #include "Config.hpp"
 
-Config::Config(char **env)
+Config::Config()
 {
-
 }
 
 Config::~Config()
@@ -87,6 +86,23 @@ void Config::parse()
 		while ((token = nextToken(line)) != "")
 		{
 			SkipEmptyLines(_Configfile);
+			if (!start && token != "server") //il config deve partire con server
+				std::cerr << "Error: config File\n";
+			else
+				start = 1;
+			if (token == "{")
+				pg.push_back(token);
+			else if (token == "}")
+			{
+				if (pg.size() != 0)
+					pg.pop_back();
+				else
+					std::cerr << "Error: curly phrases\n";
+			}
+			else if (token == "server")
+			{
+
+			}
 		}
 	}
 }

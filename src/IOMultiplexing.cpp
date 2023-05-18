@@ -12,7 +12,6 @@ IOMultiplexing::~IOMultiplexing()
 
 void IOMultiplexing::SetupServers(Config &conf)
 {
-	conf.parse();
 	std::vector<Server> &Svec = conf.getServers();
 	if (Svec.size())
 	{

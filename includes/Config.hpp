@@ -28,7 +28,7 @@ private:
 	char **_env;
 	
 public:
-	Config(char **env);
+	Config();
 	~Config();
 
 	void setConfig(std::string filePath);
