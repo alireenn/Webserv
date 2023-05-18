@@ -9,15 +9,14 @@
 class Server
 {
 	private:
-		Socket							*_socket;
-		size_t 							_port;
-		bool							_running;
-		std::vector<std::string>		_serverNames;
-		std::vector<Location>			_locations;
-		std::vector<std::pair
-			<std::string, std::string> >	_errorPages;
-		std::string				_uploadPath;
-		std::vector<std::string>		_mimeTypes;
+		bool												_running;
+		Socket												*_socket;
+		size_t 												_port;
+		std::string											_uploadPath;
+		std::vector<Location>								_locations;
+		std::vector<std::string>							_serverNames;
+		std::vector<std::string>							_mimeTypes;
+		std::vector<std::pair <std::string, std::string> >	_errorPages;
 
 							Server(void);
 
@@ -32,7 +31,7 @@ class Server
 		Server	&operator=(Server &toCopy);
 
 		Socket	&getSocket(void);
-		int	getFd(void) const;
+		int		getFd(void) const;
 		bool	isRunning(void) const;
 };
 
