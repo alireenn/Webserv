@@ -65,7 +65,6 @@ int	main(int argc, char **argv)
 	struct sigaction 	sa;
 	int			temp_sock;
 	int			pid;
-	int i =0;
 
 	if (argc != 2)
 	{
@@ -78,7 +77,12 @@ int	main(int argc, char **argv)
 		delete (testServer);
 		return (1);
 	}
-	signal(SIGPIPE, SIG_IGN);//La chiamata a signal(SIGPIPE, SIG_IGN) imposta il gestore dei segnali per il segnale SIGPIPE in modo da ignorare il segnale quando viene ricevuto, anziché gestirlo con il comportamento predefinito del sistema operativo, che di solito è terminare il processo.
+	/* La chiamata a signal(SIGPIPE, SIG_IGN) imposta il gestore dei segnali
+	** per il segnale SIGPIPE in modo da ignorare il segnale quando viene
+	** ricevuto, anziché gestirlo con il comportamento predefinito del sistema
+	** operativo, che di solito è terminare il processo.
+	*/
+	signal(SIGPIPE, SIG_IGN);
 	server_deleter(testServer);
 	memset( &sa, 0, sizeof(sa) );
 	sa.sa_handler = sigint_handler;
@@ -91,7 +95,6 @@ int	main(int argc, char **argv)
 	{
 		temp_sock = accept(testServer->getFd(),
 				(struct sockaddr *)&clientAddr, &clientAddrSize);
-		std::cout << i++ << std::endl;
 		if (temp_sock < 0)
 		{
 			std::cerr << "accept() failed." << std::endl;
