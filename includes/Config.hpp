@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:29:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/18 17:38:39 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/19 11:47:32 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ public:
 	void parse();
 	bool SkipEmptyLines(std::ifstream &file);
 
+	std::vector<Server &> &getServers(void);
 };
 
 #endif	

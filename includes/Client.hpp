@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IOMultiplexing.hpp                                 :+:      :+:    :+:   */
+/*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/10 14:48:24 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/19 12:15:39 by mruizzo          ###   ########.fr       */
+/*   Created: 2023/05/19 12:19:58 by mruizzo           #+#    #+#             */
+/*   Updated: 2023/05/19 12:38:34 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IOMULTIPLEXING_HPP
-#define IOMULTIPLEXING_HPP
+#ifndef CLIENT_HPP
+# define CLIENT_HPP
 
-#include <sys/epoll.h>
+#include <vector>
+#include <iostream>
+#include "Server.hpp"
 
-#include "Config.hpp"
-
-class IOMultiplexing
+class Client
 {
 private:
-	/* data */
+	Server *_server;
 public:
-	IOMultiplexing(/* args */);
-	~IOMultiplexing();
-	
-	void StartServers(Config &conf);
-	void EventLoop(std::vector<Server &> &Svec);
+	Client();
+	~Client();
+
+	void	setServer(Server *server);
+	int		getSocketFd(void) const;
 };
-
-
 
 #endif

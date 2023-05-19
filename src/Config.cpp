@@ -1,5 +1,5 @@
 #include "../includes/Config.hpp"
-#include "Config.hpp"
+
 
 Config::Config()
 {
@@ -125,4 +125,10 @@ bool Config::SkipEmptyLines(std::ifstream &file)
 	while (file.peek() == '\n' || file.peek() == '\t' || file.peek() == ' ')
 		file.get();
 	return (1);
+}
+
+//la ref ordina i server per location. non e' detto che serva ma teniamolo presente
+std::vector<Server &> &Config::getServers(void)
+{
+	return (this->_Servers);
 }
