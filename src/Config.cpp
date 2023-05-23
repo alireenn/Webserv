@@ -131,11 +131,11 @@ void Config::parse()
 	
 	while (getline(_configfile, line))
 	{
-		SkipEmptyLines(_configfile);
+		utils::skipEmptyLines(_configfile);
 		std::string token;
 		while ((token = nextToken(line)) != "")
 		{
-			SkipEmptyLines(_configfile);
+			utils::skipEmptyLines(_configfile);
 			if (!start && token != "server") //il config deve partire con server
 			{
 				std::cerr << "Error: config File\n";
@@ -165,13 +165,6 @@ void Config::parse()
 	}
 	if (curlyBruh != 0)
 		std::cerr << "cazzo fai fratm impara a scrivere coglione\n";
-}
-
-bool Config::SkipEmptyLines(std::ifstream &file)
-{	
-	while (file.peek() == '\n' || file.peek() == '\t' || file.peek() == ' ')
-		file.get();
-	return (1);
 }
 
 //la ref ordina i server per location. non e' detto che serva ma teniamolo presente
