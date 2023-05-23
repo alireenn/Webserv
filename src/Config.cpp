@@ -125,7 +125,7 @@ void findPort(std::string &line, Server server)
 void Config::parse()
 {
 	int 						start = 0;
-	int							n_servers = 0; //conta i blocchi server
+	int							n_servers = 0; //conta i blocchi server // ccantale::Questa secondo me non server
 	int							curlyBruh = 0;
 	std::string					line; //per leggere il file
 	
