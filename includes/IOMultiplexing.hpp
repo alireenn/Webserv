@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:48:24 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/23 16:24:13 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/23 18:20:56 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "Server.hpp"
 #include "Client.hpp"
 #include "Request.hpp"
+#include "Response.hpp"
 
 class IOMultiplexing
 {
