@@ -15,16 +15,16 @@ Config::~Config()
 
 bool isEmpty(std::string File)
 {
-	std::ifstream file(File);
+	std::ifstream file(File.c_str());
 	return file.peek() == std::ifstream::traits_type::eof();
 }
 
-void Config::setConfig(std::string filePath)
+void Config::setConfig(char *filePath)
 {
 	this->_FilePath = filePath;
 	this->_Configfile.open(_FilePath.c_str());
 
-	if (!_Configfile.is_open() || !isEmpty(_FilePath))
+	if (!_Configfile.is_open() || isEmpty(_FilePath))
 		std::cerr << "Your file can't be opened or is empty\n";
 	else
 		parse();
@@ -54,7 +54,7 @@ std::string nextToken(std::string &fLine)
 	{
 		if (fLine[i] == ' ' || fLine[i] == '\t')
 			i++;
-		if ( fLine[i] == '{' || fLine[i] == '}') 
+		if (fLine[i] == '{' || fLine[i] == '}') 
 		{
 			ret += fLine[i];
 			i++;
@@ -66,6 +66,7 @@ std::string nextToken(std::string &fLine)
 			{
 				ret += fLine[i];
 				i++;
+				std::cout << ret << std::endl;
 			}
 			break ;
 		}
@@ -87,7 +88,7 @@ std::string nextToken(std::string &fLine)
 void Config::parse()
 {
 	int 						start = 0;
-	int							n_servers = 0; //conta i blocchi server
+	// int							n_servers = 0; //conta i blocchi server
 	std::string					line; //per leggere il file
 	std::vector<std::string>	pg; //conta le parentesi graffe
 	
@@ -114,7 +115,17 @@ void Config::parse()
 			}
 			else if (token == "server")
 			{
-
+				token = nextToken(line);
+				std::cout << token << std::endl;
+				if ((token = nextToken(line)) != "listen")
+				{
+					std::cerr << "Error: Listen not found on first line\n";
+					return ;
+				}
+				else
+				{
+					std::cout << line << std::endl;
+				}
 			}
 		}
 	}
@@ -128,7 +139,7 @@ bool Config::SkipEmptyLines(std::ifstream &file)
 }
 
 //la ref ordina i server per location. non e' detto che serva ma teniamolo presente
-std::vector<Server &> &Config::getServers(void)
+std::vector<Server> &Config::getServers(void)
 {
 	return (this->_Servers);
 }

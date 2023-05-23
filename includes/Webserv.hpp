@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <signal.h>
+#include <vector>
 
 #include "Config.hpp"
 #include "IOMultiplexing.hpp"

@@ -4,10 +4,11 @@ FLAGS		=		-Wall -Wextra -Werror -std=c++98
 NAME		=		test
 TEST_PORT	=		8080
 
-SRC		=		temp_main.cpp \
+SRC		=		main.cpp \
 				src/Socket.cpp \
 				src/Server.cpp \
-				src/Location.cpp
+				src/Location.cpp \
+				src/Config.cpp
 
 OBJDIR		=		obj
 OBJS		=		$(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))

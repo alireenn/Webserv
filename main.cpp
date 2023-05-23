@@ -16,7 +16,7 @@
 int main(int argc, char** argv, char** env)
 {
 	Config conf(env);
-	IOMultiplexing io;
+	// IOMultiplexing io;
 
 
 	signal(SIGPIPE, SIG_IGN);//La chiamata a signal(SIGPIPE, SIG_IGN) 
@@ -30,12 +30,13 @@ int main(int argc, char** argv, char** env)
         return (1);
     }
 	else if (argc == 1)
-		conf.setConfig("./config.d/default.conf");
+		conf.setConfig((char *)"./config.d/default.conf");
 	else if (argc == 2)
 		conf.setConfig(argv[1]);
 	
 		
-	io.SetupServers(conf);
+	// io.SetupServers(conf);/
+	
 	
 	return 0;
 }
