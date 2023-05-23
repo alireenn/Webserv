@@ -8,7 +8,8 @@ SRC		=		main.cpp \
 				src/Socket.cpp \
 				src/Server.cpp \
 				src/Location.cpp \
-				src/Config.cpp
+				src/Config.cpp \
+				src/utils.cpp
 
 OBJDIR		=		obj
 OBJS		=		$(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:29:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/23 13:03:27 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/23 17:03:35 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 #include "Server.hpp"
+#include "utils.h"
 
 class Config
 {
@@ -36,20 +38,7 @@ public:
 	void setEnv(char **env);
 	char **getEnv(void) const;
 	void parse();                                   // Questa forse dovrebbe essere statica interna al .cpp della classe, non pubblica, tanto chi la richiama
-	bool SkipEmptyLines(std::ifstream &file);       // E pure questa, oppure a parte, in un namespace di utils
-	std::vector<Server> &getServers()                                            //
-};                                                                                             //
-                                                                                               //
-/*                                       <///////////////////////////////////////////////////////
-** Es.
-**
-** namespace StringUtils
-** {
-**	bool skipEmptyLines(std::ecceteraeccetera...
-**	...
-**	...
-** }
-**
-*/
+	std::vector<Server> &getServers(void);
+};
 
 #endif	
