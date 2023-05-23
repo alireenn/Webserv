@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 13:11:06 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/23 16:53:00 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/23 17:32:10 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <unistd.h>
 #include <map>
 #include <fcntl.h>
+#include <string.h>
+#include <math.h>
 
 class Request
 {
@@ -69,7 +71,7 @@ private:
         std::string &getPathTmp(void);
         int getOk(void);
         void TransferChunked(void);
-        int getLentChunked(void);
+        int getLentChunked(std::string str);
 
 };
 

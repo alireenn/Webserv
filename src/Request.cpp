@@ -309,7 +309,7 @@ void Request::TransferChunked(void)
 {
 	char buff;
 //     std::string tmp;
-//     int a = 0;
+    int tmp_bl = 0;
 //     (void) a;
 	if(lent_chunked > (int) body.length())
 	{
@@ -334,8 +334,72 @@ void Request::TransferChunked(void)
 		{
 			if (lent_chunked)
 			{
-				
-			}	
+				buff = body[i];
+				write(fd, &buff, 1);
+			}
+			lent_chunked--;
+			if (lent_chunked == 0)
+			{
+				lent_chunked = getLentChunked(body.substr(i));
+				tmp_bl = body.length() - i;
+				if (lent_chunked == 0)
+				{
+					lent_chunked = getLentChunked(body.substr(i));
+					if (lent_chunked == 0)
+					{
+						close(fd);
+						finished = 1;
+						ok = 0;
+					}
+					i += skip;
+				}
+			}
 		}
 	}
+}
+
+static int hex_dec(char *str)
+{
+     int i = 0, val, len;
+    int n = 0;
+     len = strlen(str) - 1;
+    while (str[i] != '\0')
+    {
+        if (str[i] >= '0' && str[i] <= '9')
+            val = str[i] - 48;
+        else if (str[i] >= 'a' && str[i] <= 'f') 
+            val = str[i] - 97 + 10;
+        else if (str[i] >= 'A'&& str[i] <= 'F') 
+            val = str[i] - 65 + 10;
+        n += val * pow(16, len);
+        len--;
+        i++;
+    }
+    return n;
+}
+
+int Request::getLentChunked(std::string str)
+{
+	std::string tmp;
+	for(int i = 0; i < (int) str.length(); i++)
+	{
+		if(str[i] == '\r' && str[i + 1] == '\n')
+		{
+			i+=2;
+			skip = 2;
+			while (i < (int)str.length() && str[i] != '\r' && str[i + 1] != '\n')
+			{
+				tmp.push_back(str[i++]);
+				skip++;
+			}
+			if(tmp.empty())
+			{
+				skip += 2;
+				return hex_dec((char *)tmp.c_str());
+			}
+			else
+				skip = 0;
+		}
+	}
+	return 0;
 }
