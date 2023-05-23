@@ -76,6 +76,20 @@ std::string nextToken(std::string &fLine)
 	return (ret);
 }
 
+void findPort(std::string &line, Server server)
+{
+	std::string port = nextToken(line);
+	if (port.empty())
+		std::cerr << "Error: Listen: port not found\n";
+	else
+	{
+		if (stoi(port) >= 0 && stoi(port) <= 65536)
+			std::cerr << "Error: Listen: port not valid\n";
+		else
+			server.setPort(stoi(port));
+	}
+}
+
 /*
 **	1) leggo il file una riga alla volta
 **	2) estraggo i token
@@ -114,9 +128,11 @@ void Config::parse()
 			}
 			else if (token == "server")
 			{
+				
 				n_servers++;
-				std::cout << n_servers;
 			}
+			else if (token == "listen")
+				// findPort(line, server); //questo funziona se usiamo setter e getter
 		}
 	}
 }
