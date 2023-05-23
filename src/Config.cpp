@@ -22,9 +22,9 @@ bool isEmpty(std::string File)
 void Config::setConfig(std::string filePath)
 {
 	this->_FilePath = filePath;
-	this->_Configfile.open(_FilePath.c_str());
+	this->_configfile.open(_FilePath.c_str());
 
-	if (!_Configfile.is_open() || !isEmpty(_FilePath))
+	if (!_configfile.is_open() || !isEmpty(_FilePath))
 		std::cerr << "Your file can't be opened or is empty\n";
 	else
 		parse();
@@ -40,15 +40,16 @@ char **Config::getEnv(void) const
 	return (this->_env);
 }
 
-bool isKey(char c)
+static bool isKey(char c)
 {
-	return (c == '_' || c == ':' || c == '/' || c == '\\' || c == '.' || c == '-' || isalnum(c));
+	return (c == '_' || c == ':' || c == '/' || c == '\\'
+				|| c == '.' || c == '-' || isalnum(c));
 }
 
-std::string nextToken(std::string &fLine)
+static std::string nextToken(std::string &fLine)
 {
-	int			i = 0;
-	std::string ret = "";
+	int		i = 0;
+	std::string	ret = "";
 
 	while (fLine[i])
 	{
@@ -87,18 +88,18 @@ std::string nextToken(std::string &fLine)
 void Config::parse()
 {
 	int 						start = 0;
-	int							n_servers = 0; //conta i blocchi server
+	int							n_servers = 0; //conta i blocchi server    // ccantale::Secondo me non server
 	std::string					line; //per leggere il file
-	std::vector<std::string>	pg; //conta le parentesi graffe
+	std::vector<std::string>	pg; //conta le parentesi graffe     // ccantale::Metterei un nome più esplicito, tipo curlyBracketsNbr o c_brackets o roba così
 	
 
-	while (getline(_Configfile, line))
+	while (getline(this->_configfile, line))
 	{
-		SkipEmptyLines(_Configfile);
+		SkipEmptyLines(_configfile);
 		std::string token;
 		while ((token = nextToken(line)) != "")
 		{
-			SkipEmptyLines(_Configfile);
+			SkipEmptyLines(_configfile);
 			if (!start && token != "server") //il config deve partire con server
 				std::cerr << "Error: config File\n";
 			else
@@ -114,7 +115,7 @@ void Config::parse()
 			}
 			else if (token == "server")
 			{
-
+				// errore
 			}
 		}
 	}
