@@ -15,16 +15,16 @@ Config::~Config()
 
 bool isEmpty(std::string File)
 {
-	std::ifstream file(File);
+	std::ifstream file(File.c_str());
 	return file.peek() == std::ifstream::traits_type::eof();
 }
 
-void Config::setConfig(std::string filePath)
+void Config::setConfig(char *filePath)
 {
-	this->_FilePath = filePath;
-	this->_configfile.open(_FilePath.c_str());
+	this->_filePath = filePath;
+	this->_configfile.open(_filePath.c_str());
 
-	if (!_configfile.is_open() || !isEmpty(_FilePath))
+	if (!_Configfile.is_open() || isEmpty(_filePath))
 		std::cerr << "Your file can't be opened or is empty\n";
 	else
 		parse();
@@ -55,7 +55,7 @@ static std::string nextToken(std::string &fLine)
 	{
 		if (fLine[i] == ' ' || fLine[i] == '\t')
 			i++;
-		if ( fLine[i] == '{' || fLine[i] == '}') 
+		if (fLine[i] == '{' || fLine[i] == '}') 
 		{
 			ret += fLine[i];
 			i++;
@@ -115,7 +115,9 @@ void Config::parse()
 			}
 			else if (token == "server")
 			{
-				// errore
+				// qui si gestisce l'errore
+				n_servers++;
+				std::cout << n_servers;
 			}
 		}
 	}
@@ -129,7 +131,7 @@ bool Config::SkipEmptyLines(std::ifstream &file)
 }
 
 //la ref ordina i server per location. non e' detto che serva ma teniamolo presente
-std::vector<Server &> &Config::getServers(void)
+std::vector<Server> &Config::getServers(void)
 {
 	return (this->_Servers);
 }
