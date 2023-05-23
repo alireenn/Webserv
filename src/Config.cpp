@@ -66,7 +66,6 @@ std::string nextToken(std::string &fLine)
 			{
 				ret += fLine[i];
 				i++;
-				std::cout << ret << std::endl;
 			}
 			break ;
 		}
@@ -88,7 +87,7 @@ std::string nextToken(std::string &fLine)
 void Config::parse()
 {
 	int 						start = 0;
-	// int							n_servers = 0; //conta i blocchi server
+	int							n_servers = 0; //conta i blocchi server
 	std::string					line; //per leggere il file
 	std::vector<std::string>	pg; //conta le parentesi graffe
 	
@@ -115,17 +114,8 @@ void Config::parse()
 			}
 			else if (token == "server")
 			{
-				token = nextToken(line);
-				std::cout << token << std::endl;
-				if ((token = nextToken(line)) != "listen")
-				{
-					std::cerr << "Error: Listen not found on first line\n";
-					return ;
-				}
-				else
-				{
-					std::cout << line << std::endl;
-				}
+				n_servers++;
+				std::cout << n_servers;
 			}
 		}
 	}
