@@ -21,10 +21,10 @@ bool isEmpty(std::string File)
 
 void Config::setConfig(char *filePath)
 {
-	this->_FilePath = filePath;
-	this->_Configfile.open(_FilePath.c_str());
+	this->_filePath = filePath;
+	this->_configfile.open(_filePath.c_str());
 
-	if (!_Configfile.is_open() || isEmpty(_FilePath))
+	if (!_Configfile.is_open() || isEmpty(_filePath))
 		std::cerr << "Your file can't be opened or is empty\n";
 	else
 		parse();
@@ -40,15 +40,16 @@ char **Config::getEnv(void) const
 	return (this->_env);
 }
 
-bool isKey(char c)
+static bool isKey(char c)
 {
-	return (c == '_' || c == ':' || c == '/' || c == '\\' || c == '.' || c == '-' || isalnum(c));
+	return (c == '_' || c == ':' || c == '/' || c == '\\'
+				|| c == '.' || c == '-' || isalnum(c));
 }
 
-std::string nextToken(std::string &fLine)
+static std::string nextToken(std::string &fLine)
 {
-	int			i = 0;
-	std::string ret = "";
+	int		i = 0;
+	std::string	ret = "";
 
 	while (fLine[i])
 	{

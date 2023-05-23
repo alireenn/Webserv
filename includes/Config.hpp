@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:29:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/19 11:47:32 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/23 12:28:34 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ class Config
 private:
 
 	std::vector<Server> _Servers; //vector di server, la vera classe da instanziare al momento.
-    std::string _FilePath;
-    std::ifstream _Configfile;
+	std::string _filePath;
+	std::ifstream _configfile;
 	char **_env;
 	
 public:
@@ -35,10 +35,21 @@ public:
 	void setConfig(char *filePath);
 	void setEnv(char **env);
 	char **getEnv(void) const;
-	void parse();
-	bool SkipEmptyLines(std::ifstream &file);
-
-	std::vector<Server> &getServers(void);
-};
+	void parse();                                   // Questa forse dovrebbe essere statica interna al .cpp della classe, non pubblica, tanto chi la richiama
+	bool SkipEmptyLines(std::ifstream &file);       // E pure questa, oppure a parte, in un namespace di utils
+	std::vector<Server> &getServers(void);                                                 //
+};                                                                                             //
+                                                                                               //
+/*                                       <///////////////////////////////////////////////////////
+** Es.
+**
+** namespace StringUtils
+** {
+**	bool skipEmptyLines(std::ecceteraeccetera...
+**	...
+**	...
+** }
+**
+*/
 
 #endif	
