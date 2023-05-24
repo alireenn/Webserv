@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/24 18:56:48 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/24 19:46:33 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ static int	init_socket(struct sockaddr_in *addr)
 	//fcntl(fd, F_SETFL, O_NONBLOCK);
 	if (bind(fd, (struct sockaddr *)addr, sizeof(*addr)) == -1)
 	{
-		perror("binf ");
 		std::cerr << "bind() ";
 		return (-1);
 	}

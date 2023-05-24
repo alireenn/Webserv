@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Log.hpp                                            :+:      :+:    :+:   */
+/*   log.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 16:52:58 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/24 17:13:52 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:44:22 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define LOG_HPP
 
 # define LOGPATH "Logbook/log"
+
+# define cout	print()
 
 # include <fstream>
 # include <chrono>
@@ -24,8 +26,7 @@ namespace log
 
 	void			init(void);
 	std::string		timestamp(void);
-	void			cout(std::string msg);
-	void			cerr(std::string msg);
+	std::ofstream		&print(void);
 	void			close(void);
 }
 
