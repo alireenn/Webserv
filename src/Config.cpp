@@ -195,14 +195,24 @@ void Config::parse()
 
 				if (path.empty() || extension.empty())
 					std::cerr << "Error: cgi: path or extension not found\n";
-				else if (extension[0] != '.')
+				else if (extension[0] != '.' || extension.length() < 2)
 					std::cerr << "Error: cgi: extension not valid\n";
 				else
-				{
-					 _servers.back()->setCgi(std::pair<std::string, std::string>(path, extension));
-				}
+					_servers.back()->setCgi(std::pair<std::string, std::string>(path, extension));
+				// for (size_t i = 0; i < _servers.back()->getcgi().size(); i++)
+				// {
+				// 	std::cout << _servers.back()->getcgi()[i].first << " " << _servers.back()->getcgi()[i].second << std::endl;
+				// }
 			}
-
+			else if (token == "error_page")
+			{
+				std::string code = nextToken(line);
+				std::string path = nextToken(line);
+				if (code.empty() || path.empty())
+					std::cerr << "Error: error_page: code or path not found\n";
+				std::vector<std::pair<std::string, std::string> > pages;
+				//da definire ancora. dopo questo rimane upload_path
+			}
 		}
 	}
 	if (curlyBruh != 0)
