@@ -1,5 +1,5 @@
 CC		=		g++
-FLAGS		=		-Wall -Wextra -Werror -std=c++98
+FLAGS		=		-Wall -Wextra -Werror -std=c++98 -g
 
 NAME		=		test
 TEST_PORT	=		8080
@@ -20,7 +20,7 @@ all: $(NAME)
 
 
 $(NAME): $(OBJS)
-	$(CC) -g $(OBJS) -o $@
+	$(CC) $(OBJS) -o $@
 
 $(OBJS): $(OBJDIR)/%.o: %.cpp
 	mkdir -p $(@D)

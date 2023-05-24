@@ -34,6 +34,8 @@ Config::Config(char **env): _env(env)
 
 Config::~Config()
 {
+	for (size_t i = 0; i < _servers.size(); i++)
+		delete _servers[i];
 }
 
 bool isEmpty(std::string File)
@@ -167,10 +169,12 @@ void Config::parse()
 			}
 			else if (token == "listen")
 			{
-				Server server(findPort(line)); //questo funziona se usiamo setter e getter
-				_servers.push_back(server);
+				std::cout << "dio poooorco\n";
+				int	port = findPort(line);
+				_servers.push_back(new Server(port));
 			}
-			std::cout << _servers.back().getPort();
+			// std::cout << _servers.back().getPort();
+			
 
 		}
 	}
@@ -179,7 +183,7 @@ void Config::parse()
 }
 
 //la ref ordina i server per location. non e' detto che serva ma teniamolo presente
-std::vector<Server> &Config::getServers(void)
+std::vector<Server *> &Config::getServers(void)
 {
 	return (this->_servers);
 }

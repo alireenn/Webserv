@@ -24,7 +24,7 @@ class Config
 {
 private:
 
-	std::vector<Server> _servers; //vector di server, la vera classe da instanziare al momento.
+	std::vector<Server *> _servers; //vector di server, la vera classe da instanziare al momento.
 	std::string _filePath;
 	std::ifstream _configfile;
 	char **_env;
@@ -38,7 +38,7 @@ public:
 	void setEnv(char **env);
 	char **getEnv(void) const;
 	void parse();                                   // Questa forse dovrebbe essere statica interna al .cpp della classe, non pubblica, tanto chi la richiama
-	std::vector<Server> &getServers(void);
+	std::vector<Server *> &getServers(void);
 };
 
 #endif	
