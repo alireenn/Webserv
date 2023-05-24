@@ -1,8 +1,8 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include <iostream>
-# include <vector>
+//# include <iostream>
+//# include <vector>
 # include "Socket.hpp"
 # include "Location.hpp"
 
@@ -32,7 +32,7 @@ class Server
   		char **_env;
 		Server	&operator=(Server &toCopy);
 		Socket	&getSocket(void);
-		int		getFd(void) const;
+		int	getFd(void) const;
 		bool	isRunning(void) const;
 
 		void	setPort(size_t port);
