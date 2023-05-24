@@ -1,5 +1,4 @@
 #include "../includes/IOMultiplexing.hpp"
-#include "IOMultiplexing.hpp"
 
 IOMultiplexing::IOMultiplexing()
 {
@@ -61,7 +60,7 @@ void IOMultiplexing::EventLoop(std::vector<Server> &servers)
 
             // Gestisci l'evento di lettura sul server
             for (size_t j = 0; j < servers.size(); j++) {
-                int fdserver = servers[j].getSocket().getSocketFd();
+                int fdserver = servers[j].getSocket().getFd();
                 if (fd == fdserver) {
                     // ...
                     // Gestisci l'accettazione del nuovo client
