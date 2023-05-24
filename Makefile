@@ -1,5 +1,6 @@
 CC		=		g++
 FLAGS		=		-Wall -Wextra -Werror -std=c++98 -g
+INCL		=		-I./includes
 
 NAME		=		test
 
@@ -23,7 +24,7 @@ $(NAME): $(OBJS)
 
 $(OBJS): $(OBJDIR)/%.o: %.cpp
 	mkdir -p $(@D)
-	$(CC) $(FLAGS) -c $< -o $(addprefix $(OBJDIR)/, $(<:.cpp=.o))
+	$(CC) $(FLAGS) $(INCL) -c $< -o $(addprefix $(OBJDIR)/, $(<:.cpp=.o))
 
 clean:
 	rm -rf $(OBJDIR)
