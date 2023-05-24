@@ -112,7 +112,7 @@ int findPort(std::string &line)
 	}
 	else
 	{
-		if (my_stoi(port) >= 0 && my_stoi(port) <= 65536)
+		if (my_stoi(port) <= 0 && my_stoi(port) >= 65536)
 		{
 			std::cerr << "Error: Listen: port not valid\n";
 			return (0);
@@ -169,7 +169,6 @@ void Config::parse()
 			}
 			else if (token == "listen")
 			{
-				std::cout << "dio poooorco\n";
 				int	port = findPort(line);
 				_servers.push_back(new Server(port));
 			}
