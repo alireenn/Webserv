@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Log.cpp                                            :+:      :+:    :+:   */
+/*   log.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:51:54 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/24 17:28:13 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:43:51 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Log.hpp"
+#include "log.hpp"
 
 void	log::init(void)
 {
@@ -25,14 +25,10 @@ std::string log::timestamp(void)
 	return (std::ctime(&currentTime_t));
 }
 
-void	log::cout(std::string msg)
+std::ofstream	&log::print(void)
 {
-	logbook << timestamp() << msg << std::endl;
-}
-
-void	log::cerr(std::string msg)
-{
-	logbook << "\nError:\n" << timestamp() << msg << std::endl;
+	logbook << timestamp();
+	return (logbook);
 }
 
 void	log::close(void)

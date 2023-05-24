@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:15:07 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/16 15:13:37 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:29:14 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <fcntl.h>
+# include "log.hpp"
 
 class	Socket
 {
