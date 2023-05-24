@@ -142,10 +142,13 @@ void Config::parse()
 				std::cout << start  <<  " " << curlyBruh  << " "<< token << std::endl;
 			}
 			else if (token == "server")
-			{
+			{// Se il token è "server", viene creato un nuovo oggetto Server e 
+            // viene aggiunto al vettore _Servers.
 				if (start == 1)
 					std::cerr << "bisogna buttare tutto fa cagare\n";
-
+				Server server;
+				server._env = this->_env;
+				_Servers.push_back(server);
 				n_servers++;
 				start = 1;
 			}
@@ -159,8 +162,9 @@ void Config::parse()
 				else if (curlyBruh == 0)
 					start = 0;
 			}
-			// else if (token == "listen")
-				// findPort(line, server); //questo funziona se usiamo setter e getter
+			else if (token == "listen")
+				findPort(line, _Servers[_Servers.size() - 1]); //questo funziona se usiamo setter e getter
+
 		}
 	}
 	if (curlyBruh != 0)
