@@ -100,17 +100,23 @@ static std::string nextToken(std::string &fLine)
 	return (ret);
 }
 
-void findPort(std::string &line, Server server)
+int findPort(std::string &line)
 {
 	std::string port = nextToken(line);
 	if (port.empty())
+	{
 		std::cerr << "Error: Listen: port not found\n";
+		return (0);
+	}
 	else
 	{
 		if (my_stoi(port) >= 0 && my_stoi(port) <= 65536)
+		{
 			std::cerr << "Error: Listen: port not valid\n";
+			return (0);
+		}
 		else
-			server.setPort(my_stoi(port));
+			return(my_stoi(port));
 	}
 }
 
@@ -143,12 +149,9 @@ void Config::parse()
 			}
 			else if (token == "server")
 			{// Se il token è "server", viene creato un nuovo oggetto Server e 
-            // viene aggiunto al vettore _Servers.
+            // viene aggiunto al vettore _servers.
 				if (start == 1)
 					std::cerr << "bisogna buttare tutto fa cagare\n";
-				Server server;
-				server._env = this->_env;
-				_Servers.push_back(server);
 				n_servers++;
 				start = 1;
 			}
@@ -163,7 +166,11 @@ void Config::parse()
 					start = 0;
 			}
 			else if (token == "listen")
-				findPort(line, _Servers[_Servers.size() - 1]); //questo funziona se usiamo setter e getter
+			{
+				Server server(findPort(line)); //questo funziona se usiamo setter e getter
+				_servers.push_back(server);
+			}
+			std::cout << _servers.back().getPort();
 
 		}
 	}
@@ -174,5 +181,5 @@ void Config::parse()
 //la ref ordina i server per location. non e' detto che serva ma teniamolo presente
 std::vector<Server> &Config::getServers(void)
 {
-	return (this->_Servers);
+	return (this->_servers);
 }

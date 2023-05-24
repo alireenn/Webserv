@@ -24,7 +24,7 @@ class Config
 {
 private:
 
-	std::vector<Server> _Servers; //vector di server, la vera classe da instanziare al momento.
+	std::vector<Server> _servers; //vector di server, la vera classe da instanziare al momento.
 	std::string _filePath;
 	std::ifstream _configfile;
 	char **_env;
