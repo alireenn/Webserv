@@ -21,7 +21,6 @@ class Server
 
 
 
-		Socket	&getSocket(void);
 	public:
 			/*
 			** After creation, make sure to
@@ -40,6 +39,7 @@ class Server
 		std::vector<std::string>							getServerNames();
 		std::vector<std::pair <std::string, std::string> >	getcgi();
 
+		Socket		&getSocket(void);
 		void		setPort(size_t port);
 		void		setUploadPath(std::string uploadPath);
 		void		setLocations(std::vector<Location> locations);

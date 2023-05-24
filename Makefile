@@ -2,7 +2,7 @@ CC		=		g++
 FLAGS		=		-Wall -Wextra -Werror -std=c++98 -g
 INCL		=		-I./includes
 
-NAME		=		test
+NAME		=		webserv
 
 SRC		=		main.cpp \
 				src/Socket.cpp \
@@ -42,4 +42,6 @@ r:
 	make
 	./$(NAME)
 
+test:
+	g++ -o epool_test test_epool.cpp
 .PHONY: all clean fclean kill re
