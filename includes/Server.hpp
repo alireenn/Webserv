@@ -26,7 +26,7 @@ class Server
 			*/
 			Server(int socketPort); // --> Server(int socketPort, std::ifstream configFile);
 			~Server(void);
-			// Server(Server &toCopy);
+			Server(Server &toCopy);
 
   		char **_env;
 		Server	&operator=(Server &toCopy);

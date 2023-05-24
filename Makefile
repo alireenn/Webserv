@@ -2,7 +2,6 @@ CC		=		g++
 FLAGS		=		-Wall -Wextra -Werror -std=c++98 -g
 
 NAME		=		test
-TEST_PORT	=		8080
 
 SRC		=		main.cpp \
 				src/Socket.cpp \
@@ -40,6 +39,6 @@ re: kill
 
 r:
 	make
-	./$(NAME) $(TEST_PORT)
+	./$(NAME)
 
 .PHONY: all clean fclean kill re
