@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
+#include <stdio.h>
 #include "../includes/Socket.hpp"
 
 static int	init_socket(struct sockaddr_in *addr)
@@ -31,6 +33,7 @@ static int	init_socket(struct sockaddr_in *addr)
 	//fcntl(fd, F_SETFL, O_NONBLOCK);
 	if (bind(fd, (struct sockaddr *)addr, sizeof(*addr)) == -1)
 	{
+		perror("binf ");
 		std::cerr << "bind() ";
 		return (-1);
 	}
