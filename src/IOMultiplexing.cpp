@@ -13,7 +13,10 @@ void IOMultiplexing::StartServers(Config &conf)
 {
 	std::vector<Server> &Svec = conf.getServers();
 	if (Svec.size())
+    {
+
 		EventLoop(Svec);
+    }
 	else
 		std::cerr << "Bad config file " << conf.getFilePath();
 }
@@ -21,88 +24,75 @@ void IOMultiplexing::StartServers(Config &conf)
 
 void IOMultiplexing::EventLoop(std::vector<Server> &servers)
 {
-    int epoll_fd = epoll_create1(0);
-    if (epoll_fd == -1) 
-	{
-        std::cerr << "Errore nella chiamata a epoll_create1" << std::endl;
-        return;
-    }
-
-    epoll_event event;
-    event.events = EPOLLIN; // Evento di lettura
-    event.data.fd = this->_fdmax; // Il file descriptor da monitorare
-    if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, this->_fdmax, &event) == -1) 
-	{
-        // Errore nell'aggiunta del file descriptor all'istanza epoll
-        std::cerr << "Errore nell'aggiunta del file descriptor all'istanza epoll" << std::endl;	
-        close(epoll_fd);
-        return;
-    }
-						//ultima roba "sbobinata"
-    std::vector<std::pair<Client, Request>> ClientRequest;
-    std::vector<Response> ReadyResponse;
-
-    while (1) {
-        epoll_event events[this->_fdmax + 1];
-        int ready_fds = epoll_wait(epoll_fd, events, this->_fdmax + 1, 3000); // Timeout di 3 secondi
-        if (ready_fds == -1) {
-            // Errore nella chiamata a epoll_wait
-            // Gestisci l'errore di conseguenza
-            close(epoll_fd);
-            return;
-        } else if (ready_fds == 0) {
-            // Timeout scaduto, nessun evento disponibile
-            continue;
+    int fd_client;
+    fd_set cpy_fdwrite, cpy_fdread;
+    struct epoll_event event, events[10];
+    int epoll_fd=epoll_create1(0);
+    std::vector<std::pair<Client, Request> > ClientRequest;
+    // std::vector<Response> ReadyResponse;
+    while (1)
+    {
+        if (epoll_fd == -1)
+        {
+            std::cerr << "Errore nella creazione dell'istanza epoll" << std::endl;
+            exit(1);
         }
-
-        for (int i = 0; i < ready_fds; i++) {
-            int fd = events[i].data.fd;
-
-            // Gestisci l'evento di lettura sul server
-            for (size_t j = 0; j < servers.size(); j++) {
-                int fdserver = servers[j].getSocket().getFd();
-                if (fd == fdserver) {
-                    // ...
-                    // Gestisci l'accettazione del nuovo client
-                    // ...
-
-                    // Aggiungi il nuovo file descriptor del client all'istanza epoll
-                    epoll_event client_event;
-                    client_event.events = EPOLLIN | EPOLLET; // Evento di lettura con modalità edge-triggered
-                    client_event.data.fd = fd_client;
-                    if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd_client, &client_event) == -1) {
-                        // Errore nell'aggiunta del file descriptor del client all'istanza epoll
-                        // Gestisci l'errore di conseguenza
-                        close(fd_client);
-                    }
-
-                    break;
-                }
+        for (std::vector<Server>::iterator it = servers.begin(); it != servers.end(); ++it)
+        {
+            Client new_client;
+            sockaddr_in client_addr;
+            socklen_t client_addr_size = sizeof(client_addr);   
+            fd_client = accept(it->getFd(), (struct sockaddr *)&client_addr, &client_addr_size);
+            if (fd_client != -1)
+            {
+                event.events = EPOLLIN; 
+                event.data.fd = fd_client;
+                epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd_client, &event);
+                new_client.setSocketFd(fd_client);
+                new_client.setServer(*it);
+                ClientRequest.push_back(std::make_pair(new_client, Request()));
+                std::cout << "Nuova connessione da " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) << std::endl;
+                FD_SET(fd_client, &this->fdread);
+                if (fd_client > _fdmax)
+                    _fdmax = fd_client;
             }
-
-            // Gestisci l'evento di lettura sui client
-            for (size_t j = 0; j < ClientRequest.size(); j++) {
-                if (fd == ClientRequest[j].first.getSocketFd()) {
-                    // ...
-                    // Gestisci la lettura dalla connessione del client
-                    // ...
-
-                    break;
-                }
+            int n_events = epoll_wait(epoll_fd, &event, 10, 3);
+            if (n_events == -1)
+            {
+                std::cerr << "Errore nella chiamata a epoll_wait" << std::endl;
+                continue;
             }
-
-            // Gestisci l'evento di scrittura sui client
-            for (size_t j = 0; j < ReadyResponse.size(); j++) {
-                if (fd == ReadyResponse[j].getClientFD()) {
-                    // ...
-                    // Gestisci la scrittura sulla connessione del client
-                    // ...
-
-                    break;
-                }
+            else
+            {
+               char buffer[1024];
+               ssize_t bytes_read = recv(event.data.fd, buffer, 1024, 0);
+               if (bytes_read == -1)
+               {
+                   std::cerr << "Errore nella lettura del messaggio" << std::endl;
+                   continue;
+               }
+               else if (bytes_read == 0)
+               {
+                   std::cout << "Il client ha chiuso la connessione" << std::endl;
+                   continue;
+               }
+               else
+               {
+                //parte di codice che gestisce la richiesta, cambierà in base a come implementeremo la classe Response e request
+                     std::cout << "Messaggio ricevuto: " << buffer << std::endl;
+                     std::string response = "HTTP/1.1 200 OK\r\n\r\n<html><body><h1>It works!</h1></body></html>";
+                     ssize_t bytes_sent = send(event.data.fd, response.c_str(), response.size(), 0);
+                     if (bytes_sent == -1)
+                     {
+                          std::cerr << "Errore nell'invio del messaggio" << std::endl;
+                          continue;
+                     }
+                     else
+                     {
+                          std::cout << "Messaggio inviato: " << response << std::endl;
+                     }
+               }
             }
         }
     }
-
-    close(epoll_fd);
 }

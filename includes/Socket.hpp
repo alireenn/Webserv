@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:15:07 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/16 15:13:37 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:56:19 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ class	Socket
 		int			getFd(void) const;
 		int			getPort(void) const;
 		bool			isRunning(void) const;
+		void  setSocketFd(int fd);
+{
+    _socket_fd = fd;
+}
 
 		class SocketFailException: public std::exception
 		{
