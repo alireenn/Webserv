@@ -130,6 +130,21 @@ int findPort(std::string &line)
 **	4) aggiungo le info al server tramite i setter
 */
 
+void serverName(std::string &line, Server &server)
+{
+	std::vector<std::string>	servernames;
+	std::string name = nextToken(line);
+
+	if (name.empty())
+		std::cerr << "Error: Server name is empty\n";
+	while (!name.empty())
+	{
+		servernames.push_back(name);
+		name = nextToken(line);
+	}
+	server.setServerNames(servernames);
+}
+
 void Config::parse()
 {
 	int 						start = 0;
@@ -150,8 +165,7 @@ void Config::parse()
 				std::cout << start  <<  " " << curlyBruh  << " "<< token << std::endl;
 			}
 			else if (token == "server")
-			{// Se il token è "server", viene creato un nuovo oggetto Server e 
-            // viene aggiunto al vettore _servers.
+			{
 				if (start == 1)
 					std::cerr << "bisogna buttare tutto fa cagare\n";
 				n_servers++;
@@ -172,8 +186,22 @@ void Config::parse()
 				int	port = findPort(line);
 				_servers.push_back(new Server(port));
 			}
-			// std::cout << _servers.back().getPort();
-			
+			else if (token == "server_name")
+				serverName(line, *_servers.back());
+			else if (token == "cgi")
+			{
+				std::string path = nextToken(line);
+				std::string extension = nextToken(line);
+
+				if (path.empty() || extension.empty())
+					std::cerr << "Error: cgi: path or extension not found\n";
+				else if (extension[0] != '.')
+					std::cerr << "Error: cgi: extension not valid\n";
+				else
+				{
+					 _servers.back()->setCgi(std::pair<std::string, std::string>(path, extension));
+				}
+			}
 
 		}
 	}

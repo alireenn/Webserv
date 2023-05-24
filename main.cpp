@@ -35,7 +35,7 @@ int main(int argc, char** argv, char** env)
 		conf.setConfig(argv[1]);
 	
 		
-	// io.SetupServers(conf);/
+	// io.SetupServers(conf);
 	
 	
 	return 0;

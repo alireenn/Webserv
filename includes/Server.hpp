@@ -16,9 +16,12 @@ class Server
 		std::vector<Location>								_locations;
 		std::vector<std::string>							_serverNames;
 		std::vector<std::string>							_mimeTypes;
+		std::vector<std::pair <std::string, std::string> >	_cgi;
 		std::vector<std::pair <std::string, std::string> >	_errorPages;
 
 
+
+		Socket	&getSocket(void);
 	public:
 			/*
 			** After creation, make sure to
@@ -30,17 +33,20 @@ class Server
 
   		char **_env;
 		Server	&operator=(Server &toCopy);
-		Socket	&getSocket(void);
-		int	getFd(void) const;
-		int 	getPort(void) const;
-		bool	isRunning(void) const;
 
-		void	setPort(size_t port);
-		void	setUploadPath(std::string uploadPath);
-		void	setLocations(std::vector<Location> locations);
-		void	setServerNames(std::vector<std::string> serverNames);
-		void	setMimeTypes(std::vector<std::string> mimeTypes);
-		void	setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages);
+		int													getFd(void) const;
+		int 												getPort(void) const;
+		bool												isRunning(void) const;
+		std::vector<std::string>							getServerNames();
+		std::vector<std::pair <std::string, std::string> >	getcgi();
+
+		void		setPort(size_t port);
+		void		setUploadPath(std::string uploadPath);
+		void		setLocations(std::vector<Location> locations);
+		void		setMimeTypes(std::vector<std::string> mimeTypes);
+		void		setCgi(std::pair <std::string, std::string> cgi);
+		void		setServerNames(std::vector<std::string> serverNames);
+		void		setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages);
 
 };
 

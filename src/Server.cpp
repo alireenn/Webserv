@@ -69,6 +69,16 @@ int Server::getPort(void) const
 {
     return this->_port;
 }
+std::vector<std::string> Server::getServerNames()
+{
+    return std::vector<std::string>(this->_serverNames);
+}
+
+std::vector<std::pair<std::string, std::string> > Server::getcgi()
+{
+    return this->_cgi;
+}
+
 bool Server::isRunning(void) const
 {
 	return (_running);
@@ -90,9 +100,18 @@ void	Server::setLocations(std::vector<Location> locations)
 	this->_locations = locations;
 }
 
-void	Server::setServerNames(std::vector<std::string> serverNames)
+
+void Server::setServerNames(std::vector<std::string> serverNames)
 {
 	this->_serverNames = serverNames;
+}
+
+
+
+void Server::setCgi(std::pair<std::string, std::string> cgi)
+{
+	// this->_cgi = cgi;
+	this->_cgi.insert(this->_cgi.end(), cgi);
 }
 
 void	Server::setMimeTypes(std::vector<std::string> mimeTypes)
