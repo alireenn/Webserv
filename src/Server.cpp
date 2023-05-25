@@ -1,4 +1,5 @@
 #include "../includes/Server.hpp"
+#include "Server.hpp"
 
 Server::Server(int socketPort)// --> Server(int socketPort, std::ifstream configFile);
 {
@@ -79,6 +80,10 @@ std::vector<std::pair<std::string, std::string> > Server::getcgi()
     return this->_cgi;
 }
 
+std::vector<std::pair<std::string, std::string> > Server::getErrorPages()
+{
+    return this->_errorPages;
+}
 bool Server::isRunning(void) const
 {
 	return (_running);

@@ -199,11 +199,8 @@ void Config::parse()
 					std::cerr << "Error: cgi: extension not valid\n";
 				else
 					_servers.back()->setCgi(std::pair<std::string, std::string>(path, extension));
-				// for (size_t i = 0; i < _servers.back()->getcgi().size(); i++)
-				// {
-				// 	std::cout << _servers.back()->getcgi()[i].first << " " << _servers.back()->getcgi()[i].second << std::endl;
-				// }
 			}
+	
 			else if (token == "error_page")
 			{
 				std::string code = nextToken(line);
@@ -211,8 +208,30 @@ void Config::parse()
 				if (code.empty() || path.empty())
 					std::cerr << "Error: error_page: code or path not found\n";
 				std::vector<std::pair<std::string, std::string> > pages;
-				//da definire ancora. dopo questo rimane upload_path
+				while (!code.empty() && !path.empty())
+				{
+					pages.push_back(std::pair<std::string, std::string>(code, path));
+					code = nextToken(line);
+					path = nextToken(line);
+				}
+				//da definire ancora. dopo questo rimane upload_path e poi location
+				// pages.push_back(std::pair<std::string, std::string>(code, path));
+				_servers.back()->setErrorPages(pages);
+			// for (size_t i = 0; i < _servers.back()->getErrorPages().size(); i++)
+			// 	{
+			// 		std::cout << _servers.back()->getErrorPages()[i].first << " " << _servers.back()->getErrorPages()[i].second << std::endl;
+			// 	}
 			}
+			else if (token == "upload_path")
+			{
+				std::string path = nextToken(line);
+				if (path.empty())
+					std::cerr << "Error: upload_path: path not found\n";
+				else
+					_servers.back()->setUploadPath(path);
+			}
+			else if (token == "location")
+				location(line, *_servers.back()); //dio mio che palle
 		}
 	}
 	if (curlyBruh != 0)

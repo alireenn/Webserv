@@ -29,15 +29,15 @@ class	Socket
 				** After creation, make sure to
 				** check that isRunning() == true.
 				*/
-					Socket(int port);
-					Socket(Socket &toCopy);
-					~Socket(void);
-		Socket			&operator=(Socket &toCopy);
+							Socket(int port);
+							~Socket(void);
+							Socket(Socket &toCopy);
+		Socket				&operator=(Socket &toCopy);
+		int					getFd(void) const;
+		int					getPort(void) const;
+		bool				isRunning(void) const;
+		void  				setSocketFd(int fd);
 		struct sockaddr_in	&getAddr(void);
-		int			getFd(void) const;
-		int			getPort(void) const;
-		bool			isRunning(void) const;
-		void  setSocketFd(int fd);
 
 		class SocketFailException: public std::exception
 		{

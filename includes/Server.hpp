@@ -33,11 +33,12 @@ class Server
   		char **_env;
 		Server	&operator=(Server &toCopy);
 
+		std::vector<std::pair <std::string, std::string> >	getcgi();
+		std::vector<std::pair <std::string, std::string> >	getErrorPages();
+		std::vector<std::string>							getServerNames();
 		int													getFd(void) const;
 		int 												getPort(void) const;
 		bool												isRunning(void) const;
-		std::vector<std::string>							getServerNames();
-		std::vector<std::pair <std::string, std::string> >	getcgi();
 
 		Socket		&getSocket(void);
 		void		setPort(size_t port);
