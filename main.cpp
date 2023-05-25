@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:04:09 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/24 16:31:22 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:05:58 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int main(int argc, char** argv, char** env)
 	Config conf(env);
 	// IOMultiplexing io;
 
+	amc::init();
 
 	signal(SIGPIPE, SIG_IGN);//La chiamata a signal(SIGPIPE, SIG_IGN) 
 	//imposta il gestore dei segnali per il segnale SIGPIPE in modo da ignorare il segnale quando viene ricevuto,

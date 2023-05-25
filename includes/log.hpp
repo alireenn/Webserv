@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 16:52:58 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/25 14:52:00 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:03:17 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <fstream>
 # include <sys/stat.h>
 # include <ctime>
+# include <cstdio>
 # include <string>
 
 namespace amc
