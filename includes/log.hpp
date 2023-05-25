@@ -6,28 +6,39 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 16:52:58 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/24 18:44:22 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/25 14:52:00 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LOG_HPP
 # define LOG_HPP
 
-# define LOGPATH "Logbook/log"
+# define LOGPATH	"Logbook/log"
+# define FOLDERPATH	"./Logbook"
 
-# define cout	print()
+# define RESET		"\033[0m"
+# define RED		"\033[31m"
+# define GREEN		"\033[32m"
+# define YELLOW		"\033[33m"
 
 # include <fstream>
-# include <chrono>
+# include <sys/stat.h>
+# include <ctime>
+# include <string>
 
-namespace log
+namespace amc
 {
 	static std::ofstream	logbook;
 
 	void			init(void);
-	std::string		timestamp(void);
-	std::ofstream		&print(void);
+	std::string		getTimeAndDate(void);
+	std::ofstream		&print(std::string color);
 	void			close(void);
 }
+
+# define lout		print(GREEN)
+# define lerr		print(RED)
+# define lwar		print(YELLOW)
+# define timestamp	amc::getTimeAndDate()
 
 #endif

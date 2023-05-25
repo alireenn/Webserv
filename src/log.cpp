@@ -6,32 +6,53 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:51:54 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/24 18:43:51 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:51:42 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "log.hpp"
+# include <sstream>
+# include <sys/time.h>
 
-void	log::init(void)
+void	amc::init(void)
 {
-	logbook = std::ofstream(LOGPATH, std::ifstream::trunc);
+	mkdir(FOLDERPATH, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	logbook.open(LOGPATH, std::ifstream::trunc);
 }
 
-std::string log::timestamp(void)
+static std::string	toString(long val)
 {
-	auto		currentTime = std::chrono::system_clock::now();
-	std::time_t	currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+	std::ostringstream	os;
+
+	os << val;
+	return (os.str());
+}
+
+std::string amc::getTimeAndDate(void)
+{
+	struct timeval	tv;
+	std::time_t	currentTime = std::time(NULL);
+	std::string	timeString = std::ctime(&currentTime);
+	std::string	milliString(":");
+	std::string	end("]\t");
+	std::string	beg("[");
+
+	timeString.erase(timeString.length() - 6, timeString.length() - 1);
+	timeString.erase(0, 11);
+	gettimeofday(&tv, NULL);
+	milliString += toString(tv.tv_usec / 1000)
+			+ std::string("_") + toString(tv.tv_usec % 1000);
 	
-	return (std::ctime(&currentTime_t));
+	return (beg + timeString + milliString + end);
 }
 
-std::ofstream	&log::print(void)
+std::ofstream	&amc::print(std::string color)
 {
-	logbook << timestamp();
+	logbook << color;
 	return (logbook);
 }
 
-void	log::close(void)
+void	amc::close(void)
 {
 	logbook.close();
 }

@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/24 18:34:44 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/25 14:53:12 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,30 @@ static int	init_socket(struct sockaddr_in *addr)
 	fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd == 0)
         {
-		std::cerr << "Socket creation ";
+		amc::lerr << "Socket creation ";
 		return (-1);
 	}
+	amc::lout << timestamp << "Socket created (fd " << fd << ")" << std::endl;
 	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val)) == -1)
 	{
-		std::cerr << "setsockopt() ";
+		amc::lerr << "setsockopt() ";
 		return (-1);
 	}
+	amc::lout << timestamp << "Socket options set" << std::endl;
+	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val)) == -1)
 	//fcntl(fd, F_SETFL, O_NONBLOCK);
 	if (bind(fd, (struct sockaddr *)addr, sizeof(*addr)) == -1)
 	{
-		std::cerr << "bind() ";
+		amc::lerr << "bind() ";
 		return (-1);
 	}
+	amc::lout << timestamp << "Socket bound" << std::endl;
 	if (listen(fd, SOMAXCONN) == -1)
 	{
-		std::cerr << "listen() ";
+		amc::lerr << "listen() ";
 		return (-1);
 	}
+	amc::lout << timestamp << "Socket listens" << std::endl;
 	return (fd);
 }
 
@@ -63,8 +68,9 @@ Socket::Socket(int port)
 		//io.setFdMax(fd); // da risistemare
 	}
 	catch (SocketFailException &e) {
-		std::cerr << e.what() << port << "." << std::endl;
+		amc::lerr << e.what() << port << "." << std::endl;
 	}
+	amc::lout << timestamp << "New server running on port " << port << std::endl;
 }
 
 Socket::Socket(Socket &toCopy)
