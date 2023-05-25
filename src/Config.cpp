@@ -145,6 +145,21 @@ void serverName(std::string &line, Server &server)
 	server.setServerNames(servernames);
 }
 
+void location(std::string &line, Server server)
+{
+	Location location;
+	std::string root = nextToken(line);
+	std::string token = "";
+	std::vector<std::string> curlyBruh;
+
+	if (root.empty())
+		std::cerr << "Error: Location path is empty\n";
+	else
+		location.setRoot(root);
+		// 'this' may only be used inside a nonstatic member function
+	// while (utils::skipEmptyLines(this->_Configfile) && getline())
+}
+
 void Config::parse()
 {
 	int 						start = 0;
