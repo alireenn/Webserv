@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 12:19:58 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/23 12:53:00 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/24 18:55:26 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ public:
 	~Client();
 
 	void	setServer(Server  &server_client);
+	void	setSocketFd(int fd);
 	Server	&getServer();
 	int		getSocketFd();
 };

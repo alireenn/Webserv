@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:48:24 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/23 18:20:56 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/24 18:58:04 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,17 @@
 #include <sys/epoll.h>
 
 #include "Config.hpp"
-// #include "Server.hpp"
+#include "Server.hpp"
 #include "Client.hpp"
 #include "Request.hpp"
-// #include "Response.hpp"
+#include "Response.hpp"
 
 class IOMultiplexing
 {
 private:
 	int _fdmax;
+	fd_set fdwrite;
+    fd_set fdread;
 public:
 	IOMultiplexing(/* args */);
 	~IOMultiplexing();

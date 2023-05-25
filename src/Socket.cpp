@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/05/25 14:53:12 by ccantale         ###   ########.fr       */
+=======
+/*   Updated: 2023/05/24 19:46:33 by mruizzo          ###   ########.fr       */
+>>>>>>> bc01b161c4863504504b8abf00f2dfb6abd8c9d7
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +115,9 @@ int	Socket::getPort(void) const
 bool	Socket::isRunning(void) const
 {
 	return (_running);
+}
+
+void Socket::setSocketFd(int fd)
+{
+    this->_fd = fd;
 }
