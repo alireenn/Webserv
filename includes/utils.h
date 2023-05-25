@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 16:43:15 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/23 16:58:30 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/25 16:22:41 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@
 
 namespace utils
 {
-	bool skipEmptyLines(std::ifstream &file);
+	bool	skipEmptyLines(std::ifstream &file);
+	bool	isKey(char c);
+	bool	isEmpty(std::string File);
+	int	myStoi(const std::string& str);
 }
 
 #endif

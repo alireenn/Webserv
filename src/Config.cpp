@@ -1,29 +1,5 @@
 #include "../includes/Config.hpp"
 
-static int my_stoi(const std::string& str) {
-    int result = 0;
-    int sign = 1;
-    size_t i = 0;
-
-    // Gestione del segno
-    if (str[i] == '-') {
-        sign = -1;
-        i++;
-    } else if (str[i] == '+') {
-        i++;
-    }
-
-    // Calcolo del valore numerico
-    for (; i < str.length(); i++) {
-        if (str[i] >= '0' && str[i] <= '9') {
-            result = result * 10 + (str[i] - '0');
-        } else {
-            break;
-        }
-    }
-    return result * sign;
-}
-
 Config::Config()
 {
 }
@@ -38,18 +14,12 @@ Config::~Config()
 		delete _servers[i];
 }
 
-bool isEmpty(std::string File)
-{
-	std::ifstream file(File.c_str());
-	return file.peek() == std::ifstream::traits_type::eof();
-}
-
 void Config::setConfig(char *filePath)
 {
 	this->_filePath = filePath;
 	this->_configfile.open(_filePath.c_str());
 
-	if (!_configfile.is_open() || isEmpty(_filePath))
+	if (!_configfile.is_open() || utils::isEmpty(_filePath))
 		std::cerr << "Your file can't be opened or is empty\n";
 	else
 		parse();
@@ -63,12 +33,6 @@ void Config::setEnv(char **env)
 char **Config::getEnv(void) const
 {
 	return (this->_env);
-}
-
-static bool isKey(char c)
-{
-	return (c == '_' || c == ':' || c == '/' || c == '\\'
-				|| c == '.' || c == '-' || isalnum(c));
 }
 
 static std::string nextToken(std::string &fLine)
@@ -86,9 +50,9 @@ static std::string nextToken(std::string &fLine)
 			i++;
 			break ;
 		}
-		if (isKey(fLine[i]))
+		if (utils::isKey(fLine[i]))
 		{
-			while (isKey(fLine[i]))
+			while (utils::isKey(fLine[i]))
 			{
 				ret += fLine[i];
 				i++;
@@ -112,13 +76,13 @@ int findPort(std::string &line)
 	}
 	else
 	{
-		if (my_stoi(port) <= 0 && my_stoi(port) >= 65536)
+		if (utils::myStoi(port) <= 0 && utils::myStoi(port) >= 65536)
 		{
 			std::cerr << "Error: Listen: port not valid\n";
 			return (0);
 		}
 		else
-			return(my_stoi(port));
+			return(utils::myStoi(port));
 	}
 }
 
@@ -145,20 +109,20 @@ void serverName(std::string &line, Server &server)
 	server.setServerNames(servernames);
 }
 
-void location(std::string &line, Server server)
-{
-	Location location;
-	std::string root = nextToken(line);
-	std::string token = "";
-	std::vector<std::string> curlyBruh;
+//void location(std::string &line, Server server)
+//{
+	//Location location;
+	//std::string root = nextToken(line);
+	//std::string token = "";
+	//std::vector<std::string> curlyBruh;
 
-	if (root.empty())
-		std::cerr << "Error: Location path is empty\n";
-	else
-		location.setRoot(root);
-		// 'this' may only be used inside a nonstatic member function
-	// while (utils::skipEmptyLines(this->_Configfile) && getline())
-}
+	//if (root.empty())
+		//std::cerr << "Error: Location path is empty\n";
+	//else
+		//location.setRoot(root);
+		//// 'this' may only be used inside a nonstatic member function
+	//// while (utils::skipEmptyLines(this->_Configfile) && getline())
+//}
 
 void Config::parse()
 {
@@ -245,8 +209,8 @@ void Config::parse()
 				else
 					_servers.back()->setUploadPath(path);
 			}
-			else if (token == "location")
-				location(line, *_servers.back()); //dio mio che palle
+			//else if (token == "location")
+				//location(line, *_servers.back()); //dio mio che palle
 		}
 	}
 	if (curlyBruh != 0)
