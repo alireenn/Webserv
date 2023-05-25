@@ -1,6 +1,11 @@
 #include "../includes/Server.hpp"
 #include "Server.hpp"
 
+Server::Server(void)
+{
+	;
+}
+
 Server::Server(int socketPort)// --> Server(int socketPort, std::ifstream configFile);
 {
 	this->_socket = new Socket(socketPort);
@@ -13,8 +18,11 @@ Server::Server(int socketPort)// --> Server(int socketPort, std::ifstream config
 		this->_running = false;
 	}
 	if (this->_running)
-		std::cout << "New server started listening on port "
+	{
+		this->_port = this->_socket->getPort();
+		amc::lout << "New server started listening on port "
 						<< socketPort << std::endl;
+	}
 }
 
 Server::~Server(void)
@@ -24,6 +32,7 @@ Server::~Server(void)
 
 Server::Server(Server &toCopy)
 {
+	// try that toCopy isRunning()!
 	this->_socket = new Socket(toCopy.getSocket());
 	if (this->_socket->isRunning())
 		this->_running = true;
@@ -35,9 +44,9 @@ Server::Server(Server &toCopy)
 	this->_errorPages = toCopy._errorPages;
 	this->_uploadPath = toCopy._uploadPath;
 	this->_mimeTypes = toCopy._mimeTypes;
-	if (this->_running)
-		std::cout << "New server started listening on port "
-						<< toCopy._port << std::endl;
+//	if (this->_running)
+//		amc::lout << timestamp << "New server started listening on port "
+//						<< toCopy._port << std::endl;
 }
 
 Server	&Server::operator=(Server &toCopy)
@@ -51,7 +60,7 @@ Server	&Server::operator=(Server &toCopy)
 	this->_mimeTypes = toCopy._mimeTypes;
 	this->_running = toCopy._running;
 	if (this->_running)
-		std::cout << "New server started listening on port "
+		amc::lout << "New server started listening on port "
 						<< toCopy._port << std::endl;
 	return (*this);
 }
@@ -92,7 +101,23 @@ bool Server::isRunning(void) const
 
 void	Server::setPort(size_t port)
 {
-	this->_port = port;
+	if (this->_socket)
+		delete (this->_socket);
+	this->_socket = new Socket(port);
+	if (this->_socket->isRunning())
+	{
+		this->_running = true;
+	}
+	else
+	{
+		this->_running = false;
+	}
+	if (this->_running)
+	{
+		this->_port = this->_socket->getPort();
+		//amc::lout << "New server started listening on port "
+						//<< port << std::endl;
+	}
 }
 
 void	Server::setUploadPath(std::string uploadPath)

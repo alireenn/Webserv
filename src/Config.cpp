@@ -100,7 +100,7 @@ void serverName(std::string &line, Server &server)
 	std::string name = nextToken(line);
 
 	if (name.empty())
-		std::cerr << "Error: Server name is empty\n";
+		amc::lerr << "Error: Server name is empty\n";
 	while (!name.empty())
 	{
 		servernames.push_back(name);
@@ -124,98 +124,199 @@ void serverName(std::string &line, Server &server)
 	//// while (utils::skipEmptyLines(this->_Configfile) && getline())
 //}
 
-void Config::parse()
+void	Config::parse(void)
 {
-	int 						start = 0;
-	int							n_servers = 0; //conta i blocchi server // ccantale::Questa secondo me non server
-	int							curlyBruh = 0;
-	std::string					line; //per leggere il file
-	
-	while (getline(_configfile, line))
+	Server		tempServer;
+	t_status	status = NO_SERVER_YET;
+	std::string	line;
+	int		curlyBruh = 0;
+
+	while (std::getline(_configfile, line))
 	{
+		std::string	token;
+
 		utils::skipEmptyLines(_configfile);
-		std::string token;
-		while ((token = nextToken(line)) != "")
+		do
 		{
 			utils::skipEmptyLines(_configfile);
-			if (!start && token != "server") //il config deve partire con server
+			token = nextToken(line);
+			if ((status == NO_SERVER_YET && token != "server")
+				|| (status == CONFIGURING_SERVER && token == "server"))
 			{
-				std::cerr << "Error: config File\n";
-				std::cout << start  <<  " " << curlyBruh  << " "<< token << std::endl;
+				amc::lerr << "Error: Config file no bueno\n";
+				std::cerr << line << " " << token << std::endl;
+				while (std::getline(_configfile, line))
+					amc::lwar << line << std::endl;
+				std::cerr << "Mmmh..." << RESET << std::endl;
+				return ;
 			}
-			else if (token == "server")
-			{
-				if (start == 1)
-					std::cerr << "bisogna buttare tutto fa cagare\n";
-				n_servers++;
-				start = 1;
-			}
+			else
+				status = CONFIGURING_SERVER;
+
 			if (token == "{")
+			{
 				curlyBruh++;
+			}
 			else if (token == "}")
 			{
 				curlyBruh--;
 				if (curlyBruh < 0)
-					std::cerr << "Error: curly phrases\n";
+				{
+					amc::lerr << "Error: Config file BRUH\n";
+					return ;
+				}
 				else if (curlyBruh == 0)
-					start = 0;
+				{
+					/* here we push the configured new server */
+					_servers.push_back(new Server(tempServer));
+					status = NO_SERVER_YET;
+				}
 			}
 			else if (token == "listen")
 			{
-				int	port = findPort(line);
-				_servers.push_back(new Server(port));
+				tempServer.setPort(findPort(line));
 			}
-			else if (token == "server_name")
-				serverName(line, *_servers.back());
+			else if (token == "server name")
+			{
+				serverName(line, tempServer);
+			}
 			else if (token == "cgi")
 			{
 				std::string path = nextToken(line);
 				std::string extension = nextToken(line);
 
 				if (path.empty() || extension.empty())
-					std::cerr << "Error: cgi: path or extension not found\n";
+					amc::lerr << "Error: cgi: path or extension not found\n";
 				else if (extension[0] != '.' || extension.length() < 2)
-					std::cerr << "Error: cgi: extension not valid\n";
+					amc::lerr << "Error: cgi: extension not valid\n";
 				else
-					_servers.back()->setCgi(std::pair<std::string, std::string>(path, extension));
+					tempServer.setCgi(std::pair<std::string, std::string>(path, extension));
 			}
-	
 			else if (token == "error_page")
 			{
 				std::string code = nextToken(line);
 				std::string path = nextToken(line);
-				if (code.empty() || path.empty())
-					std::cerr << "Error: error_page: code or path not found\n";
 				std::vector<std::pair<std::string, std::string> > pages;
+				
+				if (code.empty() || path.empty())
+					amc::lerr << "Error: error_page: code or path not found\n";
 				while (!code.empty() && !path.empty())
 				{
 					pages.push_back(std::pair<std::string, std::string>(code, path));
 					code = nextToken(line);
 					path = nextToken(line);
 				}
-				//da definire ancora. dopo questo rimane upload_path e poi location
-				// pages.push_back(std::pair<std::string, std::string>(code, path));
-				_servers.back()->setErrorPages(pages);
-			// for (size_t i = 0; i < _servers.back()->getErrorPages().size(); i++)
-			// 	{
-			// 		std::cout << _servers.back()->getErrorPages()[i].first << " " << _servers.back()->getErrorPages()[i].second << std::endl;
-			// 	}
+				tempServer.setErrorPages(pages);
 			}
 			else if (token == "upload_path")
 			{
 				std::string path = nextToken(line);
 				if (path.empty())
-					std::cerr << "Error: upload_path: path not found\n";
+					amc::lerr << "Error: upload_path: path not found\n";
 				else
-					_servers.back()->setUploadPath(path);
+					tempServer.setUploadPath(path);
 			}
-			//else if (token == "location")
-				//location(line, *_servers.back()); //dio mio che palle
-		}
+		} while (!token.empty());
 	}
+
 	if (curlyBruh != 0)
-		std::cerr << "cazzo fai fratm impara a scrivere coglione\n";
+		amc::lerr << "cazzo fai fratm impara a scrivere coglione\n";
+
+	std::cout << "Numero server: " << _servers.size() << std::endl;
 }
+
+//void Config::parse()
+//{
+//	int 						start = 0;
+//	int							n_servers = 0; //conta i blocchi server // ccantale::Questa secondo me non server
+//	int							curlyBruh = 0;
+//	std::string					line; //per leggere il file
+//	
+//	while (getline(_configfile, line))
+//	{
+//		utils::skipEmptyLines(_configfile);
+//		std::string token;
+//		while ((token = nextToken(line)) != "")
+//		{
+//			utils::skipEmptyLines(_configfile);
+//			if (!start && token != "server") //il config deve partire con server
+//			{
+//				std::cerr << "Error: config File\n";
+//				std::cout << start  <<  " " << curlyBruh  << " "<< token << std::endl;
+//			}
+//			else if (token == "server")
+//			{
+//				if (start == 1)
+//					std::cerr << "bisogna buttare tutto fa cagare\n";
+//				n_servers++;
+//				start = 1;
+//			}
+//			if (token == "{")
+//				curlyBruh++;
+//			else if (token == "}")
+//			{
+//				curlyBruh--;
+//				if (curlyBruh < 0)
+//					std::cerr << "Error: curly phrases\n";
+//				else if (curlyBruh == 0)
+//					start = 0;
+//			}
+//			else if (token == "listen")
+//			{
+//				int	port = findPort(line);
+//				_servers.push_back(new Server(port));
+//			}
+//			else if (token == "server_name")
+//				serverName(line, *_servers.back());
+//			else if (token == "cgi")
+//			{
+//				std::string path = nextToken(line);
+//				std::string extension = nextToken(line);
+//
+//				if (path.empty() || extension.empty())
+//					std::cerr << "Error: cgi: path or extension not found\n";
+//				else if (extension[0] != '.' || extension.length() < 2)
+//					std::cerr << "Error: cgi: extension not valid\n";
+//				else
+//					_servers.back()->setCgi(std::pair<std::string, std::string>(path, extension));
+//			}
+//	
+//			else if (token == "error_page")
+//			{
+//				std::string code = nextToken(line);
+//				std::string path = nextToken(line);
+//				if (code.empty() || path.empty())
+//					std::cerr << "Error: error_page: code or path not found\n";
+//				std::vector<std::pair<std::string, std::string> > pages;
+//				while (!code.empty() && !path.empty())
+//				{
+//					pages.push_back(std::pair<std::string, std::string>(code, path));
+//					code = nextToken(line);
+//					path = nextToken(line);
+//				}
+//				//da definire ancora. dopo questo rimane upload_path e poi location
+//				// pages.push_back(std::pair<std::string, std::string>(code, path));
+//				_servers.back()->setErrorPages(pages);
+//			// for (size_t i = 0; i < _servers.back()->getErrorPages().size(); i++)
+//			// 	{
+//			// 		std::cout << _servers.back()->getErrorPages()[i].first << " " << _servers.back()->getErrorPages()[i].second << std::endl;
+//			// 	}
+//			}
+//			else if (token == "upload_path")
+//			{
+//				std::string path = nextToken(line);
+//				if (path.empty())
+//					std::cerr << "Error: upload_path: path not found\n";
+//				else
+//					_servers.back()->setUploadPath(path);
+//			}
+//			//else if (token == "location")
+//				//location(line, *_servers.back()); //dio mio che palle
+//		}
+//	}
+//	if (curlyBruh != 0)
+//		std::cerr << "cazzo fai fratm impara a scrivere coglione\n";
+//}
 
 //la ref ordina i server per location. non e' detto che serva ma teniamolo presente
 std::vector<Server *> &Config::getServers(void)

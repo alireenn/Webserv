@@ -6,6 +6,13 @@
 # include "Socket.hpp"
 # include "Location.hpp"
 
+typedef enum e_status
+{
+	NO_SERVER_YET,
+	CONFIGURING_SERVER
+} t_status;
+
+
 class Server
 {
 	private:
@@ -26,6 +33,7 @@ class Server
 			** After creation, make sure to
 			** check that isRunning() == true.
 			*/
+			Server(void);
 			Server(int socketPort); // --> Server(int socketPort, std::ifstream configFile);
 			~Server(void);
 			Server(Server &toCopy);
