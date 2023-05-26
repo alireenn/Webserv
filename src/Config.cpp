@@ -186,6 +186,7 @@ void Config::parseLocation(std::string &line, Server server)
 				std::pair<std::string, std::string> redirection = std::make_pair(code, url);
 				tmploc.setRedirection(redirection);
 			}
+		token = nextToken(line);
 		} while (token != "");
 	}
 	if (curlyBruh != 0)
@@ -240,7 +241,9 @@ void	Config::parse(void)
 					_servers.push_back(new Server(tempServer));
 					status = NO_SERVER_YET;
 					token = nextToken(line);
+					std::cout << "dio proco "<< _servers.size() << std::endl;
 				}
+				std::cout << "cazzo " << _servers.size() << std::endl;
 			}
 			else if (token == "listen")
 			{
