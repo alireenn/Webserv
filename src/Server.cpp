@@ -175,3 +175,4 @@ std::vector<Location>	&Server::getLocations(void)
 {
 	return (this->_locations);
 }
+

@@ -1,7 +1,7 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-//# include <iostream>
+# include <iostream>
 //# include <vector>
 # include "Socket.hpp"
 # include "Location.hpp"
@@ -62,5 +62,9 @@ class Server
 		void 		addLocation(Location location);
 		void		reset(void);
 };
+
+//operatore di overload << per la classe server
+// std::ostream &operator<<(std::ostream &out, Server &server);
+
 
 #endif

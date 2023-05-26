@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:16:58 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/26 16:14:13 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/26 18:29:34 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,8 @@ class Location
 		void								setAllowedMethods(std::vector<std::string> &allowedMethods);
 		void								setRedirection(std::pair<std::string, std::string> &redirection);
 };
+//operatore di overloading <<
+		std::ostream						&operator<<(std::ostream &out, Location &location);
+
 
 #endif

@@ -128,7 +128,6 @@ void Config::parseLocation(std::string &line, Server &server)
 
 		do
 		{
-			std::cout << "token: " << token << std::endl;
 			if (token == "{")
 				curlyBruh++;
 			else if (token == "}")
@@ -141,9 +140,7 @@ void Config::parseLocation(std::string &line, Server &server)
 				}
 				else if (curlyBruh == 0)
 				{
-				 std::cout << "sono qui\n";
 					server.getLocations().push_back(tmploc);
-					std::cout << "ora qui\n";
 					return ;
 				}
 			}
@@ -179,6 +176,7 @@ void Config::parseLocation(std::string &line, Server &server)
 						method = nextToken(line);
 					}
 				}
+				tmploc.setAllowedMethods(allow_methods);
 			}
 			else if (token == "upload_path")
 			{
@@ -322,6 +320,9 @@ void	Config::parse(void)
 	{
 		static int i = 1;
 		std::cout << i++<<" Numero location: " << (*it)->getLocations().size() << std::endl;
+		//stampa di ogni singola location esiste gia l'operatore << per location
+		for (std::vector<Location>::iterator it2 = (*it)->getLocations().begin(); it2 != (*it)->getLocations().end(); it2++)
+			std::cout << *it2 << std::endl;
 	}
 	
 }

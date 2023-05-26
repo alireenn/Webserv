@@ -91,3 +91,20 @@ std::pair<std::string, std::string>	&Location::getRedirection()
 {
 	return (_redirection);
 }
+
+//operatore di overloading <<
+std::ostream	&operator<<(std::ostream &out, Location &location)
+{
+	out << "locationPath: " << location.getLocationPath() << std::endl;
+	out << "root: " << location.getRoot() << std::endl;
+	out << "index: " << location.getIndex() << std::endl;
+	out << "autoIndex: " << location.getAutoIndex() << std::endl;
+	out << "uploadPath: " << location.getUploadPath() << std::endl;
+	out << "redirection: " << location.getRedirection().first << " " << location.getRedirection().second << std::endl;
+	out << "allowedMethods: ";
+	for (std::vector<std::string>::iterator it = location.getAllowedMethods().begin(); it != location.getAllowedMethods().end(); it++)
+		out << *it << " ";
+	out << std::endl;
+	out << "clientMaxBodySize: " << location.getClientMaxBodySize() << std::endl;
+	return (out);
+}
