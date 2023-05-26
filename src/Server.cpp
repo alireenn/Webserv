@@ -153,3 +153,8 @@ void	Server::setErrorPages(std::vector<std::pair <std::string, std::string> > er
 {
 	this->_errorPages = errorPages;
 }
+
+void	Server::addLocation(Location location)
+{
+	this->_locations.push_back(location);
+}

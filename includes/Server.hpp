@@ -57,6 +57,8 @@ class Server
 		void		setServerNames(std::vector<std::string> serverNames);
 		void		setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages);
 
+		void 		addLocation(Location location);
+
 };
 
 #endif

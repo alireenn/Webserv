@@ -190,7 +190,7 @@ void Config::parseLocation(std::string &line, Server server)
 	}
 	if (curlyBruh != 0)
 		amc::lerr << "Error: Location curly brackets not balanced\n";
-	// server.addLocation(tmploc);
+	server.addLocation(tmploc);
 }
 
 void	Config::parse(void)
