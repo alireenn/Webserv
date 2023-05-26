@@ -17,11 +17,11 @@
 
 namespace utils
 {
-	bool	skipEmptyLines(std::ifstream &file);
 	bool	isKey(char c);
 	bool	isEmpty(std::string File);
-	int	myStoi(const std::string& str);
-	int check_methods(std::string token);
+	int		myStoi(const std::string& str);
+	int 	check_methods(std::string token);
+	bool	skipEmptyLines(std::ifstream &file);
 }
 
 #endif

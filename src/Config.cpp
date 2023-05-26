@@ -17,9 +17,9 @@ Config::~Config()
 void Config::setConfig(char *filePath)
 {
 	this->_filePath = filePath;
-	this->_configfile.open(_filePath.c_str());
+	this->_Configfile.open(_filePath.c_str());
 
-	if (!_configfile.is_open() || utils::isEmpty(_filePath))
+	if (!_Configfile.is_open() || utils::isEmpty(_filePath))
 		std::cerr << "Your file can't be opened or is empty\n";
 	else
 		parse();
@@ -111,6 +111,7 @@ void serverName(std::string &line, Server &server)
 
 void Config::parseLocation(std::string &line, Server server)
 {
+	(void)server;
 	Location tmploc;
 	int curlyBruh = 0;
 	std::string token = "";
@@ -152,7 +153,7 @@ void Config::parseLocation(std::string &line, Server server)
 				std::string method = nextToken(line);
 				while (!method.empty())
 				{
-					if (!utils::check_methods)
+					if (!utils::check_methods(method))
 					{
 						amc::lerr << "Error: Method not valid\n";
 						continue ;
@@ -172,11 +173,24 @@ void Config::parseLocation(std::string &line, Server server)
 			else if (token == "client_max_body_size")
 			{
 				std::string client_max_body_size = nextToken(line);
+				// if (!utils::check_size(client_max_body_size))
+				// 	amc::lerr << "Error: Size not valid\n";
+				// else
+				// 	tmploc.setClientMaxBodySize(client_max_body_size);
 				tmploc.setClientMaxBodySize(client_max_body_size);
 			}
-
+			if (token == "redirection")
+			{
+				std::string code = nextToken(line);
+				std::string url = nextToken(line);
+				std::pair<std::string, std::string> redirection = std::make_pair(code, url);
+				tmploc.setRedirection(redirection);
+			}
 		} while (token != "");
 	}
+	if (curlyBruh != 0)
+		amc::lerr << "Error: Location curly brackets not balanced\n";
+	// server.addLocation(tmploc);
 }
 
 void	Config::parse(void)
@@ -186,23 +200,21 @@ void	Config::parse(void)
 	int			curlyBruh = 0;
 	t_status	status = NO_SERVER_YET;
 
-	while (std::getline(_configfile, line))
+	while (std::getline(_Configfile, line))
 	{
 		std::string	token;
 
-		utils::skipEmptyLines(_configfile);
+		utils::skipEmptyLines(_Configfile);
 		do
 		{
-			utils::skipEmptyLines(_configfile);
+			utils::skipEmptyLines(_Configfile);
 			token = nextToken(line);
-			std::cout << "token: " << token << std::endl;
-			std::cout << "status: " << status << std::endl;
 			if ((status == NO_SERVER_YET && token != "server")
 				|| (status == CONFIGURING_SERVER && token == "server"))
 			{
 				amc::lerr << "Error: Config file no bueno\n";
 				std::cerr << line << " " << token << std::endl;
-				while (std::getline(_configfile, line))
+				while (std::getline(_Configfile, line))
 					amc::lwar << line << std::endl;
 				std::cerr << "Mmmh..." << RESET << std::endl;
 				return ;
@@ -292,13 +304,13 @@ void	Config::parse(void)
 //	int							curlyBruh = 0;
 //	std::string					line; //per leggere il file
 //	
-//	while (getline(_configfile, line))
+//	while (getline(_Configfile, line))
 //	{
-//		utils::skipEmptyLines(_configfile);
+//		utils::skipEmptyLines(_Configfile);
 //		std::string token;
 //		while ((token = nextToken(line)) != "")
 //		{
-//			utils::skipEmptyLines(_configfile);
+//			utils::skipEmptyLines(_Configfile);
 //			if (!start && token != "server") //il config deve partire con server
 //			{
 //				std::cerr << "Error: config File\n";
