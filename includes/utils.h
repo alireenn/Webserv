@@ -21,6 +21,7 @@ namespace utils
 	bool	isKey(char c);
 	bool	isEmpty(std::string File);
 	int	myStoi(const std::string& str);
+	int check_methods(std::string token);
 }
 
 #endif

@@ -26,7 +26,7 @@ private:
 
 	std::vector<Server *> _servers; //vector di server, la vera classe da instanziare al momento.
 	std::string _filePath;
-	std::ifstream _configfile;
+	std::ifstream _Configfile;
 	char **_env;
 	
 public:
@@ -39,6 +39,8 @@ public:
 	char **getEnv(void) const;
 	void parse();                                   // Questa forse dovrebbe essere statica interna al .cpp della classe, non pubblica, tanto chi la richiama
 	std::vector<Server *> &getServers(void);
+
+	void parseLocation(std::string &line, Server server);
 };
 
 #endif	

@@ -109,27 +109,82 @@ void serverName(std::string &line, Server &server)
 	server.setServerNames(servernames);
 }
 
-//void location(std::string &line, Server server)
-//{
-	//Location location;
-	//std::string root = nextToken(line);
-	//std::string token = "";
-	//std::vector<std::string> curlyBruh;
+void Config::parseLocation(std::string &line, Server server)
+{
+	Location tmploc;
+	int curlyBruh = 0;
+	std::string token = "";
+	std::string locpath = nextToken(line);
 
-	//if (root.empty())
-		//std::cerr << "Error: Location path is empty\n";
-	//else
-		//location.setRoot(root);
-		//// 'this' may only be used inside a nonstatic member function
-	//// while (utils::skipEmptyLines(this->_Configfile) && getline())
-//}
+	if (locpath.empty())
+		std::cerr << "Error: Location path is empty\n";
+	else
+		tmploc.setLocationPath(locpath);
+	while (utils::skipEmptyLines(this->_Configfile) && getline(this->_Configfile, line))
+	{
+		token = nextToken(line);
+		utils::skipEmptyLines(this->_Configfile);
+
+		do
+		{
+			if (token == "{")
+				curlyBruh++;
+			else if (token == "}")
+				curlyBruh--;
+			else if (token == "autoindex")
+			{
+				std::string autoindex = nextToken(line);
+				tmploc.setAutoIndex(autoindex);
+			}
+			else if (token == "index")
+			{
+				std::string index = nextToken(line);
+				tmploc.setIndex(index);
+			}
+			else if (token == "root")
+			{
+				std::string root = nextToken(line);
+				tmploc.setRoot(root);
+			}
+			else if (token == "allow_methods")
+			{
+				std::vector<std::string> allow_methods;
+				std::string method = nextToken(line);
+				while (!method.empty())
+				{
+					if (!utils::check_methods)
+					{
+						amc::lerr << "Error: Method not valid\n";
+						continue ;
+					}
+					else
+					{
+						allow_methods.push_back(method);
+						method = nextToken(line);
+					}
+				}
+			}
+			else if (token == "upload_path")
+			{
+				std::string upload_path = nextToken(line);
+				tmploc.setUploadPath(upload_path);
+			}
+			else if (token == "client_max_body_size")
+			{
+				std::string client_max_body_size = nextToken(line);
+				tmploc.setClientMaxBodySize(client_max_body_size);
+			}
+
+		} while (token != "");
+	}
+}
 
 void	Config::parse(void)
 {
-	Server		tempServer;
-	t_status	status = NO_SERVER_YET;
 	std::string	line;
-	int		curlyBruh = 0;
+	Server		tempServer;
+	int			curlyBruh = 0;
+	t_status	status = NO_SERVER_YET;
 
 	while (std::getline(_configfile, line))
 	{
@@ -140,6 +195,8 @@ void	Config::parse(void)
 		{
 			utils::skipEmptyLines(_configfile);
 			token = nextToken(line);
+			std::cout << "token: " << token << std::endl;
+			std::cout << "status: " << status << std::endl;
 			if ((status == NO_SERVER_YET && token != "server")
 				|| (status == CONFIGURING_SERVER && token == "server"))
 			{
@@ -170,6 +227,7 @@ void	Config::parse(void)
 					/* here we push the configured new server */
 					_servers.push_back(new Server(tempServer));
 					status = NO_SERVER_YET;
+					token = nextToken(line);
 				}
 			}
 			else if (token == "listen")
@@ -216,6 +274,8 @@ void	Config::parse(void)
 				else
 					tempServer.setUploadPath(path);
 			}
+			else if (token == "location")
+				parseLocation(line, tempServer);
 		} while (!token.empty());
 	}
 

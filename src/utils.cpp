@@ -55,3 +55,11 @@ int	utils::myStoi(const std::string& str)
     }
     return result * sign;
 }
+
+
+int utils::check_methods(std::string token)
+{
+    if (token != "GET" && token != "DELETE" && token != "POST")
+        return (0);
+    return (1);
+}
