@@ -109,7 +109,7 @@ void serverName(std::string &line, Server &server)
 	server.setServerNames(servernames);
 }
 
-void Config::parseLocation(std::string &line, Server server)
+void Config::parseLocation(std::string &line, Server &server)
 {
 	(void)server;
 	Location tmploc;
@@ -128,10 +128,25 @@ void Config::parseLocation(std::string &line, Server server)
 
 		do
 		{
+			std::cout << "token: " << token << std::endl;
 			if (token == "{")
 				curlyBruh++;
 			else if (token == "}")
+			{
 				curlyBruh--;
+				if (curlyBruh <0)
+				{
+					amc::lerr << "Error: Config file BRUH\n";
+					return ;
+				}
+				else if (curlyBruh == 0)
+				{
+				 std::cout << "sono qui\n";
+					server.getLocations().push_back(tmploc);
+					std::cout << "ora qui\n";
+					return ;
+				}
+			}
 			else if (token == "autoindex")
 			{
 				std::string autoindex = nextToken(line);
@@ -191,7 +206,6 @@ void Config::parseLocation(std::string &line, Server server)
 	}
 	if (curlyBruh != 0)
 		amc::lerr << "Error: Location curly brackets not balanced\n";
-	server.addLocation(tmploc);
 }
 
 void	Config::parse(void)
@@ -239,6 +253,8 @@ void	Config::parse(void)
 				{
 					/* here we push the configured new server */
 					_servers.push_back(new Server(tempServer));
+					///qui temp_andrebbe svuotato
+					tempServer.reset();
 					status = NO_SERVER_YET;
 					token = nextToken(line);
 					std::cout << "dio proco "<< _servers.size() << std::endl;
@@ -290,14 +306,24 @@ void	Config::parse(void)
 					tempServer.setUploadPath(path);
 			}
 			else if (token == "location")
+			{
 				parseLocation(line, tempServer);
+			}
 		} while (!token.empty());
 	}
 
 	if (curlyBruh != 0)
 		amc::lerr << "cazzo fai fratm impara a scrivere coglione\n";
 
+
 	std::cout << "Numero server: " << _servers.size() << std::endl;
+	//funzione che stampa il numero di locatione per server
+	for (std::vector<Server*>::iterator it = _servers.begin(); it != _servers.end(); it++)
+	{
+		static int i = 1;
+		std::cout << i++<<" Numero location: " << (*it)->getLocations().size() << std::endl;
+	}
+	
 }
 
 //void Config::parse()

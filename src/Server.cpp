@@ -25,6 +25,18 @@ Server::Server(int socketPort)// --> Server(int socketPort, std::ifstream config
 	}
 }
 
+void Server::reset()
+{
+	this->_running = false;
+	this->_port = 0;
+	this->_serverNames.clear();
+	this->_locations.clear();
+	this->_errorPages.clear();
+	this->_uploadPath.clear();
+	this->_mimeTypes.clear();
+	this->_cgi.clear();
+}
+
 Server::~Server(void)
 {
 	delete (_socket);
@@ -157,4 +169,9 @@ void	Server::setErrorPages(std::vector<std::pair <std::string, std::string> > er
 void	Server::addLocation(Location location)
 {
 	this->_locations.push_back(location);
+}
+
+std::vector<Location>	&Server::getLocations(void)
+{
+	return (this->_locations);
 }

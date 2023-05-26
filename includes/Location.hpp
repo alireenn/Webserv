@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:16:58 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/11 17:18:55 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/26 16:14:13 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Location
 		std::string							_clientMaxBodySize;
 	public:
 		Location();
+		Location(Location const &obj);
 		~Location();
 
 		std::string							&getRoot();

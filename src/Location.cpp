@@ -1,8 +1,11 @@
 #include "../includes/Location.hpp"
 
 Location::Location()
-{
+{}
 
+Location::Location(Location const &obj)
+{
+	*this = obj;
 }
 
 Location::~Location()

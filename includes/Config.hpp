@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:29:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/25 17:56:55 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/26 16:56:24 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ public:
 	void parse();                                   // Questa forse dovrebbe essere statica interna al .cpp della classe, non pubblica, tanto chi la richiama
 	std::vector<Server *> &getServers(void);
 
-	void parseLocation(std::string &line, Server server);
+	void parseLocation(std::string &line, Server &server);
 };
 
 #endif	

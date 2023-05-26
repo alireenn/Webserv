@@ -46,7 +46,9 @@ class Server
 		std::vector<std::string>							getServerNames();
 		int													getFd(void) const;
 		int 												getPort(void) const;
+		std::vector<Location>								&getLocations(void);
 		bool												isRunning(void) const;
+	
 
 		Socket		&getSocket(void);
 		void		setPort(size_t port);
@@ -58,7 +60,7 @@ class Server
 		void		setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages);
 
 		void 		addLocation(Location location);
-
+		void		reset(void);
 };
 
 #endif
