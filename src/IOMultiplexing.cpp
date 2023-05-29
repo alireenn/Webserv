@@ -11,25 +11,25 @@ IOMultiplexing::~IOMultiplexing()
 
 void IOMultiplexing::StartServers(Config &conf)
 {
-	std::vector<Server> &Svec = conf.getServers();
+	std::vector<Server *> &Svec = conf.getServers();
 	if (Svec.size())
     {
 
 		EventLoop(Svec);
     }
-	else
-		std::cerr << "Bad config file " << conf.getFilePath();
+	// else
+	// 	std::cerr << "Bad config file " << conf.getFilePath();
 }
 
 
-void IOMultiplexing::EventLoop(std::vector<Server> &servers)
+void IOMultiplexing::EventLoop(std::vector<Server *> &servers)
 {
     int fd_client;
-    fd_set cpy_fdwrite, cpy_fdread;
-    struct epoll_event event, events[10];
+    // fd_set cpy_fdwrite, cpy_fdread;
+    struct epoll_event event;
     int epoll_fd=epoll_create1(0);
     std::vector<std::pair<Client, Request> > ClientRequest;
-    // std::vector<Response> ReadyResponse;
+    std::vector<Response> ReadyResponse;
     while (1)
     {
         if (epoll_fd == -1)
@@ -37,20 +37,23 @@ void IOMultiplexing::EventLoop(std::vector<Server> &servers)
             std::cerr << "Errore nella creazione dell'istanza epoll" << std::endl;
             exit(1);
         }
-        for (std::vector<Server>::iterator it = servers.begin(); it != servers.end(); ++it)
+        // for (std::vector<Server>::iterator it = servers.begin(); it != servers.end(); ++it)
+        for (std::vector<Server *>::iterator it = servers.begin(); it != servers.end(); ++it) //<- bleah
         {
             Client new_client;
             sockaddr_in client_addr;
             socklen_t client_addr_size = sizeof(client_addr);   
-            fd_client = accept(it->getFd(), (struct sockaddr *)&client_addr, &client_addr_size);
+            // fd_client = accept(it->getFd(), (struct sockaddr *)&client_addr, &client_addr_size);
+            fd_client = accept((*it)->getFd(), (struct sockaddr *)&client_addr, &client_addr_size); // <- bleah
             if (fd_client != -1)
             {
                 event.events = EPOLLIN; 
                 event.data.fd = fd_client;
                 epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd_client, &event);
                 new_client.setSocketFd(fd_client);
-                new_client.setServer(*it);
-                ClientRequest.push_back(std::make_pair(new_client, Request()));
+                // new_client.setServer(*it);
+                new_client.setServer(**it); // <- bleah
+                ClientRequest.push_back(std::pair<Client, Request>(new_client, Request()));
                 std::cout << "Nuova connessione da " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) << std::endl;
                 FD_SET(fd_client, &this->fdread);
                 if (fd_client > _fdmax)

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/25 15:03:10 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:34:10 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,10 @@ Socket	&Socket::operator=(Socket &toCopy)
 	this->_fd = toCopy._fd;
 	this->_port = toCopy._port;
 	return (*this);
+}
+
+Socket::Socket()
+{
 }
 
 struct sockaddr_in	&Socket::getAddr(void)

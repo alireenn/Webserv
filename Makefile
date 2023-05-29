@@ -1,5 +1,5 @@
 CC		=		g++
-FLAGS		=		-Wall -Wextra -Werror -std=c++98 -g
+FLAGS		=		-std=c++98 #  -Wall -Wextra -Werror -g
 INCL		=		-I./includes
 
 NAME		=		webserv
@@ -10,7 +10,12 @@ SRC		=		main.cpp \
 				src/Location.cpp \
 				src/Config.cpp \
 				src/utils.cpp \
-				src/log.cpp
+				src/log.cpp \
+				src/IOMultiplexing.cpp \
+				src/Request.cpp \
+				src/Response.cpp \
+				src/Client.cpp \
+
 
 OBJDIR		=		obj
 OBJS		=		$(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))

@@ -6,12 +6,11 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 12:23:25 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/24 18:55:01 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/29 12:03:47 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Client.hpp"
-#include "Client.hpp"
 
 Client::Client(){}
 
@@ -30,10 +29,6 @@ void Client::setSocketFd(int fd)
     this->_client_socket.setSocketFd(fd);
 }
 
-int Client::getSocketFd()
-{
-	return (this->_client_socket.getFd());
-}
 
 void Client::setServer(Server & clinet_server)
 {

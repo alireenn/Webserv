@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:15:07 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/25 15:04:59 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:34:37 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class	Socket
 				** After creation, make sure to
 				** check that isRunning() == true.
 				*/
+		Socket();
 							Socket(int port);
 							~Socket(void);
 							Socket(Socket &toCopy);
@@ -53,7 +54,6 @@ class	Socket
 		int			_fd;
 		int			_port;
 		bool			_running;
-					Socket(void);
 };
 		
 #endif

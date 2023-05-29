@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:04:09 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/29 11:19:00 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/29 11:41:06 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int main(int argc, char** argv, char** env)
 		conf.setConfig(argv[1]);
 	
 		
-	io.StartServers(conf);
+	// io.StartServers(conf);
 	
 	
 	return 0;
