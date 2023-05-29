@@ -125,7 +125,7 @@ void IOMultiplexing::EventLoop(std::vector<Server> &servers)
                 if (fd_client > _fdmax)
                     _fdmax = fd_client;
             }
-            int n_events = epoll_wait(it->getEpoll_fd(), &event, 10, 3);
+            int n_events = epoll_wait(it->getEpoll_fd(), &event, 10, 3000);
             if (n_events == -1)
             {
                 std::cerr << "Errore nella chiamata a epoll_wait" << std::endl;
