@@ -53,7 +53,7 @@ void IOMultiplexing::EventLoop(std::vector<Server *> &servers)
                 new_client.setSocketFd(fd_client);
                 // new_client.setServer(*it);
                 new_client.setServer(**it); // <- bleah
-                ClientRequest.push_back(std::pair<Client, Request>(new_client, Request()));
+                // ClientRequest.push_back(std::make_pair(new_client, Request()));
                 std::cout << "Nuova connessione da " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) << std::endl;
                 FD_SET(fd_client, &this->fdread);
                 if (fd_client > _fdmax)
@@ -71,7 +71,7 @@ void IOMultiplexing::EventLoop(std::vector<Server *> &servers)
                ssize_t bytes_read = recv(event.data.fd, buffer, 1024, 0);
                if (bytes_read == -1)
                {
-                   std::cerr << "Errore nella lettura del messaggio" << std::endl;
+                //    std::cerr << "Errore nella lettura del messaggio" << std::endl;
                    continue;
                }
                else if (bytes_read == 0)
