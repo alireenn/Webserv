@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:04:09 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/25 15:05:58 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:19:00 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int main(int argc, char** argv, char** env)
 {
 	Config conf(env);
-	// IOMultiplexing io;
+	IOMultiplexing io;
 
 	amc::init();
 
@@ -36,7 +36,7 @@ int main(int argc, char** argv, char** env)
 		conf.setConfig(argv[1]);
 	
 		
-	// io.SetupServers(conf);
+	io.StartServers(conf);
 	
 	
 	return 0;
