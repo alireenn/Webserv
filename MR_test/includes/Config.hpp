@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:29:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/29 14:15:55 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/30 12:05:56 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "Server.hpp"
 #include "utils.h"
 

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/29 10:54:14 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/30 12:47:49 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ class Response
 			Response();
 			~Response();
 			Response(Request &request, Server &server, int client_fd);
-			
+
+			int getClientFD() const;
+			int &getDone(void);
+
 };
 
 #endif

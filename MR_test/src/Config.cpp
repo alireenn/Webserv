@@ -98,9 +98,12 @@ void serverName(std::string &line, Server &server)
 	std::string name = nextToken(line);
 
 	if (name.empty())
+	{
 		std::cout << "Error: Server name is empty\n";
+	}
 	while (!name.empty())
 	{
+		std::cout << "ci passo " << name << std::endl;
 		servernames.push_back(name);
 		name = nextToken(line);
 	}
@@ -261,7 +264,7 @@ void	Config::parse(void)
 			{
 				tempServer.setPort(findPort(line));
 			}
-			else if (token == "server name")
+			else if (token == "server_name")
 			{
 				serverName(line, tempServer);
 			}
@@ -414,8 +417,17 @@ void	Config::parse(void)
 //		std::cerr << "cazzo fai fratm impara a scrivere coglione\n";
 //}
 
-//la ref ordina i server per location. non e' detto che serva ma teniamolo presente
+
+static bool compare_location(Location &a,  Location &b)
+{
+    return (a.getLocationPath().length()) < (b.getLocationPath().length());
+}
+
 std::vector<Server> &Config::getServers(void)
 {
+	for (std::vector<Server>::iterator it = _servers.begin(); it != _servers.end(); it++)
+    {
+        std::sort((it)->getLocations().begin(), (it)->getLocations().end(), compare_location);
+    }
 	return (this->_servers);
 }
