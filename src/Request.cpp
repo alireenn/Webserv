@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:02:14 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/29 12:02:42 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/30 15:52:29 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,7 +320,8 @@ void Request::TransferChunked(void)
 {
 	char buff;
 //     std::string tmp;
-    int tmp_bl = 0;
+    // int bl_tmp;
+	// bl_tmp = 0;
 //     (void) a;
 	if(lent_chunked > (int) body.length())
 	{
@@ -352,7 +353,7 @@ void Request::TransferChunked(void)
 			if (lent_chunked == 0)
 			{
 				lent_chunked = getLentChunked(body.substr(i));
-				tmp_bl = body.length() - i;
+				// bl_tmp = body.length() - i;
 				if (lent_chunked == 0)
 				{
 					lent_chunked = getLentChunked(body.substr(i));

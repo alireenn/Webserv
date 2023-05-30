@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:29:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/26 16:56:24 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/30 12:05:56 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "Server.hpp"
 #include "utils.h"
 
@@ -24,7 +25,7 @@ class Config
 {
 private:
 
-	std::vector<Server *> _servers; //vector di server, la vera classe da instanziare al momento.
+	std::vector<Server> _servers; //vector di server, la vera classe da instanziare al momento.
 	std::string _filePath;
 	std::ifstream _Configfile;
 	char **_env;
@@ -38,7 +39,7 @@ public:
 	void setEnv(char **env);
 	char **getEnv(void) const;
 	void parse();                                   // Questa forse dovrebbe essere statica interna al .cpp della classe, non pubblica, tanto chi la richiama
-	std::vector<Server *> &getServers(void);
+	std::vector<Server> &getServers(void);
 
 	void parseLocation(std::string &line, Server &server);
 };

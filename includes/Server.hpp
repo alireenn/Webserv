@@ -16,41 +16,43 @@ typedef enum e_status
 class Server
 {
 	private:
-		bool												_running;
-		Socket												*_socket;
+		Socket												_socket;
 		size_t 												_port;
-		std::string											_uploadPath;
-		std::vector<Location>								_locations;
 		std::vector<std::string>							_serverNames;
-		std::vector<std::string>							_mimeTypes;
-		std::vector<std::pair <std::string, std::string> >	_cgi;
+		std::vector<Location>								_locations;
 		std::vector<std::pair <std::string, std::string> >	_errorPages;
+		std::string											_uploadPath;
+		std::vector<std::string>							_mimeTypes;
+
+		int epool_fd;
+  		
+		//roba trovata public
+		char **_env;
+		std::string root;
+  		int en_handle;
+		std::vector<std::pair<std::string,std::string> > _cgi;
+	    int a;
+
 
 
 
 	public:
-			/*
-			** After creation, make sure to
-			** check that isRunning() == true.
-			*/
-			Server(void);
-			Server(int socketPort); // --> Server(int socketPort, std::ifstream configFile);
-			~Server(void);
-			Server(Server &toCopy);
+		Server();
+		~Server();
 
-  		char **_env;
-		Server	&operator=(Server &toCopy);
 
-		std::vector<std::pair <std::string, std::string> >	getcgi();
+		// Server	&operator=(Server &toCopy);
+
 		std::vector<std::pair <std::string, std::string> >	getErrorPages();
 		std::vector<std::string>							getServerNames();
-		int													getFd(void) const;
-		int 												getPort(void) const;
+		size_t												getPort(void);
 		std::vector<Location>								&getLocations(void);
-		bool												isRunning(void) const;
 	
+		int        &getEpoll_fd(void);
+		void	   setEpoll_fd(int epool_fd);
 
 		Socket		&getSocket(void);
+		void		setSocket(Socket socket);
 		void		setPort(size_t port);
 		void		setUploadPath(std::string uploadPath);
 		void		setLocations(std::vector<Location> locations);
@@ -59,12 +61,13 @@ class Server
 		void		setServerNames(std::vector<std::string> serverNames);
 		void		setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages);
 
-		void 		addLocation(Location location);
+		std::string	getUploadPath(void);
 		void		reset(void);
+
 };
 
-//operatore di overload << per la classe server
-// std::ostream &operator<<(std::ostream &out, Server &server);
+// operatore di overload << per la classe server
+std::ostream &operator<<(std::ostream &out, Server &server);
 
 
 #endif

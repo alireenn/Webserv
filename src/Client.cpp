@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 12:23:25 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/29 12:03:47 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/29 14:18:30 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Client::~Client()
 
 int Client::getSocketFd()
 {
-   return (this->_client_socket.getFd());
+   return (this->_client_socket.getSocketFd());
 }
 
 void Client::setSocketFd(int fd)

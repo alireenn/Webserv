@@ -10,8 +10,6 @@ Config::Config(char **env): _env(env)
 
 Config::~Config()
 {
-	for (size_t i = 0; i < _servers.size(); i++)
-		delete _servers[i];
 }
 
 void Config::setConfig(char *filePath)
@@ -100,9 +98,12 @@ void serverName(std::string &line, Server &server)
 	std::string name = nextToken(line);
 
 	if (name.empty())
-		amc::lerr << "Error: Server name is empty\n";
+	{
+		std::cout << "Error: Server name is empty\n";
+	}
 	while (!name.empty())
 	{
+		std::cout << "ci passo " << name << std::endl;
 		servernames.push_back(name);
 		name = nextToken(line);
 	}
@@ -135,7 +136,7 @@ void Config::parseLocation(std::string &line, Server &server)
 				curlyBruh--;
 				if (curlyBruh <0)
 				{
-					amc::lerr << "Error: Config file BRUH\n";
+					std::cout << "Error: Config file BRUH\n";
 					return ;
 				}
 				else if (curlyBruh == 0)
@@ -167,7 +168,7 @@ void Config::parseLocation(std::string &line, Server &server)
 				{
 					if (!utils::check_methods(method))
 					{
-						amc::lerr << "Error: Method not valid\n";
+						std::cout << "Error: Method not valid\n";
 						continue ;
 					}
 					else
@@ -187,7 +188,7 @@ void Config::parseLocation(std::string &line, Server &server)
 			{
 				std::string client_max_body_size = nextToken(line);
 				// if (!utils::check_size(client_max_body_size))
-				// 	amc::lerr << "Error: Size not valid\n";
+				// 	std::cout << "Error: Size not valid\n";
 				// else
 				// 	tmploc.setClientMaxBodySize(client_max_body_size);
 				tmploc.setClientMaxBodySize(client_max_body_size);
@@ -203,7 +204,7 @@ void Config::parseLocation(std::string &line, Server &server)
 		} while (token != "");
 	}
 	if (curlyBruh != 0)
-		amc::lerr << "Error: Location curly brackets not balanced\n";
+		std::cout << "Error: Location curly brackets not balanced\n";
 }
 
 void	Config::parse(void)
@@ -225,11 +226,11 @@ void	Config::parse(void)
 			if ((status == NO_SERVER_YET && token != "server")
 				|| (status == CONFIGURING_SERVER && token == "server"))
 			{
-				amc::lerr << "Error: Config file no bueno\n";
+				std::cout << "Error: Config file no bueno\n";
 				std::cerr << line << " " << token << std::endl;
 				while (std::getline(_Configfile, line))
-					amc::lwar << line << std::endl;
-				std::cerr << "Mmmh..." << RESET << std::endl;
+					std::cout << line << std::endl;
+				std::cerr << "Mmmh..."<< std::endl;
 				return ;
 			}
 			else
@@ -244,13 +245,13 @@ void	Config::parse(void)
 				curlyBruh--;
 				if (curlyBruh < 0)
 				{
-					amc::lerr << "Error: Config file BRUH\n";
+					std::cout << "Error: Config file BRUH\n";
 					return ;
 				}
 				else if (curlyBruh == 0)
 				{
 					/* here we push the configured new server */
-					_servers.push_back(new Server(tempServer));
+					_servers.push_back(tempServer);
 					///qui temp_andrebbe svuotato
 					tempServer.reset();
 					status = NO_SERVER_YET;
@@ -263,7 +264,7 @@ void	Config::parse(void)
 			{
 				tempServer.setPort(findPort(line));
 			}
-			else if (token == "server name")
+			else if (token == "server_name")
 			{
 				serverName(line, tempServer);
 			}
@@ -273,9 +274,9 @@ void	Config::parse(void)
 				std::string extension = nextToken(line);
 
 				if (path.empty() || extension.empty())
-					amc::lerr << "Error: cgi: path or extension not found\n";
+					std::cout << "Error: cgi: path or extension not found\n";
 				else if (extension[0] != '.' || extension.length() < 2)
-					amc::lerr << "Error: cgi: extension not valid\n";
+					std::cout << "Error: cgi: extension not valid\n";
 				else
 					tempServer.setCgi(std::pair<std::string, std::string>(path, extension));
 			}
@@ -286,7 +287,7 @@ void	Config::parse(void)
 				std::vector<std::pair<std::string, std::string> > pages;
 				
 				if (code.empty() || path.empty())
-					amc::lerr << "Error: error_page: code or path not found\n";
+					std::cout << "Error: error_page: code or path not found\n";
 				while (!code.empty() && !path.empty())
 				{
 					pages.push_back(std::pair<std::string, std::string>(code, path));
@@ -299,7 +300,7 @@ void	Config::parse(void)
 			{
 				std::string path = nextToken(line);
 				if (path.empty())
-					amc::lerr << "Error: upload_path: path not found\n";
+					std::cout << "Error: upload_path: path not found\n";
 				else
 					tempServer.setUploadPath(path);
 			}
@@ -311,19 +312,15 @@ void	Config::parse(void)
 	}
 
 	if (curlyBruh != 0)
-		amc::lerr << "cazzo fai fratm impara a scrivere coglione\n";
+		std::cout << "cazzo fai fratm impara a scrivere coglione\n";
 
 
 	std::cout << "Numero server: " << _servers.size() << std::endl;
-	//funzione che stampa il numero di locatione per server
-	for (std::vector<Server*>::iterator it = _servers.begin(); it != _servers.end(); it++)
-	{
-		static int i = 1;
-		std::cout << i++<<" Numero location: " << (*it)->getLocations().size() << std::endl;
-		//stampa di ogni singola location esiste gia l'operatore << per location
-		for (std::vector<Location>::iterator it2 = (*it)->getLocations().begin(); it2 != (*it)->getLocations().end(); it2++)
-			std::cout << *it2 << std::endl;
-	}
+
+	//stampa dei server tramite <<
+	std::cout << "\n\n\nStampa dei server tramite <<\n";
+	for (std::vector<Server>::iterator it = _servers.begin(); it != _servers.end(); it++)
+		std::cout << *it << std::endl;
 	
 }
 
@@ -420,8 +417,17 @@ void	Config::parse(void)
 //		std::cerr << "cazzo fai fratm impara a scrivere coglione\n";
 //}
 
-//la ref ordina i server per location. non e' detto che serva ma teniamolo presente
-std::vector<Server *> &Config::getServers(void)
+
+static bool compare_location(Location &a,  Location &b)
 {
+    return (a.getLocationPath().length()) < (b.getLocationPath().length());
+}
+
+std::vector<Server> &Config::getServers(void)
+{
+	for (std::vector<Server>::iterator it = _servers.begin(); it != _servers.end(); it++)
+    {
+        std::sort((it)->getLocations().begin(), (it)->getLocations().end(), compare_location);
+    }
 	return (this->_servers);
 }

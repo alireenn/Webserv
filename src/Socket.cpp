@@ -6,118 +6,51 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:59:33 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/29 11:34:10 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/29 13:41:43 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#include <stdio.h>
 #include "../includes/Socket.hpp"
 
-static int	init_socket(struct sockaddr_in *addr)
-{
-	int			fd;
-	int			val	= 1;
-
-	fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (fd == 0)
-        {
-		amc::lerr << "Socket creation ";
-		return (-1);
-	}
-	amc::lout << timestamp << "Socket created (fd " << fd << ")" << std::endl;
-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val)) == -1)
-	{
-		amc::lerr << "setsockopt() ";
-		return (-1);
-	}
-	amc::lout << timestamp << "Socket options set" << std::endl;
-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val)) == -1)
-	//fcntl(fd, F_SETFL, O_NONBLOCK);
-	if (bind(fd, (struct sockaddr *)addr, sizeof(*addr)) == -1)
-	{
-		amc::lerr << "bind() ";
-		return (-1);
-	}
-	amc::lout << timestamp << "Socket bound" << std::endl;
-	if (listen(fd, SOMAXCONN) == -1)
-	{
-		amc::lerr << "listen() ";
-		return (-1);
-	}
-	amc::lout << timestamp << "Socket listens" << std::endl;
-	return (fd);
-}
-
-Socket::Socket(int port)
-{
-
-	this->_running = false;
-	memset(&_addr, '\0', sizeof(_addr));
-	this->_addr.sin_family = AF_INET;
-	this->_addr.sin_port = htons(port);
-	this->_addr.sin_addr.s_addr = INADDR_ANY;
-	try
-	{
-		_fd = init_socket(&_addr);
-		if (_fd < 0)
-			throw SocketFailException();
-		this->_port = port;
-		this->_running = true;
-		//io.setFdRead(fd); // da risistemare
-		//io.setFdMax(fd); // da risistemare
-	}
-	catch (SocketFailException &e) {
-		amc::lerr << e.what() << port << "." << std::endl;
-	}
-	amc::lout << timestamp << "New server running on port " << port << std::endl;
-}
-
-Socket::Socket(Socket &toCopy)
-{
-	this->_addr = toCopy._addr;
-	this->_fd = toCopy._fd;
-	this->_port = toCopy._port;
-}
-
-Socket::~Socket(void)
-{
-	close(_fd);
-}
-
-Socket	&Socket::operator=(Socket &toCopy)
-{
-	this->_addr = toCopy._addr;
-	this->_fd = toCopy._fd;
-	this->_port = toCopy._port;
-	return (*this);
-}
 
 Socket::Socket()
 {
+	_sockaddr=new struct sockaddr_in;
 }
 
-struct sockaddr_in	&Socket::getAddr(void)
+Socket::Socket(const Socket &rhs)
 {
-	return (_addr);
+	if(this != &rhs)
+	{
+		_sockaddr=new struct sockaddr_in;
+		_socket_fd=rhs._socket_fd;
+	}
 }
 
-int	Socket::getFd(void) const
+Socket &Socket::operator=(const Socket &rhs)
 {
-	return (_fd);
+	delete _sockaddr;
+	_sockaddr=new struct sockaddr_in;
+	_socket_fd=rhs._socket_fd;
+	return *this;
 }
 
-int	Socket::getPort(void) const
+Socket::~Socket()
 {
-	return (_port);
+	delete _sockaddr;
 }
 
-bool	Socket::isRunning(void) const
+struct sockaddr_in *Socket::getSockAddr() const
 {
-	return (_running);
+	return _sockaddr;
+}
+
+int Socket::getSocketFd() const
+{
+	return _socket_fd;
 }
 
 void Socket::setSocketFd(int fd)
 {
-    this->_fd = fd;
+	_socket_fd=fd;
 }

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/29 12:03:10 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/30 12:47:17 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,14 @@ Response::Response(Request &request, Server &server, int client_fd)
 	len_server = 0;
 	fd_error = 0;
 	error = 0;
+}
+
+int Response::getClientFD() const
+{
+    return _client_fd;
+}
+
+int &Response::getDone(void)
+{
+    return done;
 }

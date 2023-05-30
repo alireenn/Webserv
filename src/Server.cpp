@@ -1,178 +1,128 @@
 #include "../includes/Server.hpp"
-#include "Server.hpp"
 
-Server::Server(void)
+Server::Server()
 {
-	;
+	//init_mimeTypes();
 }
 
-Server::Server(int socketPort)// --> Server(int socketPort, std::ifstream configFile);
+Server::~Server()
+{}
+
+Socket		&Server::getSocket(void)
 {
-	this->_socket = new Socket(socketPort);
-	if (this->_socket->isRunning())
-	{
-		this->_running = true;
-	}
-	else
-	{
-		this->_running = false;
-	}
-	if (this->_running)
-	{
-		this->_port = this->_socket->getPort();
-		amc::lout << "New server started listening on port "
-						<< socketPort << std::endl;
-	}
+	return _socket;
 }
 
-void Server::reset()
+size_t		Server::getPort(void)
 {
-	this->_running = false;
-	this->_port = 0;
-	this->_serverNames.clear();
-	this->_locations.clear();
-	this->_errorPages.clear();
-	this->_uploadPath.clear();
-	this->_mimeTypes.clear();
-	this->_cgi.clear();
+	return _port;
 }
 
-Server::~Server(void)
+std::vector<std::string>	Server::getServerNames(void)
 {
-	delete (_socket);
+	return _serverNames;
 }
 
-Server::Server(Server &toCopy)
+std::vector<Location>		&Server::getLocations(void)
 {
-	// try that toCopy isRunning()!
-	this->_socket = new Socket(toCopy.getSocket());
-	if (this->_socket->isRunning())
-		this->_running = true;
-	else
-		this->_running = false;
-	this->_port = toCopy._port;
-	this->_serverNames = toCopy._serverNames;
-	this->_locations = toCopy._locations;
-	this->_errorPages = toCopy._errorPages;
-	this->_uploadPath = toCopy._uploadPath;
-	this->_mimeTypes = toCopy._mimeTypes;
-//	if (this->_running)
-//		amc::lout << timestamp << "New server started listening on port "
-//						<< toCopy._port << std::endl;
+	return _locations;
 }
 
-Server	&Server::operator=(Server &toCopy)
+std::vector<std::pair <std::string, std::string> >	Server::getErrorPages(void)
 {
-	this->_socket = toCopy._socket;
-	this->_port = toCopy._port;
-	this->_serverNames = toCopy._serverNames;
-	this->_locations = toCopy._locations;
-	this->_errorPages = toCopy._errorPages;
-	this->_uploadPath = toCopy._uploadPath;
-	this->_mimeTypes = toCopy._mimeTypes;
-	this->_running = toCopy._running;
-	if (this->_running)
-		amc::lout << "New server started listening on port "
-						<< toCopy._port << std::endl;
-	return (*this);
+	return _errorPages;
 }
 
-Socket	&Server::getSocket(void)
+std::string	Server::getUploadPath(void)
 {
-	return (*_socket);
+	return _uploadPath;
 }
 
-int	Server::getFd(void) const
+void Server::setSocket(Socket socket)
 {
-	return (_socket->getFd());
+	_socket = socket;
 }
 
-int Server::getPort(void) const
+void Server::setPort(size_t port)
 {
-    return this->_port;
+	_port = port;
 }
-std::vector<std::string> Server::getServerNames()
-{
-    return std::vector<std::string>(this->_serverNames);
-}
-
-std::vector<std::pair<std::string, std::string> > Server::getcgi()
-{
-    return this->_cgi;
-}
-
-std::vector<std::pair<std::string, std::string> > Server::getErrorPages()
-{
-    return this->_errorPages;
-}
-bool Server::isRunning(void) const
-{
-	return (_running);
-}
-
-
-void	Server::setPort(size_t port)
-{
-	if (this->_socket)
-		delete (this->_socket);
-	this->_socket = new Socket(port);
-	if (this->_socket->isRunning())
-	{
-		this->_running = true;
-	}
-	else
-	{
-		this->_running = false;
-	}
-	if (this->_running)
-	{
-		this->_port = this->_socket->getPort();
-		//amc::lout << "New server started listening on port "
-						//<< port << std::endl;
-	}
-}
-
-void	Server::setUploadPath(std::string uploadPath)
-{
-	this->_uploadPath = uploadPath;
-}
-
-void	Server::setLocations(std::vector<Location> locations)
-{
-	this->_locations = locations;
-}
-
 
 void Server::setServerNames(std::vector<std::string> serverNames)
 {
-	this->_serverNames = serverNames;
+	_serverNames = serverNames;
 }
 
-
-
-void Server::setCgi(std::pair<std::string, std::string> cgi)
+void Server::setLocations(std::vector<Location> locations)
 {
-	// this->_cgi = cgi;
-	this->_cgi.insert(this->_cgi.end(), cgi);
+	_locations = locations;
 }
 
-void	Server::setMimeTypes(std::vector<std::string> mimeTypes)
+void Server::setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages)
 {
-	this->_mimeTypes = mimeTypes;
+	_errorPages = errorPages;
 }
 
-void	Server::setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages)
+void Server::setUploadPath(std::string uploadPath)
 {
-	this->_errorPages = errorPages;
+	_uploadPath = uploadPath;
 }
 
-void	Server::addLocation(Location location)
+//funzione che reinizializza il server
+void Server::reset(void)
 {
-	this->_locations.push_back(location);
+	_socket = Socket();
+	_port = 0;
+	_serverNames.clear();
+	_locations.clear();
+	_errorPages.clear();
+	_uploadPath = "";
 }
 
-std::vector<Location>	&Server::getLocations(void)
+// std::vector<std::string> &Server::getmime_types(void)
+// {
+//     return mime_types;
+// }
+// void Server::init_MimeTypes(void)
+// {
+//     std::ifstream file;
+//     file.open("srcs/mime.types");
+//     std::string str;
+//     while(getline(file,str))
+//         mime_types.push_back(str);
+//     file.close();
+// }
+
+void Server::setCgi(std::pair<std::string,std::string> cgi)
 {
-	return (this->_locations);
+    _cgi.push_back(cgi);
 }
 
+int &Server::getEpoll_fd(void)
+{
+	return epool_fd;
+}
+
+void Server::setEpoll_fd(int epool_fd)
+{
+	this->epool_fd = epool_fd;
+}
+
+std::ostream &operator<<(std::ostream &out, Server &server)
+{
+	out << "Server: " << server.getPort() << std::endl;
+	out << "ServerNames: ";
+	for (size_t i = 0; i < server.getServerNames().size(); i++)
+		out << server.getServerNames()[i] << " ";
+	out << std::endl;
+	out << "Locations: ";
+	for (size_t i = 0; i < server.getLocations().size(); i++)
+		out << server.getLocations()[i] << " ";
+	out << std::endl;
+	out << "ErrorPages: ";
+	for (size_t i = 0; i < server.getErrorPages().size(); i++)
+		out << server.getErrorPages()[i].first << " " << server.getErrorPages()[i].second << " ";
+	out << std::endl;
+	out << "UploadPath: " << server.getUploadPath() << std::endl;
+	return out;
+}
