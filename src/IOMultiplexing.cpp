@@ -206,7 +206,9 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
                         fdmaxs[i] = client_fd;
 
 
-
+	//test, da eliminare
+                    std::string res = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
+					send(client_fd, res.c_str(), res.length(), 0);
                 }
                 else
                 {
@@ -284,9 +286,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
             if (FD_ISSET(ResponseReady[i].getClientFD(), &fdwrite_cp))
             {
                 // ResponseReady[i].handler(fdreads[i], fdwrites[i]);
-                					//test, da eliminare
-                    std::string res = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
-					send(ResponseReady[i].getClientFD(), res.c_str(), res.length(), 0);
+                				
                     // ResponseReady[i].setDone(1);
                 if (ResponseReady[i].getDone() == 1)
                     ResponseReady.erase(ResponseReady.begin() + i);
