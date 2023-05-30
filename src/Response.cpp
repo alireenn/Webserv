@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/30 12:47:17 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/30 18:40:53 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,9 @@ int Response::getClientFD() const
 int &Response::getDone(void)
 {
     return done;
+}
+
+void Response::setDone(int done)
+{
+	this->done = done;
 }
