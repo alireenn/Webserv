@@ -1,5 +1,13 @@
 #include "../includes/IOMultiplexing.hpp"
 
+
+
+//scrivi una funzione che lancia un suono ogni volta che viene chiamata
+void playSound()
+{
+	std::cout << "\a";
+}
+
 static std::string strtrim(std::string str)
 {
 	size_t first = str.find_first_not_of(' ');
@@ -66,27 +74,10 @@ void IOMultiplexing::CreateServer(Server &server)
 			return;
 		}
 		std::cout << "Server in ascolto sulla porta " << server.getPort() << std::endl;
-		
-		// struct epoll_event event;
-		// event.events = EPOLLIN | EPOLLET;
-		// event.data.fd = fd;
-		// int epoll_fd = epoll_create1(0);
-		// if (epoll_fd == -1)
-		// {
-		//     std::cerr << "Errore nella creazione dell'istanza epoll" << std::endl;
-		//     return;
-		// }
-		// if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event) == -1)
-		// {
-		//     std::cerr << "Errore nella chiamata a epoll_ctl" << std::endl;
-		//     return;
-		// }
-		// static int i=0;
-		// std::cout << ++i<< "fd server: " << fd << std::endl;
+
 		server.getSocket().setSocketFd(fd);
 		FD_SET(fd, &fdread);
 		_fdmax = fd;
-		// server.setEpoll_fd(epoll_fd);// da capire
 	}
 	else
 	{
@@ -206,6 +197,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 					ClientsRequest.push_back(std::make_pair(client, request));
 					std::cout << "Nuova connessione accettata sul server " << i << std::endl;
 					FD_SET(client_fd, &fdreads[i]);
+					FD_SET(client_fd, &fdwrites[i]);
 					if (client_fd > fdmaxs[i])
 						fdmaxs[i] = client_fd;
 				}
@@ -259,6 +251,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 											}
 										}
 									}
+
 									if (!found)
 									{
 										for (size_t l = 0; l < servers.size(); l++)
@@ -285,10 +278,12 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 			}
 		}
 
-		// std::cout << "Numero di richieste pronte: " << ResponseReady.size() << std::endl;
 
 		for (size_t j = 0; j < ResponseReady.size(); j++)
 		{
+
+			std::cout << "Numero di richieste pronte: " << ResponseReady.size() << std::endl;
+
 			for(size_t i=0; i<servers.size(); i++)
 			{
 
@@ -298,12 +293,12 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 					if (ResponseReady[j].getDone() == true)
 					{
 						ResponseReady.erase(ResponseReady.begin() + j);
+						playSound();
+						std::cout << "Richiesta inviata sul server " << i << std::endl;
 					}
-					std::cout << "Richiesta inviata sul server " << i << std::endl;
 					break;
 				}
 			}
-
 		}
 	}
 }
