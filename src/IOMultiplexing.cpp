@@ -165,7 +165,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 			int fdmax = fdmaxs[i];
 			std::vector<epoll_event>& server_events = events[i];
 
-			int fd_pronti = epoll_wait(epoll_fd, server_events.data(), fdmax + 1, 3000);
+			int fd_pronti = epoll_wait(epoll_fd, server_events.data(), fdmax + 1, 500);
 			if (fd_pronti == -1)
 			{
 				std::cerr << "Errore nella chiamata a epoll_wait per il server " << i << std::endl;
@@ -174,7 +174,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 			}
 			else if (fd_pronti == 0)
 			{
-				std::cout << "Timeout scaduto per il server " << i << std::endl;
+				// std::cout << "Timeout scaduto per il server " << i << std::endl;
 				continue;
 			}
 
@@ -219,15 +219,15 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 							int nread = recv(fd, buffer, 10000, 0);
 							if (nread == -1)
 							{
-								FD_CLR(fd, &fdreads[i]);
-								close(fd);
+								FD_CLR(ClientsRequest[i].first.getSocketFd(), &fdreads[i]);
+								close(ClientsRequest[i].first.getSocketFd());
 								ClientsRequest.erase(ClientsRequest.begin() + k);
 							}
 							else if (nread == 0)
 							{
-								FD_CLR(fd, &fdreads[i]);
+								FD_CLR(ClientsRequest[i].first.getSocketFd(), &fdreads[i]);
 								std::cout << "Client disconnesso" << std::endl;
-								close(fd);
+								close(ClientsRequest[i].first.getSocketFd());
 								ClientsRequest.erase(ClientsRequest.begin() + k);
 							}
 							else
@@ -285,7 +285,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 			}
 		}
 
-		std::cout << "Numero di richieste pronte: " << ResponseReady.size() << std::endl;
+		// std::cout << "Numero di richieste pronte: " << ResponseReady.size() << std::endl;
 
 		for (size_t j = 0; j < ResponseReady.size(); j++)
 		{
