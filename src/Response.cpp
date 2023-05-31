@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/31 12:03:37 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/31 14:23:05 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void Response::setDone(int done)
 void Response::handler(fd_set& r, fd_set& w) 
 {
 	(void)r;
-    if (FD_ISSET(_client_fd, &w)) {
+	(void) w;
         std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
 
         const char* response_data = response.c_str();
@@ -73,5 +73,4 @@ void Response::handler(fd_set& r, fd_set& w)
         }
 
         done = true;
-    }
 }
