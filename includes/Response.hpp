@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/30 18:41:17 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/05/31 11:51:42 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ class Response
 			int getClientFD() const;
 			int &getDone(void);
 			void setDone(int done);
+
+			void handler(fd_set &r, fd_set &w);
 
 };
 

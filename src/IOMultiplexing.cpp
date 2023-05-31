@@ -144,7 +144,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 
         epoll_fds[i] = epoll_fd;
         fdreads[i] = fdread;
-        // fdwrites[i] = {}; // Inizializza l'insieme di fdwrite vuoto per il server i
+        fdwrites[i] = fdread;
         fdmaxs[i] = fdmax;
         events[i].resize(fdmax + 1);
     }
@@ -207,8 +207,8 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 
 
 	//test, da eliminare
-                    std::string res = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
-					send(client_fd, res.c_str(), res.length(), 0);
+                    // std::string res = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
+					// send(client_fd, res.c_str(), res.length(), 0);
                 }
                 else
                 {
@@ -253,6 +253,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
                                                 response = Response(ClientsRequest[k].second, servers[l], ClientsRequest[k].first.getSocketFd());
                                                 ResponseReady.push_back(response);
                                                 found = true;
+                                                break;
                                             }
                                         }
                                     }
@@ -265,12 +266,13 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
                                                 response = Response(ClientsRequest[k].second, servers[l], ClientsRequest[k].first.getSocketFd());
                                                 ResponseReady.push_back(response);
                                                 found = true;
+                                                break;
                                             }
                                         }
                                     }
                                     if (!found)
                                     {
-                                        response = Response(ClientsRequest[k].second, servers[0], ClientsRequest[k].first.getSocketFd());
+                                        response = Response(ClientsRequest[k].second, ClientsRequest[k].first.getServer(), ClientsRequest[k].first.getSocketFd());
                                         ResponseReady.push_back(response);
                                     }
                                 }
@@ -283,11 +285,10 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 
         for (size_t i = 0; i < ResponseReady.size(); i++)
         {
-            if (FD_ISSET(ResponseReady[i].getClientFD(), &fdwrite_cp))
+            if (FD_ISSET(ResponseReady[i].getClientFD(), &fdwrites[i]))
             {
-                // ResponseReady[i].handler(fdreads[i], fdwrites[i]);
-                				
-                    // ResponseReady[i].setDone(1);
+            std::cout << "sono qui" << std::endl;
+                ResponseReady[i].handler(fdreads[i], fdwrites[i]);                				
                 if (ResponseReady[i].getDone() == 1)
                     ResponseReady.erase(ResponseReady.begin() + i);
             }
