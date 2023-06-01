@@ -6,11 +6,19 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/31 18:35:08 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/01 12:47:05 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
+
+static std::string deleteSpace(std::string str)
+{
+	for (int i = 0; str[i]; i++)
+        if (str[i] == ' ')
+            str.erase(i, 1);
+    return str;
+}
 
 Response::Response()
 {
@@ -65,11 +73,11 @@ static std::string	getDate(void)
 	time(&rawtime);
 	timeInfo = localtime (&rawtime);
 
-	strftime(buffer,80,"%a, %e %b %G %T GMT+2",timeinfo);
+	strftime(buffer,80,"%a, %e %b %G %T GMT+2",timeInfo);
 	ret = buffer;
 }
 
-void Response::handler(fd_set& r, fd_set& w) 
+void Response::test(fd_set& r, fd_set& w) 
 {
 	(void)r;
 	(void) w;
@@ -79,7 +87,7 @@ void Response::handler(fd_set& r, fd_set& w)
 
     const char* response_data = response.c_str();
     size_t response_length = response.length();
-    ssize_t bytes_sent = send(_client_fd, response_data, response_length, 
+    ssize_t bytes_sent = send(_client_fd, response_data, response_length, 0);
     if (bytes_sent == -1) {
         std::cerr << "Error sending response to client" << std::endl;
     } else if (static_cast<size_t>(bytes_sent) < response_length) {
@@ -88,4 +96,11 @@ void Response::handler(fd_set& r, fd_set& w)
     }
 
 	done = true;
+}
+
+void Response::handler(fd_set &r, fd_set &w)
+{
+	if (!ok)
+		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
+	
 }
