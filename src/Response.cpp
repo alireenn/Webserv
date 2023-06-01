@@ -12,13 +12,13 @@
 
 #include "../includes/Response.hpp"
 
-static std::string deleteSpace(std::string str)
-{
-	for (int i = 0; str[i]; i++)
-        if (str[i] == ' ')
-            str.erase(i, 1);
-    return str;
-}
+// static std::string deleteSpace(std::string str)
+// {
+// 	for (int i = 0; str[i]; i++)
+//         if (str[i] == ' ')
+//             str.erase(i, 1);
+//     return str;
+// }
 
 Response::Response()
 {
@@ -63,26 +63,26 @@ void Response::setDone(int done)
 	this->done = done;
 }
 
-static std::string	getDate(void)
-{
-	time_t		rawtime;
-	struct tm *timeInfo;
-	char		buffer[80];
-	std::string	ret;
+// static std::string	getDate(void)
+// {
+// 	time_t		rawtime;
+// 	struct tm *timeInfo;
+// 	char		buffer[80];
+// 	std::string	ret;
 
-	time(&rawtime);
-	timeInfo = localtime (&rawtime);
+// 	time(&rawtime);
+// 	timeInfo = localtime (&rawtime);
 
-	strftime(buffer,80,"%a, %e %b %G %T GMT+2",timeInfo);
-	ret = buffer;
-}
+// 	strftime(buffer,80,"%a, %e %b %G %T GMT+2",timeInfo);
+// 	ret = buffer;
+// }
 
 void Response::test(fd_set& r, fd_set& w) 
 {
 	(void)r;
 	(void) w;
 
-	std::string	date = getDate();
+	// std::string	date = getDate();
     std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
 
     const char* response_data = response.c_str();
@@ -98,9 +98,9 @@ void Response::test(fd_set& r, fd_set& w)
 	done = true;
 }
 
-void Response::handler(fd_set &r, fd_set &w)
-{
-	if (!ok)
-		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
+// void Response::handler(fd_set &r, fd_set &w)
+// {
+// 	if (!ok)
+// 		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
 	
-}
+// }

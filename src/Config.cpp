@@ -187,11 +187,10 @@ void Config::parseLocation(std::string &line, Server &server)
 			else if (token == "client_max_body_size")
 			{
 				std::string client_max_body_size = nextToken(line);
-				// if (!utils::check_size(client_max_body_size))
-				// 	std::cout << "Error: Size not valid\n";
-				// else
-				// 	tmploc.setClientMaxBodySize(client_max_body_size);
-				tmploc.setClientMaxBodySize(client_max_body_size);
+				if (client_max_body_size.empty())
+					std::cout << "Error: Size not valid\n";
+				else
+					tmploc.setClientMaxBodySize(client_max_body_size);
 			}
 			if (token == "redirection")
 			{

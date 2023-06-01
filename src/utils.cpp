@@ -63,8 +63,3 @@ int utils::check_methods(std::string token)
         return (0);
     return (1);
 }
-
-// int utils::check_size(std::string token)
-// {
-//     if ()
-// }
