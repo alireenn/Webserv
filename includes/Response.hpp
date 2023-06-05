@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 12:51:27 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/05 14:12:16 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ class Response
 
 			void handler(fd_set &r, fd_set &w);
 			bool isValid(fd_set &r, fd_set &w);
+			bool isSubjectCompliant(fd_set & r, fd_set & w);
 			bool sendError(std::string code, std::string msg);
 
 };
