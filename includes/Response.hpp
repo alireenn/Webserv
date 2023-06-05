@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 
 #ifndef RESPONSE_HPP
-#define RESPONSE_HPP
+# define RESPONSE_HPP
 
-#include "Request.hpp"
-#include "Server.hpp"
+# include <fstream>
+# include "Request.hpp"
+# include "Server.hpp"
 
 class Response
 {

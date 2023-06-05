@@ -102,19 +102,15 @@ void Response::test(fd_set& r, fd_set& w)
 
 bool Response::sendError(std::string code, std::string msg)
 {
-		/*
-						Ci sono quasi, ma devo ancora
-						far funzionare bene questa 
-						cosa dell'using errpage (ccantale)
+	using vecterr = std::vector<std::pair<std::string, std::string> >;
+	vecterr	errorPages = this->_server.getErrorPages();
 
-	using errpage = std::vector<std::pair<std::string, std::string> >;
-	errpage	errorPages = this->server.getErrorPages();
-
-	for (errpage::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
+	std::cout << "\n\n\n\nHEY\n\n\n\n" << std::endl;
+	for (vecterr::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
 	{
-			if (it->first() == code)
+			if (it->first == code)
 			{
-					std::ifstream	page(it->second().c_str());
+					std::ifstream	page(it->second.c_str(), std::ifstream::in);
 					std::string		toSend;
 					std::string		line;
 
@@ -125,13 +121,14 @@ bool Response::sendError(std::string code, std::string msg)
 						toSend += line;
 						std::getline(page, line);
 					} while (!line.empty());
+					page.close();
 					if (toSend.empty())
 							return (true);
+					std::cout << "\n\n\n\n" << toSend << "\n\n\n\n" << std::endl;
 					send(_client_fd, toSend.c_str(), toSend.size(), 0);
 					return (false);
 			}
 	}
-	*/
 	return (true);
 }
 
