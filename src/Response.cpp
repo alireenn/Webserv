@@ -6,15 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2023/06/05 16:48:10 by ccantale         ###   ########.fr       */
-=======
-/*   Updated: 2023/06/05 16:54:11 by mruizzo          ###   ########.fr       */
->>>>>>> f5307309cebc9a43493d93a3001f3cc6cfd73967
-=======
-/*   Updated: 2023/06/05 16:59:10 by mruizzo          ###   ########.fr       */
->>>>>>> c9f8ca6771b1302baf939c281c2875c7595698e3
+/*   Updated: 2023/06/05 18:42:31 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +102,37 @@ void Response::test(fd_set& r, fd_set& w)
 
 bool Response::sendError(std::string code, std::string msg)
 {
-	//da completare
-	return true;
+		/*
+						Ci sono quasi, ma devo ancora
+						far funzionare bene questa 
+						cosa dell'using errpage (ccantale)
+
+	using errpage = std::vector<std::pair<std::string, std::string> >;
+	errpage	errorPages = this->server.getErrorPages();
+
+	for (errpage::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
+	{
+			if (it->first() == code)
+			{
+					std::ifstream	page(it->second().c_str());
+					std::string		toSend;
+					std::string		line;
+
+					if (!page.is_open())
+							return (true);
+					do
+					{
+						toSend += line;
+						std::getline(page, line);
+					} while (!line.empty());
+					if (toSend.empty())
+							return (true);
+					send(_client_fd, toSend.c_str(), toSend.size(), 0);
+					return (false);
+			}
+	}
+	*/
+	return (true);
 }
 
 bool Response::isValid(fd_set &r, fd_set &w)

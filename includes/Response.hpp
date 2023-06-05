@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 16:53:55 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/05 17:04:44 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Response
 		int error;
 		std::string status_code;
 		Location _location;
+
 	public:
 			Response();
 			~Response();
