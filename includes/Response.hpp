@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 16:20:58 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/05 16:53:55 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ class Response
 			bool handleAutoIndex(fd_set &r, fd_set &w);
 			bool handleIndex();
 			void sendData(fd_set &r, fd_set &w);
+			bool checkLocation(fd_set &r, fd_set &w);
+			bool handleRedirection(fd_set &r, fd_set &w);
+			bool handleMethod(fd_set &r, fd_set &w);
 
 };
 

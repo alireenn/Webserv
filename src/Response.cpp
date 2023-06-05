@@ -6,7 +6,11 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/06/05 16:48:10 by ccantale         ###   ########.fr       */
+=======
+/*   Updated: 2023/06/05 16:54:11 by mruizzo          ###   ########.fr       */
+>>>>>>> f5307309cebc9a43493d93a3001f3cc6cfd73967
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,37 +169,59 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
 
 bool Response::redirectPath(fd_set &r, fd_set &w)
 {
-	
+	std::cout << "REDIRECT PATH da scrivere" << std::endl;
+	return true;
 }
 
 bool Response::checkForbidden(fd_set &r, fd_set &w)
 {
-	
+	std::cout << "CHECK FORBIDDEN da scrivere" << std::endl;
+	return true;
 }
 
 bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 {
-
+	std::cout << "HANDLE AUTOINDEX da scrivere" << std::endl;
+	return true;
 }
 
 bool Response::handleIndex()
 {
-	
+	std::cout << "HANDLE INDEX da scrivere" << std::endl;
+	return true;
 }
 
 void Response::sendData(fd_set &r, fd_set &w)
 {
-	
+	std::cout << "SEND DATA da scrivere" << std::endl;
+}
+
+bool Response::checkLocation(fd_set &r, fd_set &w)
+{
+	std::cout << "CHECK LOCATION da scrivere" << std::endl;
+	return true;
+}
+
+bool Response::handleRedirection(fd_set &r, fd_set &w)
+{
+	std::cout << "HANDLE REDIRECTION da scrivere" << std::endl;
+	return true;
+}
+
+bool Response::handleMethod(fd_set &r, fd_set &w)
+{
+	std::cout << "HANDLE METHOD da scrivere" << std::endl;
+	return true;
 }
 
 void Response::handler(fd_set &r, fd_set &w)
 {
 	if (!ok)
 		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
-	if (ok || (isValid(r,w) && isSubjectCompliant(r,w)))//&& checkLocation(r,w)
+	if (ok || (isValid(r,w) && isSubjectCompliant(r,w) && checkLocation(r,w)))
 	{
-		// if(ok || (handleRedirection(r,w) && handleMethod(r,w)))
-		// {
+		if(ok || (handleRedirection(r,w) && handleMethod(r,w)))
+		{
 			std::string tmp = deleteSpace(_request.GetRequest().at("Method"));
 			if(tmp == "GET")
 			{
@@ -203,7 +229,7 @@ void Response::handler(fd_set &r, fd_set &w)
 					if(ok || handleIndex() || handleAutoIndex(r,w))
 						sendData(r,w);
 			}
-		// }
+		}
 	}
 	
 	
