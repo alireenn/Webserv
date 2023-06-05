@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 16:54:11 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/05 16:59:10 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,8 +223,14 @@ void Response::handler(fd_set &r, fd_set &w)
 					if(ok || handleIndex() || handleAutoIndex(r,w))
 						sendData(r,w);
 			}
+			else if (tmp == "POST")
+			{
+				std::cout << "POST da scrivere" << std::endl;
+			}
+			else if (tmp == "DELETE")
+			{
+				std::cout << "DELETE da scrivere" << std::endl;
+			}
 		}
-	}
-	
-	
+	}	
 }
