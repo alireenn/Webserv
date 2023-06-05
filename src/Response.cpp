@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 16:30:58 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/05 16:48:10 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,15 +163,47 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
 	return true;
 }
 
+bool Response::redirectPath(fd_set &r, fd_set &w)
+{
+	
+}
+
+bool Response::checkForbidden(fd_set &r, fd_set &w)
+{
+	
+}
+
+bool Response::handleAutoIndex(fd_set &r, fd_set &w)
+{
+
+}
+
+bool Response::handleIndex()
+{
+	
+}
+
+void Response::sendData(fd_set &r, fd_set &w)
+{
+	
+}
+
 void Response::handler(fd_set &r, fd_set &w)
 {
 	if (!ok)
 		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
 	if (ok || (isValid(r,w) && isSubjectCompliant(r,w)))//&& checkLocation(r,w)
 	{
-		//if(ok || (handleRedirection(r,w) && handleMethod(r,w)))
-		//std::string tmp = deleteSpace(_request.GetRequest().at("Method"));
-		//if post / if get / if delete
+		// if(ok || (handleRedirection(r,w) && handleMethod(r,w)))
+		// {
+			std::string tmp = deleteSpace(_request.GetRequest().at("Method"));
+			if(tmp == "GET")
+			{
+				if (ok || (redirectPath(r,w) && checkForbidden(r,w)))
+					if(ok || handleIndex() || handleAutoIndex(r,w))
+						sendData(r,w);
+			}
+		// }
 	}
 	
 	
