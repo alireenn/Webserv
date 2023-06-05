@@ -289,7 +289,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 
 				if(FD_ISSET(ResponseReady[j].getClientFD(), &fdwrites[i]))
 				{
-					// ResponseReady[j].handler(fdwrites[i], fdreads[i]);
+					ResponseReady[j].handler(fdwrites[i], fdreads[i]);
 					ResponseReady[j].test(fdwrites[i], fdreads[i]);
 					if (ResponseReady[j].getDone() == true)
 					{

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:02:14 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/30 15:52:29 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/05 11:55:06 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,15 @@ Request &Request::operator=(const Request &req)
 {
 	if (this != &req)
 	{
-		this->header = req.header;
-		this->first_line = req.first_line;
-		this->done = req.done;
-		this->_length = req._length;
+		this->body = req.body;
 		this->body_length = req.body_length;
 		this->fd = req.fd;
+		this->header = req.header;
+		this->_length = req._length;
+		this->first_line = req.first_line;
 		this->finished = req.finished;
+		this->request = req.request;
+		this->done = req.done;
 		this->send = req.send;
 		this->size = req.size;
 		this->connection = req.connection;
@@ -67,7 +69,7 @@ Request &Request::operator=(const Request &req)
 
 std::map<std::string, std::string> &Request::GetRequest(void)
 {
-	return (this->request);
+	return (request);
 }
 
 int &Request::getHeader(void)
@@ -414,4 +416,10 @@ int Request::getLentChunked(std::string str)
 		}
 	}
 	return 0;
+}
+
+
+std::string &Request::getPathTmp(void)
+{
+	return path_tmp;
 }

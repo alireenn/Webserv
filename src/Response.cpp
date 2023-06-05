@@ -6,19 +6,19 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/01 12:47:05 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/05 12:52:03 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
 
-// static std::string deleteSpace(std::string str)
-// {
-// 	for (int i = 0; str[i]; i++)
-//         if (str[i] == ' ')
-//             str.erase(i, 1);
-//     return str;
-// }
+static std::string deleteSpace(std::string str)
+{
+	for (int i = 0; str[i]; i++)
+        if (str[i] == ' ')
+            str.erase(i, 1);
+    return str;
+}
 
 Response::Response()
 {
@@ -97,10 +97,42 @@ void Response::test(fd_set& r, fd_set& w)
 
 	done = true;
 }
+bool sendError(std::string code, std::string msg)
+{
+	//da completare
+	return true;
+}
 
-// void Response::handler(fd_set &r, fd_set &w)
-// {
-// 	if (!ok)
-// 		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
+bool Response::isValid(fd_set &r, fd_set &w)
+{
+	std::string Method = _request.GetRequest().at("Method");
+    std::string Version = _request.GetRequest().at("Version");
+    if (Method != "GET" && Method != "POST" && Method != "PUT" && Method != "PATCH" && Method != "DELETE" && Method != "COPY" && Method != "HEAD" && Method != "OPTIONS" && Method != "LINK" && Method != "UNLINK" && Method != "PURGE" && Method != "LOCK" && Method != "UNLOCK" && Method != "PROPFIND" && Method != "VIEW" && Version != "HTTP/1.1" && Version != "HTTP/1.0" && Version != "HTTP/2.0" && Version != "HTTP/3.0")
+	{
+		if (sendError("400" , "Bad Request"))
+		{
+			std::cout << "400 Bad Request" << std::endl;
+			std::string response = "HTTP/1.1 400 \r\nConnection: close\r\nContent-Length: 133\r\n\r\n";
+			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>400 Bad Request</span>\n</body>\n</html>";
+			send(_client_fd, response.c_str(), response.length(), 0);
+			FD_CLR(_client_fd, &w);
+			FD_SET(_client_fd, &r);
+			done = true;
+			return false;
+		}
+		
+	}
+	return true;
+}
+
+void Response::handler(fd_set &r, fd_set &w)
+{
+	if (!ok)
+		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
+	if (ok || isValid(r,w))
+	{
+		/* code */
+	}
 	
-// }
+	
+}
