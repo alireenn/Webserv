@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 14:52:32 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/05 16:30:58 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,28 +63,30 @@ void Response::setDone(int done)
 	this->done = done;
 }
 
-// static std::string	getDate(void)
-// {
-// 	time_t		rawtime;
-// 	struct tm *timeInfo;
-// 	char		buffer[80];
-// 	std::string	ret;
+static std::string	getDate(void)
+{
+	time_t		rawtime;
+	struct tm	*timeInfo;
+	char		buffer[80];
+	std::string	ret;
 
-// 	time(&rawtime);
-// 	timeInfo = localtime (&rawtime);
+	time(&rawtime);
+	timeInfo = localtime (&rawtime);
 
-// 	strftime(buffer,80,"%a, %e %b %G %T GMT+2",timeInfo);
-// 	ret = buffer;
-// }
+	strftime(buffer, 80, "%a,%e %b %G %T GMT+2", timeInfo);
+	ret = buffer;
+	return (ret);
+}
 
 void Response::test(fd_set& r, fd_set& w) 
 {
 	(void)r;
-	(void) w;
+	(void)w;
 
-	// std::string	date = getDate();
-    std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
+	std::string	date = getDate();
+    std::string response = "ciao" + date; //"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
 
+	std::cout << date << std::endl;
     const char* response_data = response.c_str();
     size_t response_length = response.length();
     ssize_t bytes_sent = send(_client_fd, response_data, response_length, 0);
@@ -98,7 +100,7 @@ void Response::test(fd_set& r, fd_set& w)
 	done = true;
 }
 
-bool sendError(std::string code, std::string msg)
+bool Response::sendError(std::string code, std::string msg)
 {
 	//da completare
 	return true;
