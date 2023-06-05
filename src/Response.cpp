@@ -7,10 +7,14 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2023/06/05 16:48:10 by ccantale         ###   ########.fr       */
 =======
 /*   Updated: 2023/06/05 16:54:11 by mruizzo          ###   ########.fr       */
 >>>>>>> f5307309cebc9a43493d93a3001f3cc6cfd73967
+=======
+/*   Updated: 2023/06/05 16:59:10 by mruizzo          ###   ########.fr       */
+>>>>>>> c9f8ca6771b1302baf939c281c2875c7595698e3
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,8 +233,14 @@ void Response::handler(fd_set &r, fd_set &w)
 					if(ok || handleIndex() || handleAutoIndex(r,w))
 						sendData(r,w);
 			}
+			else if (tmp == "POST")
+			{
+				std::cout << "POST da scrivere" << std::endl;
+			}
+			else if (tmp == "DELETE")
+			{
+				std::cout << "DELETE da scrivere" << std::endl;
+			}
 		}
-	}
-	
-	
+	}	
 }
