@@ -6,7 +6,7 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 16:49:44 by ccantale          #+#    #+#             */
-/*   Updated: 2023/06/05 16:50:22 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/06 16:11:21 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,7 +301,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 
 				if(FD_ISSET(ResponseReady[j].getClientFD(), &fdwrites[i]))
 				{
-					//ResponseReady[j].handler(fdwrites[i], fdreads[i]);
+					ResponseReady[j].handler(fdwrites[i], fdreads[i]);
 					ResponseReady[j].test(fdwrites[i], fdreads[i]);
 					if (ResponseReady[j].getDone() == true)
 					{

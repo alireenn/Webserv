@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 15:47:00 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:54:03 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void Response::test(fd_set& r, fd_set& w)
 	(void)w;
 
 	std::string	date = getDate();
-    std::string response = "ciao" + date; //"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
+    std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nDate: " + date + "\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
 
 	std::cout << date << std::endl;
     const char* response_data = response.c_str();
@@ -106,28 +106,29 @@ bool Response::sendError(std::string code, std::string msg)
 	t_err	errorPages = this->_server.getErrorPages();
 
 	std::cout << "\n\n\n\nHEY\n\n\n\n" << std::endl;
+	std::cout << msg << std::endl;
 	for (t_err::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
 	{
-			if (it->first == code)
-			{
-					std::ifstream	page(it->second.c_str(), std::ifstream::in);
-					std::string		toSend;
-					std::string		line;
+		if (it->first == code)
+		{
+			std::ifstream	page(it->second.c_str(), std::ifstream::in);
+			std::string		toSend;
+			std::string		line;
 
-					if (!page.is_open())
-							return (true);
-					do
-					{
-						toSend += line;
-						std::getline(page, line);
-					} while (!line.empty());
-					page.close();
-					if (toSend.empty())
-							return (true);
-					std::cout << "\n\n\n\n" << toSend << "\n\n\n\n" << std::endl;
-					send(_client_fd, toSend.c_str(), toSend.size(), 0);
-					return (false);
-			}
+			if (!page.is_open())
+					return (true);
+			do
+			{
+				toSend += line;
+				std::getline(page, line);
+			} while (!line.empty());
+			page.close();
+			if (toSend.empty())
+					return (true);
+			std::cout << "\n\n\n\n" << toSend << "\n\n\n\n" << std::endl;
+			send(_client_fd, toSend.c_str(), toSend.size(), 0);
+			return (false);
+		}
 	}
 	return (true);
 }
@@ -136,6 +137,7 @@ bool Response::isValid(fd_set &r, fd_set &w)
 {
 	std::string method = _request.GetRequest().at("Method");
     std::string version = _request.GetRequest().at("Version");
+
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH" && method != "DELETE" && method != "COPY" && method != "HEAD" && method != "OPTIONS" && method != "LINK" && method != "UNLINK" && method != "PURGE" && method != "LOCK" && method != "UNLOCK" && method != "PROPFIND" && method != "VIEW" && version != "HTTP/1.1" && version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0")
 	{
 		if (sendError("400" , "Bad Request"))
@@ -149,7 +151,6 @@ bool Response::isValid(fd_set &r, fd_set &w)
 			done = true;
 			return false;
 		}
-		
 	}
 	return true;
 }
@@ -158,6 +159,7 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
 {
 	std::string method = _request.GetRequest().at("Method");
     std::string version = _request.GetRequest().at("Version");
+
 	if (method != "GET" && method != "POST" && method != "DELETE")
 	{
 		if (sendError("501", "Method not Implemented"))
@@ -192,6 +194,7 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
 bool Response::redirectPath(fd_set &r, fd_set &w)
 {
 	struct stat		fileStat; // La struttura stat contiene i metadati relativi a un file o a una directory, come ad esempio le informazioni sulle autorizzazioni, le dimensioni, le informazioni sul timestamp e altro ancora.
+
 	stat(_full_path.c_str(), &fileStat); // la struttura stat verrà popolata con i dati corrispondenti al file specificato
 	if ((access(_full_path.c_str(),F_OK) != -1 //il file esiste?
 		&& S_ISDIR(fileStat.st_mode)) //il file è una directory?
@@ -211,6 +214,7 @@ bool Response::redirectPath(fd_set &r, fd_set &w)
 bool Response::checkForbidden(fd_set &r, fd_set &w)
 {
 	struct stat fileStat;
+		
 	stat(_full_path.c_str(), &fileStat);
 	if(access(_full_path.c_str(),F_OK) != -1 && access(_full_path.c_str(),R_OK) == -1)
 	{
@@ -255,6 +259,8 @@ void Response::sendData(fd_set &r, fd_set &w)
 {
 	//startCgi();
 	struct stat fileStat;
+
+	stat(_full_path.c_str(), &fileStat);
 	if (!ok)
 	{
 		/* code */
