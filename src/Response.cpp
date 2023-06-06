@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 15:03:25 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 15:47:00 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,11 @@ void Response::test(fd_set& r, fd_set& w)
 
 bool Response::sendError(std::string code, std::string msg)
 {
-	using vecterr = std::vector<std::pair<std::string, std::string> >;
-	vecterr	errorPages = this->_server.getErrorPages();
+	typedef std::vector<std::pair<std::string, std::string> > t_err;
+	t_err	errorPages = this->_server.getErrorPages();
 
 	std::cout << "\n\n\n\nHEY\n\n\n\n" << std::endl;
-	for (vecterr::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
+	for (t_err::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
 	{
 			if (it->first == code)
 			{
