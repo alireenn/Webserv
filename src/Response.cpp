@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 15:03:25 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 15:46:11 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,21 @@ static std::string deleteSpace(std::string str)
         if (str[i] == ' ')
             str.erase(i, 1);
     return str;
+}
+
+static int comp(const char *str, const char *path)
+{
+    int i = 0;
+    while(str[i] && path[i])
+    {
+        if (str[i] == path[i])
+            i++;
+        else
+            break;
+    }
+    if ((!path[i] && !str[i]) || ( !str[i] && path[i] == '/'))
+        return 1;
+    return 0;
 }
 
 Response::Response()

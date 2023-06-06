@@ -40,14 +40,10 @@ fclean: clean
 
 kill: clean fclean
 
-
-re: kill
-	make
+re: fclean all
 
 r:
 	make
 	./$(NAME)
 
-test:
-	g++ -o epool_test test_epool.cpp
 .PHONY: all clean fclean kill re

@@ -1,0 +1,85 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>WebServ</title>
+		<style type="text/css">
+		body {
+			background-image: url("la_taverna.jpg");
+			background-size: cover;
+			background-position: center;
+			background-attachment: fixed;
+			background-repeat: no-repeat;
+			resize: both;
+			overflow: auto;
+		}
+	   button {
+			margin: 0 auto;
+			display: inline;
+			margin-left: auto;
+			margin-right: auto;
+			background-color: #044361;
+			border: solid 1px black;
+			border-radius: 60px;
+			position: relative;
+			top: 100px;
+			width: 100px;
+			height: 50px;
+			transition: 1.5s ease-in-out;
+		}
+		button:hover {
+			background-color: #a2c4f7;
+		}
+		a {
+			font: 15px Arial, sans-serif;
+			text-decoration: none;
+			color: #ffffff;
+		}
+		a:hover {
+			text-decoration: underline;
+		}
+		.title {
+			text-align: center;
+			font-size: 100px;
+			color: #bbab8d;
+			position: relative;
+			top: 100px;
+			text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+			
+		}
+		.text {
+			text-align: center;
+			font-weight: 10;
+			font-size: 30px;
+			color: #000000;
+			position: relative;
+			top: 80px;
+		}
+		.block_button {
+			text-align: center;
+			position: relative;
+			top: 10px;
+		}
+
+		.audio {
+			position: fixed;
+			top: 20;
+			right: 20;
+		}
+
+	</style>
+	</head>
+
+
+	<body>
+									<!--autoplay  ???? --> 
+		<audio src="Sway.mp3" autoplay loop controls class="audio"></audio>
+		<h1 class="title">WebServ</h1>
+		<p class="text">WebServ is a simple web server written in C++.
+			<br>It is currently under development.</p>   
+		<div class="block_button">
+			<button><a href="https://github.com/alireenn" target="_blank" rel="noreferrer noopener"><strong>Alireenn</strong></a></button>
+			<button><a  href="https://github.com/Ozziur" target="_blank" rel="noreferrer noopener"><strong>Ozziur</strong></a></button>
+			<button><a href="https://github.com/CCantale" target="_blank" rel="noreferrer noopener"><strong>CCantale</strong></a></button>
+		</div>
+	</body> 
+</html>
