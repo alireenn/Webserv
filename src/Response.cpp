@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 11:20:03 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 11:39:50 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,37 @@ bool Response::handleRedirection(fd_set &r, fd_set &w)
 
 bool Response::handleMethod(fd_set &r, fd_set &w)
 {
-	std::cout << "HANDLE METHOD da scrivere" << std::endl;
+	_path = deleteSpace(_request.GetRequest().at("Path"));
+	if (_path.find(_location.getLocationPath()) != -1) //c++ potrebbe rompere il cazzo per i tipi
+	{
+		if (!_location.getClientMaxBodySize().empty())
+			len_server = strtoul(_location.getClientMaxBodySize().c_str(), NULL, 10);
+		else
+			len_server = -1;
+		for (size_t i = 0; i < _location.getAllowedMethods().size(); i++)
+		{
+			if (deleteSpace(_location.getAllowedMethods().at(i)) == deleteSpace(_request.GetRequest().at("Method")))
+				return true;
+		}
+		
+		if (_request.GetRequest().at("Method") == "POST")
+		{
+			if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+				remove(_request.getPathTmp().c_str());
+		}
+		
+		if (sendError("405", "Method Not Allowed"))
+		{
+			std::cout << "405 Method Not Allowed" << std::endl;
+			std::string response = "HTTP/1.1 405 \r\nConnection: close\r\nContent-Length: 144\r\n\r\n";
+			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>405 Method Not Allowed</span>\n</body>\n</html>";
+			send(_client_fd, response.c_str(), response.length(), 0);
+			FD_CLR(_client_fd, &w);
+			FD_SET(_client_fd, &r);
+			done = true;
+		}
+		return false;
+	}
 	return true;
 }
 
