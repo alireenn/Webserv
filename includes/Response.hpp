@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 12:52:56 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 20:56:36 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Response
 			bool redirectPath(fd_set &r, fd_set &w);
 			bool checkForbidden(fd_set &r, fd_set &w);
 			bool handleAutoIndex(fd_set &r, fd_set &w);
-			bool handleIndex();
+			bool handleIndex(void);
 			void sendData(fd_set &r, fd_set &w);
 			bool checkLocation(fd_set &r, fd_set &w);
 			bool handleRedirection(fd_set &r, fd_set &w);

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:02:14 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 11:55:06 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 21:02:20 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,13 +132,14 @@ static int last_slash(std::string tmp)
 {
     int a = 0;
     int i = 0;
+
     a = i = tmp.find("/",0);
     while(i != -1)
     {
         a = i;
-        i = tmp.find("/",i+1);
+        i = tmp.find("/", i + 1);
     }
-    return a;
+    return (a);
 }
 
 void Request::getBody(char *str)
