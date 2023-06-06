@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 14:32:56 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 15:03:25 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,13 +238,28 @@ bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 
 bool Response::handleIndex()
 {
-	std::cout << "HANDLE INDEX da scrivere" << std::endl;
-	return true;
+	struct stat fileStat;
+	stat(_full_path.c_str(), &fileStat);
+	if (access(_full_path.c_str(), F_OK) != -1 && S_ISDIR(fileStat.st_mode))
+		return true;
+	for (size_t i = 0; i < _location.getIndex().at(i); i++)
+	{
+		_full_path += "/" + _location.getIndex().at(i);
+		if (access(_full_path.c_str(), F_OK) != -1)
+			return true;
+	}
+	return false;
 }
 
 void Response::sendData(fd_set &r, fd_set &w)
 {
-	std::cout << "SEND DATA da scrivere" << std::endl;
+	//startCgi();
+	struct stat fileStat;
+	if (!ok)
+	{
+		/* code */
+	}
+	
 }
 
 bool Response::checkLocation(fd_set &r, fd_set &w)
