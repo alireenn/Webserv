@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 18:42:31 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:20:03 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,17 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 
 bool Response::handleRedirection(fd_set &r, fd_set &w)
 {
-	std::cout << "HANDLE REDIRECTION da scrivere" << std::endl;
+	_path = deleteSpace(_request.GetRequest().at("Path"));
+	if (!_location.getRedirection().second.empty())
+	{
+		std::cout << "302 Reindirizzamento temporaneo trovato" << std::endl;
+		std::string response = "HTTP/1.1 302 Found\r\nLocation: " + _location.getRedirection().second + "\r\nContent-Length: 0\r\n\r\n";
+		send(_client_fd, response.c_str(), response.length(), 0);
+		FD_CLR(_client_fd, &w);
+		FD_SET(_client_fd, &r);
+		done = true;
+		return false;
+	}
 	return true;
 }
 
