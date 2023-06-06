@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 18:30:40 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 18:32:25 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,8 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 
 bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 {
+	(void)r;
+	(void)w;
 	std::cout << "HANDLE AUTOINDEX da scrivere" << std::endl;
 	return false;
 }
@@ -273,6 +275,8 @@ bool Response::handleIndex()
 
 void Response::sendData(fd_set &r, fd_set &w)
 {
+	(void)r;
+	(void)w;
 	//startCgi();
 	struct stat fileStat;
 
@@ -367,7 +371,7 @@ bool Response::handleRedirection(fd_set &r, fd_set &w)
 bool Response::handleMethod(fd_set &r, fd_set &w)
 {
 	_path = deleteSpace(_request.GetRequest().at("Path"));
-	if (_path.find(_location.getLocationPath()) != -1) 
+	if (_path.find(_location.getLocationPath()) != std::string::npos)
 	{
 		if (!_location.getClientMaxBodySize().empty())
 			len_server = strtoul(_location.getClientMaxBodySize().c_str(), NULL, 10);
