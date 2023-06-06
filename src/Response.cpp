@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 17:57:29 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/06 18:28:13 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,6 +251,8 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 
 bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 {
+	(void)r;
+	(void)w;
 	std::cout << "HANDLE AUTOINDEX da scrivere" << std::endl;
 	return true;
 }
@@ -261,7 +263,7 @@ bool Response::handleIndex()
 	stat(_full_path.c_str(), &fileStat);
 	if (access(_full_path.c_str(), F_OK) != -1 && S_ISDIR(fileStat.st_mode))
 		return true;
-	for (size_t i = 0; i < _location.getIndex().at(i); i++)
+	for (size_t i = 0; i < _location.getIndex().size(); i++)
 	{
 		_full_path += "/" + _location.getIndex().at(i);
 		if (access(_full_path.c_str(), F_OK) != -1)
@@ -272,6 +274,8 @@ bool Response::handleIndex()
 
 void Response::sendData(fd_set &r, fd_set &w)
 {
+	(void)r;
+	(void)w;
 	//startCgi();
 	struct stat fileStat;
 
@@ -366,7 +370,7 @@ bool Response::handleRedirection(fd_set &r, fd_set &w)
 bool Response::handleMethod(fd_set &r, fd_set &w)
 {
 	_path = deleteSpace(_request.GetRequest().at("Path"));
-	if (_path.find(_location.getLocationPath()) != -1) //c++ potrebbe rompere il cazzo per i tipi
+	if (_path.find(_location.getLocationPath()) != std::string::npos)
 	{
 		if (!_location.getClientMaxBodySize().empty())
 			len_server = strtoul(_location.getClientMaxBodySize().c_str(), NULL, 10);
