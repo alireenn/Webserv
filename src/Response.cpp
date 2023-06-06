@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 17:54:03 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:57:29 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,21 @@ static std::string deleteSpace(std::string str)
         if (str[i] == ' ')
             str.erase(i, 1);
     return str;
+}
+
+static int comp(const char *str, const char *path)
+{
+    int i = 0;
+    while(str[i] && path[i])
+    {
+        if (str[i] == path[i])
+            i++;
+        else
+            break;
+    }
+    if ((!path[i] && !str[i]) || ( !str[i] && path[i] == '/'))
+        return 1;
+    return 0;
 }
 
 Response::Response()
@@ -270,8 +285,66 @@ void Response::sendData(fd_set &r, fd_set &w)
 
 bool Response::checkLocation(fd_set &r, fd_set &w)
 {
-	std::cout << "CHECK LOCATION da scrivere" << std::endl;
-	return true;
+	for (size_t i = 0; i < _server.getLocations().size(); i++)
+	{
+		if(comp(_server.getLocations().at(i).getLocationPath().c_str(), _path.c_str()))
+		{
+			_location = _server.getLocations().at(i);
+			std::string tmp = _path;
+			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
+			char buff[1024];
+			realpath(_full_path.c_str(), buff);
+			_full_path = buff;
+			if (_request.GetRequest().at("Method") == "DELETE")
+			{
+				std::string tmp = _path;
+				_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
+				char buff[1024];
+				realpath(_path.c_str(), buff);
+				_full_path = buff;
+			}
+			return true;
+		}
+	}
+
+	//se non trovo la location, allora cerco quella di default
+	for (size_t i = 0; i < _server.getLocations().size(); i++)
+	{
+		if(_server.getLocations().at(i).getLocationPath() == "/")
+		{
+			_location = _server.getLocations().at(i);
+			std::string tmp = _path;
+			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
+			char buff[1024];
+			realpath(_full_path.c_str(), buff);
+			_full_path = buff;
+			if (_request.GetRequest().at("Method") == "DELETE")
+			{
+				std::string tmp = _path;
+				_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
+				char buff[1024];
+				realpath(_path.c_str(), buff);
+				_full_path = buff;
+			}
+			return true;
+		}
+	}
+	if (_request.GetRequest().at("Method") == "POST")
+	{
+		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+			remove(_request.getPathTmp().c_str());
+	}
+	if (sendError("404", "Not Found"))
+	{
+		std::cout << "404 Risorsa non trovata" << std::endl;
+		std::string response = "HTTP/1.1 404 Not Found\r\nConnection: close\r\nContent-Length: 131\r\n\r\n";
+		response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>404 Not Found</span>\n</body>\n</html>";
+		send(_client_fd, response.c_str(), response.length(), 0);
+		FD_CLR(_client_fd, &w);
+		FD_SET(_client_fd, &r);
+		done = true;
+	}
+	return false;
 }
 
 bool Response::handleRedirection(fd_set &r, fd_set &w)

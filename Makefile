@@ -1,5 +1,5 @@
 CC		=		g++
-FLAGS		=		#-std=c++98 -Wall -Wextra -Werror -g
+FLAGS		=		-std=c++98 -Wall -Wextra -Werror -g
 INCL		=		-I./includes
 
 NAME		=		webserv
@@ -40,14 +40,10 @@ fclean: clean
 
 kill: clean fclean
 
-
-re: kill
-	make
+re: fclean all
 
 r:
 	make
 	./$(NAME)
 
-test:
-	g++ -o epool_test test_epool.cpp
 .PHONY: all clean fclean kill re

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Caricamento file</title>
+</head>
+<body>
+  <h1>Caricamento file</h1>
+
+  <form id="uploadForm">
+    <input type="file" id="fileInput" required>
+    <button type="submit">Carica file</button>
+  </form>
+
+  <script>
+    // Funzione per inviare la richiesta di caricamento del file
+    function uploadFile(file) {
+      var xhr = new XMLHttpRequest();
+      var formData = new FormData();
+
+      formData.append('file', file);
+
+      xhr.open('POST', '/upload', true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          alert('Caricamento file completato con successo!');
+        } else {
+          alert('Errore durante il caricamento del file: ' + xhr.status);
+        }
+      };
+      xhr.onerror = function() {
+        alert('Errore di rete durante il caricamento del file.');
+      };
+      xhr.send(formData);
+    }
+
+    // Gestisci l'evento di submit del modulo
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      var fileInput = document.getElementById('fileInput');
+      var file = fileInput.files[0];
+
+      if (file) {
+        uploadFile(file);
+      } else {
+        alert('Seleziona un file da caricare.');
+      }
+    });
+  </script>
+</body>
+</html>
