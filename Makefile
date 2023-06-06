@@ -1,5 +1,5 @@
 CC		=		g++
-FLAGS		=		#-std=c++98 -Wall -Wextra -Werror -g
+FLAGS		=		-std=c++98 -Wall -Wextra -Werror -g
 INCL		=		-I./includes
 
 NAME		=		webserv
