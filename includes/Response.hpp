@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/05 17:04:44 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:52:56 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define RESPONSE_HPP
 
 # include <fstream>
+# include <sys/stat.h>
 # include "Request.hpp"
 # include "Server.hpp"
 

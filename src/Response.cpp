@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 11:39:50 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 13:05:37 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,20 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
 
 bool Response::redirectPath(fd_set &r, fd_set &w)
 {
-	std::cout << "REDIRECT PATH da scrivere" << std::endl;
+	struct stat		fileStat; // La struttura stat contiene i metadati relativi a un file o a una directory, come ad esempio le informazioni sulle autorizzazioni, le dimensioni, le informazioni sul timestamp e altro ancora.
+	stat(_full_path.c_str(), &fileStat); // la struttura stat verrà popolata con i dati corrispondenti al file specificato
+	if ((access(_full_path.c_str(),F_OK) != -1 //il file esiste?
+		&& S_ISDIR(fileStat.st_mode)) //il file è una directory?
+		&& _path != "/"  && _path[_path.length() - 1] != '/') //il path non è la root e non termina con '/'?
+	{
+		std::cout << "301 Reindirizzamento permanente trovato" << std::endl;
+		std::string response = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + _path + "/\r\nContent-Length: 0\r\n\r\n";
+		send(_client_fd, response.c_str(), response.length(), 0);
+		FD_CLR(_client_fd, &w);
+		FD_SET(_client_fd, &r);
+		done = true;
+		return false;
+	}
 	return true;
 }
 
