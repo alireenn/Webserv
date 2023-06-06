@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 17:57:29 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/06 18:30:40 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void Response::test(fd_set& r, fd_set& w)
 	(void)w;
 
 	std::string	date = getDate();
-    std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nDate: " + date + "\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
+    std::string response = "HTTP/1.1 200 OK\rContent-Type: text/html\r\nDate: " + date + "\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
 
 	std::cout << date << std::endl;
     const char* response_data = response.c_str();
@@ -142,6 +142,7 @@ bool Response::sendError(std::string code, std::string msg)
 					return (true);
 			std::cout << "\n\n\n\n" << toSend << "\n\n\n\n" << std::endl;
 			send(_client_fd, toSend.c_str(), toSend.size(), 0);
+			done = true;
 			return (false);
 		}
 	}
@@ -158,8 +159,8 @@ bool Response::isValid(fd_set &r, fd_set &w)
 		if (sendError("400" , "Bad Request"))
 		{
 			std::cout << "400 Bad Request" << std::endl;
-			std::string response = "HTTP/1.1 400 \r\nConnection: close\r\nContent-Length: 133\r\n\r\n";
-			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>400 Bad Request</span>\n</body>\n</html>";
+			std::string response = "HTTP/1.1 400 \r\nConnection: close\r\nContent-Length: 121\r\n\r\n";
+			response += "<!DOCTYPE html><html><head><style>span {font-size: 120px;}</style></head><body><span>400 Bad Request</span></body></html>";
 			send(_client_fd, response.c_str(), response.length(), 0);
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
@@ -180,8 +181,8 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
 		if (sendError("501", "Method not Implemented"))
 		{
 			std::cout << "501 Method not Implemented" << std::endl;
-			std::string response = "HTTP/1.1 501 \r\nConnection: close\r\nContent-Length: 144\r\n\r\n";
-			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>501 Method not Implemented</span>\n</body>\n</html>";
+			std::string response = "HTTP/1.1 501 \r\nConnection: close\r\nContent-Length: 132\r\n\r\n";
+			response += "<!DOCTYPE html><html><head><style>span {font-size: 120px;}</style></head><body><span>501 Method not Implemented</span></body></html>";
 			send(_client_fd, response.c_str(), response.length(), 0);
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
@@ -194,8 +195,8 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
 		if (sendError("505", "HTTP Version not Supported"))
 		{
 			std::cout << "505 HTTP Version not Supported" << std::endl;
-			std::string response = "HTTP/1.1 505 \r\nConnection: close\r\nContent-Length: 148\r\n\r\n";
-			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>505 HTTP Version not Supported</span>\n</body>\n</html>";
+			std::string response = "HTTP/1.1 505 \r\nConnection: close\r\nContent-Length: 136\r\n\r\n";
+			response += "<!DOCTYPE html><html><head><style>span {font-size: 120px;}</style></head><body><span>505 HTTP Version not Supported</span></body></html>";
 			send(_client_fd, response.c_str(), response.length(), 0);
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
@@ -236,8 +237,8 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 		if((sendError("403","Forbidden")))
 		{
 			std::cout << "403 Accesso alla risorsa richiesta è vietato" << std::endl;
-			std::string response = "HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 131\r\n\r\n";
-			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>403 Forbidden</span>\n</body>\n</html>";
+			std::string response = "HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 119\r\n\r\n";
+			response += "<!DOCTYPE html><html><head><style>span {font-size: 120px;}</style></head><body><span>403 Forbidden</span></body></html>";
 			send(_client_fd, response.c_str(), response.length(), 0);
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
@@ -252,7 +253,7 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 {
 	std::cout << "HANDLE AUTOINDEX da scrivere" << std::endl;
-	return true;
+	return false;
 }
 
 bool Response::handleIndex()
@@ -261,7 +262,7 @@ bool Response::handleIndex()
 	stat(_full_path.c_str(), &fileStat);
 	if (access(_full_path.c_str(), F_OK) != -1 && S_ISDIR(fileStat.st_mode))
 		return true;
-	for (size_t i = 0; i < _location.getIndex().at(i); i++)
+	for (size_t i = 0; i < _location.getIndex().size(); i++)
 	{
 		_full_path += "/" + _location.getIndex().at(i);
 		if (access(_full_path.c_str(), F_OK) != -1)
@@ -337,8 +338,8 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 	if (sendError("404", "Not Found"))
 	{
 		std::cout << "404 Risorsa non trovata" << std::endl;
-		std::string response = "HTTP/1.1 404 Not Found\r\nConnection: close\r\nContent-Length: 131\r\n\r\n";
-		response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>404 Not Found</span>\n</body>\n</html>";
+		std::string response = "HTTP/1.1 404 Not Found\r\nConnection: close\r\nContent-Length: 119\r\n\r\n";
+		response += "<!DOCTYPE html><html><head><style>span {font-size: 120px;}</style></head><body><span>404 Not Found</span></body></html>";
 		send(_client_fd, response.c_str(), response.length(), 0);
 		FD_CLR(_client_fd, &w);
 		FD_SET(_client_fd, &r);
@@ -366,7 +367,7 @@ bool Response::handleRedirection(fd_set &r, fd_set &w)
 bool Response::handleMethod(fd_set &r, fd_set &w)
 {
 	_path = deleteSpace(_request.GetRequest().at("Path"));
-	if (_path.find(_location.getLocationPath()) != -1) //c++ potrebbe rompere il cazzo per i tipi
+	if (_path.find(_location.getLocationPath()) != -1) 
 	{
 		if (!_location.getClientMaxBodySize().empty())
 			len_server = strtoul(_location.getClientMaxBodySize().c_str(), NULL, 10);
@@ -387,8 +388,8 @@ bool Response::handleMethod(fd_set &r, fd_set &w)
 		if (sendError("405", "Method Not Allowed"))
 		{
 			std::cout << "405 Method Not Allowed" << std::endl;
-			std::string response = "HTTP/1.1 405 \r\nConnection: close\r\nContent-Length: 144\r\n\r\n";
-			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>405 Method Not Allowed</span>\n</body>\n</html>";
+			std::string response = "HTTP/1.1 405 \r\nConnection: close\r\nContent-Length: 128\r\n\r\n";
+			response += "<!DOCTYPE html><html><head><style>span {font-size: 120px;}</style></head><body><span>405 Method Not Allowed</span></body></html>";
 			send(_client_fd, response.c_str(), response.length(), 0);
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
