@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 13:05:37 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/06 14:32:56 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,23 @@ bool Response::redirectPath(fd_set &r, fd_set &w)
 
 bool Response::checkForbidden(fd_set &r, fd_set &w)
 {
-	std::cout << "CHECK FORBIDDEN da scrivere" << std::endl;
+	struct stat fileStat;
+	stat(_full_path.c_str(), &fileStat);
+	if(access(_full_path.c_str(),F_OK) != -1 && access(_full_path.c_str(),R_OK) == -1)
+	{
+		if((sendError("403","Forbidden")))
+		{
+			std::cout << "403 Accesso alla risorsa richiesta è vietato" << std::endl;
+			std::string response = "HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 131\r\n\r\n";
+			response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>403 Forbidden</span>\n</body>\n</html>";
+			send(_client_fd, response.c_str(), response.length(), 0);
+			FD_CLR(_client_fd, &w);
+			FD_SET(_client_fd, &r);
+			done = true;
+			return false;
+		}
+		return false;
+	}
 	return true;
 }
 
