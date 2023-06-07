@@ -65,7 +65,8 @@ class Server
 
 		std::string	getUploadPath(void);
 		void		reset(void);
-		void		init_MimeTypes(void);
+		void		initMimeTypes(void);
+		std::vector<std::string> &getMimeTypes();
 
 };
 

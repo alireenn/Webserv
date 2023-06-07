@@ -2,7 +2,7 @@
 
 Server::Server()
 {
-	//init_mimeTypes();
+	initMimeTypes();
 }
 
 Server::~Server()
@@ -84,7 +84,7 @@ std::vector<std::string> &Server::getMimeTypes(void)
     return this->_mimeTypes;
 }
 
-void Server::init_MimeTypes(void)
+void Server::initMimeTypes(void)
 {
     std::ifstream file;
     file.open("srcs/mime.types");
@@ -107,6 +107,11 @@ int &Server::getEpoll_fd(void)
 void Server::setEpoll_fd(int epool_fd)
 {
 	this->epool_fd = epool_fd;
+}
+
+std::vector<std::string> &Server::getMimeTypes()
+{
+	return _mimeTypes;
 }
 
 std::ostream &operator<<(std::ostream &out, Server &server)

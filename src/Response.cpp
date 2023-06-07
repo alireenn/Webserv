@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 16:36:12 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:41:45 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,6 +238,7 @@ void Response::sendData(fd_set &r, fd_set &w)
 		len = read(fd, str, 1024);
 		_send += send(_client_fd, str, len, 0);
 		res_len += _send;
+		std::cout << _send << std::endl;
 		if (_send == -1)
 		{
 			FD_CLR(_client_fd, &w);
