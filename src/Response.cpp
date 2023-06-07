@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 12:02:34 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/07 12:57:46 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,6 @@ bool Response::isValid(fd_set &r, fd_set &w)
 {
 	std::string method = _request.GetRequest().at("Method");
     std::string version = _request.GetRequest().at("Version");
-	// std::cout << "HELLO    " << _request.GetRequest().at("Method") << std::endl;
-
 	
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH" && method != "DELETE" && method != "COPY" && method != "HEAD" && method != "OPTIONS" && method != "LINK" && method != "UNLINK" && method != "PURGE" && method != "LOCK" && method != "UNLOCK" && method != "PROPFIND" && method != "VIEW" && version != "HTTP/1.1" && version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0")
 	{
@@ -275,19 +273,70 @@ bool Response::handleIndex()
 	return false;
 }
 
+static std::string getExtension(std::string str)
+{
+    std::string tmp;
+    int i = str.size();
+    while (i != 0 && i--)
+    {
+        if (str[i] != '.')
+            tmp.insert(tmp.begin(), str[i]);
+        else
+            return tmp;
+    }
+    return tmp;
+}
+
+std::string Response::getType(std::string path)
+{
+    std::string tmp = getExtension(path);
+    for (int i = 0; i < (int)_server.getMimeTypes().size(); i++)
+        if ((int)_server.getMimeTypes()[i].find(tmp, 0) != -1)
+            return _server.getMimeTypes()[i].substr(0, _server.getMimeTypes()[i].find("|", 0));
+    return "text/plain";
+}
+
 void Response::sendData(fd_set &r, fd_set &w)
 {
-	(void)r;
-	(void)w;
 	//startCgi();
 	struct stat fileStat;
 
 	stat(_full_path.c_str(), &fileStat);
-	if (!ok)
+	if (access(_full_path.c_str(), F_OK) != -1)
 	{
-		/* code */
+		if (!ok)
+		{
+			stat(_full_path.c_str(), &fileStat);
+			size = fileStat.st_size;
+			fd = open(_full_path.c_str(), O_RDONLY);
+			bzero(str, 1025);
+			std::string header;
+			std::cout << "200 OK" << std::endl;
+			header = "HTTP/1.1 200 OK\r\nContent-Length: " + std::to_string(size) + "\r\nContent-Type: ";
+			header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] != "") ? ("\r\nSet-Cookie: " + _headers["Set-Cookie"]) : "");
+			header += "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
+			write(_client_fd, header.c_str(), header.length());
+			ok = true;
+		}
+		len = read(fd, str, 1024);
+		_send += send(_client_fd, str, len, 0);
+		res_len += _send;
+		if (_send == -1)
+		{
+			FD_CLR(_client_fd, &w);
+			FD_SET(_client_fd, &r);
+			done = true;
+			close(fd);
+		}
+		else if (res_len >= size)
+		{
+			FD_CLR(_client_fd, &w);
+			FD_SET(_client_fd, &r);
+			close(fd);
+			done = true;
+			res_len = 0;
+		}	
 	}
-	
 }
 
 bool Response::checkLocation(fd_set &r, fd_set &w)

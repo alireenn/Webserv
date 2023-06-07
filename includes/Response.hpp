@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/06 20:56:36 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/07 12:33:12 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class Response
 		int error;
 		std::string status_code;
 		Location _location;
+		std::map<std::string, std::string> _headers; //serve per cookie e cgi
 
 	public:
 			Response();
@@ -66,6 +67,7 @@ class Response
 			bool checkLocation(fd_set &r, fd_set &w);
 			bool handleRedirection(fd_set &r, fd_set &w);
 			bool handleMethod(fd_set &r, fd_set &w);
+			std::string getType(std::string path);
 
 };
 
