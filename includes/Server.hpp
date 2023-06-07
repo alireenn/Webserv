@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
-
+# include <string>
+# include <fstream>
 # include <iostream>
 //# include <vector>
 # include "Socket.hpp"
@@ -43,17 +44,18 @@ class Server
 
 		// Server	&operator=(Server &toCopy);
 
+		size_t												getPort(void);
 		std::vector<std::pair <std::string, std::string> >	getErrorPages();
 		std::vector<std::string>							getServerNames();
-		size_t												getPort(void);
 		std::vector<Location>								&getLocations(void);
 	
-		int        &getEpoll_fd(void);
-		void	   setEpoll_fd(int epool_fd);
+		Socket						&getSocket(void);
+		int        					&getEpoll_fd(void);
+		std::vector<std::string>	&getmime_types(void);
 
-		Socket		&getSocket(void);
-		void		setSocket(Socket socket);
+		void		setEpoll_fd(int epool_fd);
 		void		setPort(size_t port);
+		void		setSocket(Socket socket);
 		void		setUploadPath(std::string uploadPath);
 		void		setLocations(std::vector<Location> locations);
 		void		setMimeTypes(std::vector<std::string> mimeTypes);
@@ -63,6 +65,7 @@ class Server
 
 		std::string	getUploadPath(void);
 		void		reset(void);
+		void		init_MimeTypes(void);
 
 };
 
