@@ -6,11 +6,25 @@
 /*   By: ccantale <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 16:46:15 by ccantale          #+#    #+#             */
-/*   Updated: 2023/05/25 16:22:52 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/07 13:36:05 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/utils.h"
+
+int utils::last_slash(std::string tmp)
+{
+    int a = 0;
+    int i = 0;
+
+    a = i = tmp.find("/",0);
+    while(i != -1)
+    {
+        a = i;
+        i = tmp.find("/", i + 1);
+    }
+    return (a);
+}
 
 bool	utils::skipEmptyLines(std::ifstream &file)
 {	
