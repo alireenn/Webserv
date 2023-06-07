@@ -51,7 +51,6 @@ class Server
 	
 		Socket						&getSocket(void);
 		int        					&getEpoll_fd(void);
-		std::vector<std::string>	&getmime_types(void);
 
 		void		setEpoll_fd(int epool_fd);
 		void		setPort(size_t port);
@@ -65,7 +64,8 @@ class Server
 
 		std::string	getUploadPath(void);
 		void		reset(void);
-		void		init_MimeTypes(void);
+		void		initMimeTypes(void);
+		std::vector<std::string> &getMimeTypes();
 
 };
 
