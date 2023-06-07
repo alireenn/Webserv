@@ -404,24 +404,24 @@ bool Response::handleMethod(fd_set &r, fd_set &w)
 	return true;
 }
 
-static bool	checkUpload(fd_set &r, fd_set &w)
-{
-	if (!_server.getUploadPath().empty())
-	{
-			_upload = _server.GetUploadPath() + _request.GetRequest().at("PATH").substr(last_slash());
-			return (true);
-	}
-	std::cout << "Response 500 Internal Server Error " << std::endl;
-    std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
-    response += "\r\n\r\n<!DOCTYPE html><head><title>Internal Server Error</title></head><body> </body></html>";
-    send(_ClientFD, response.c_str(), response.length(), 0);
-    FD_CLR(_ClientFD, &w);
-    FD_SET(_ClientFD, &r);
-    done = 1;
-	// L'if("POST") lo levo, che tanto qui ci entra solo se è POST
-	if (access(/*path temporaneo della request, ma non so bene che è, domani lo chiedo a Michi*/.c_str(), F_OK != -1)
-			remove(/*sempre lo stesso file*/.c_str());
-}
+// static bool	checkUpload(fd_set &r, fd_set &w)
+// {
+// 	if (!_server.getUploadPath().empty())
+// 	{
+// 			_upload = _server.GetUploadPath() + _request.GetRequest().at("PATH").substr(last_slash());
+// 			return (true);
+// 	}
+// 	std::cout << "Response 500 Internal Server Error " << std::endl;
+//     std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
+//     response += "\r\n\r\n<!DOCTYPE html><head><title>Internal Server Error</title></head><body> </body></html>";
+//     send(_ClientFD, response.c_str(), response.length(), 0);
+//     FD_CLR(_ClientFD, &w);
+//     FD_SET(_ClientFD, &r);
+//     done = 1;
+// 	// L'if("POST") lo levo, che tanto qui ci entra solo se è POST
+// 	if (access(/*path temporaneo della request, ma non so bene che è, domani lo chiedo a Michi*/.c_str(), F_OK != -1)
+// 			remove(/*sempre lo stesso file*/.c_str());
+// }
 
 void Response::handler(fd_set &r, fd_set &w)
 {
