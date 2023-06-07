@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 13:25:44 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/07 15:02:09 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -456,24 +456,32 @@ bool Response::handleMethod(fd_set &r, fd_set &w)
 	return true;
 }
 
-// static bool	checkUpload(fd_set &r, fd_set &w)
-// {
-// 	if (!_server.getUploadPath().empty())
-// 	{
-// 			_upload = _server.GetUploadPath() + _request.GetRequest().at("PATH").substr(last_slash());
-// 			return (true);
-// 	}
-// 	std::cout << "Response 500 Internal Server Error " << std::endl;
-//     std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
-//     response += "\r\n\r\n<!DOCTYPE html><head><title>Internal Server Error</title></head><body> </body></html>";
-//     send(_ClientFD, response.c_str(), response.length(), 0);
-//     FD_CLR(_ClientFD, &w);
-//     FD_SET(_ClientFD, &r);
-//     done = 1;
-// 	// L'if("POST") lo levo, che tanto qui ci entra solo se è POST
-// 	if (access(/*path temporaneo della request, ma non so bene che è, domani lo chiedo a Michi*/.c_str(), F_OK != -1)
-// 			remove(/*sempre lo stesso file*/.c_str());
-// }
+static bool	checkUpload(Server &_server, Request &_request, std::string _upload)
+{
+	if (!_server.getUploadPath().empty())
+	{
+		std::string request_str = _request.GetRequest().at("PATH");
+
+		_upload = _server.getUploadPath() + request_str.substr(utils::last_slash(request_str));
+		return (true);
+	}
+	return (false);
+}
+
+static void	uploadFail(fd_set &r, fd_set &w, int _client_fd, Request &_request, int *done)
+{
+    std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
+
+	std::cout << "Response 500 Internal Server Error " << std::endl;
+    response += "\r\n\r\n<!DOCTYPE html><head><title>Internal Server Error</title></head><body> </body></html>";
+    send(_client_fd, response.c_str(), response.length(), 0);
+	FD_CLR(_client_fd, &w);
+	FD_SET(_client_fd, &r);
+    *done = 1;
+	// L'if("POST") lo levo, che tanto qui ci entra solo se è POST
+	if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+		remove(_request.getPathTmp().c_str());
+}
 
 void Response::handler(fd_set &r, fd_set &w)
 {
@@ -492,8 +500,10 @@ void Response::handler(fd_set &r, fd_set &w)
 			}
 			else if (tmp == "POST")
 			{
-				// if (ok(?) || checkUpload(r, w))
-					std::cout << "POST da scrivere" << std::endl;
+				if (checkUpload(_server, _request, _upload))
+					std::cout << "POST da finire" << std::endl;
+				else
+					uploadFail(r, w, _client_fd, _request, &done);
 			}
 			else if (tmp == "DELETE")
 			{

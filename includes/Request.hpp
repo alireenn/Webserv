@@ -6,19 +6,20 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 13:11:06 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/23 17:32:10 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/07 13:38:39 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-#include <iostream>
-#include <unistd.h>
-#include <map>
-#include <fcntl.h>
-#include <string.h>
-#include <math.h>
+# include <iostream>
+# include <unistd.h>
+# include <map>
+# include <fcntl.h>
+# include <string.h>
+# include <math.h>
+# include "utils.h"
 
 class Request
 {
