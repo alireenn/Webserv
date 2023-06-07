@@ -153,7 +153,9 @@ bool Response::isValid(fd_set &r, fd_set &w)
 {
 	std::string method = _request.GetRequest().at("Method");
     std::string version = _request.GetRequest().at("Version");
+	std::cout << "HELLO    " << _request.GetRequest().at("Method") << std::endl;
 
+	
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH" && method != "DELETE" && method != "COPY" && method != "HEAD" && method != "OPTIONS" && method != "LINK" && method != "UNLINK" && method != "PURGE" && method != "LOCK" && method != "UNLOCK" && method != "PROPFIND" && method != "VIEW" && version != "HTTP/1.1" && version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0")
 	{
 		if (sendError("400" , "Bad Request"))
