@@ -447,6 +447,7 @@ void Response::handler(fd_set &r, fd_set &w)
 			}
 			else if (tmp == "DELETE")
 			{
+				
 				std::cout << "DELETE da scrivere" << std::endl;
 			}
 		}

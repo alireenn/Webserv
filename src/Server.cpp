@@ -79,19 +79,20 @@ void Server::reset(void)
 	_uploadPath = "";
 }
 
-// std::vector<std::string> &Server::getmime_types(void)
-// {
-//     return mime_types;
-// }
-// void Server::init_MimeTypes(void)
-// {
-//     std::ifstream file;
-//     file.open("srcs/mime.types");
-//     std::string str;
-//     while(getline(file,str))
-//         mime_types.push_back(str);
-//     file.close();
-// }
+std::vector<std::string> &Server::getmime_types(void)
+{
+    return this->_mimeTypes;
+}
+
+void Server::init_MimeTypes(void)
+{
+    std::ifstream file;
+    file.open("srcs/mime.types");
+    std::string str;
+    while(getline(file,str))
+        _mimeTypes.push_back(str);
+    file.close();
+}
 
 void Server::setCgi(std::pair<std::string,std::string> cgi)
 {
