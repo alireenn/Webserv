@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 12:33:12 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/07 16:15:33 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class Response
 			void handler(fd_set &r, fd_set &w);
 			bool isValid(fd_set &r, fd_set &w);
 			bool isSubjectCompliant(fd_set & r, fd_set & w);
-			bool sendError(std::string code, std::string msg);
+			void sendError(std::string code, std::string message, fd_set &r, fd_set &w);
 			bool redirectPath(fd_set &r, fd_set &w);
 			bool checkForbidden(fd_set &r, fd_set &w);
 			bool handleAutoIndex(fd_set &r, fd_set &w);

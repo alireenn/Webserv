@@ -79,7 +79,7 @@ void Server::reset(void)
 	_uploadPath = "";
 }
 
-std::vector<std::string> &Server::getmime_types(void)
+std::vector<std::string> &Server::getMimeTypes(void)
 {
     return this->_mimeTypes;
 }

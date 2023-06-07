@@ -51,7 +51,7 @@ class Server
 	
 		Socket						&getSocket(void);
 		int        					&getEpoll_fd(void);
-		std::vector<std::string>	&getmime_types(void);
+		std::vector<std::string>	&getMimeTypes(void);
 
 		void		setEpoll_fd(int epool_fd);
 		void		setPort(size_t port);
