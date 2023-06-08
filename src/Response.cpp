@@ -322,10 +322,15 @@ int Response::check_permission(fd_set &read, fd_set &write)
 	return (1);
 }
 
-void recDeleater(std::string to_delete)
+void DirDeleater(std::string to_delete)
 {
-(void)to_delete;
+	struct dirent *dir;
+	struct stat fileStat;
 	
+	stat(to_delete.c_str(), &fileStat);
+	to_delete += "/";
+	DIR *d = opendir(to_delete.c_str());
+
 }
 
 void Response::deleater(fd_set read, fd_set write)
@@ -335,7 +340,7 @@ void Response::deleater(fd_set read, fd_set write)
 	if (!S_ISDIR(fileStat.st_mode))
 		unlink(_full_path.c_str());
 	else
-		recDeleater(_full_path);
+		DirDeleater(_full_path);
 	sendError("204", "No Content", read, write);
 	FD_CLR(_client_fd, &write);
 	FD_SET(_client_fd, &read);
