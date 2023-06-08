@@ -560,7 +560,8 @@ static void	uploadFail(int _client_fd, Request &_request, int *done, fd_set &r, 
 		remove(_request.getPathTmp().c_str());
 }
 
-static bool	checkRequest(Request &_request, Response &response, u_int64_t len_server, fd_set &r, fd_set &w)
+static bool	checkRequest(Request &_request, Response &response,
+							u_int64_t len_server, fd_set &r, fd_set &w)
 {
 	if (_request.checkChunked() == 0 && _request.GetRequest().at("Content-Length").empty())
 	{
