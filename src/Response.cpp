@@ -6,12 +6,11 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 12:58:39 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 13:28:32 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
-#include "Response.hpp"
 
 std::string ft_toString(long long n)
 {
@@ -371,7 +370,6 @@ void Response::sendData(fd_set &r, fd_set &w)
 			ok = true;
 		}
 		len = read(fd, str, 1024);
-		std::cout << "len: " << len << std::endl;
 		_send += send(_client_fd, str, len, 0);
 		res_len += _send;
 		std::cout << _send << std::endl;
@@ -384,6 +382,8 @@ void Response::sendData(fd_set &r, fd_set &w)
 		}
 		else if (res_len >= size)
 		{
+			std::cout << "res_len: " << res_len << std::endl;
+			std::cout << "size: " << size << std::endl;
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
 			close(fd);
@@ -525,7 +525,6 @@ bool Response::handleIndex()
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
 	}
-	// std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
 	return false;
 }
 
