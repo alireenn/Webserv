@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 12:24:07 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 12:41:48 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 	t_err	errorPages = this->_server.getErrorPages();
 
 	std::cout << code << " " << message << std::endl;
+	done = true;
 	for (t_err::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
 	{
 		if (it->first == code)
@@ -171,22 +172,24 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 			if (toSend.empty())
 				break ;
 			send(_client_fd, toSend.c_str(), toSend.size(), 0);
-			done = 1;
 			return ;
 		}
 	}
 	errorPageNotFound(code, message, r, w, _client_fd, &done);
-	done = 1;
 }
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
-    return (!(method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
+    if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
 			&& method != "PURGE" && method != "LOCK" && method != "UNLOCK"
 			&& method != "PROPFIND" && method != "VIEW" && version != "HTTP/1.1"
-			&& version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0"));
+			&& version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0")
+	{
+			return (false);
+	}
+	return (true);
 }
 
 bool Response::isValid(fd_set &r, fd_set &w)
@@ -197,7 +200,6 @@ bool Response::isValid(fd_set &r, fd_set &w)
 	if (!checkMethodAndVersion(method, version))
 	{
 		sendError("400" , "Bad Request", r, w);
-		done = true;
 		return (false);
 	}
 	return (true);
@@ -375,7 +377,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			remove(_request.getPathTmp().c_str());
 	}
 	sendError("404", "Not Found", r, w);
-	done = true;
+	//done = true;
 	return false;
 }
 
@@ -455,7 +457,7 @@ bool Response::handleIndex()
 			return true;
 	}
 	std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
-	exit(1);
+	//exit(1);
 	return false;
 }
 
