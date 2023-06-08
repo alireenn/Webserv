@@ -560,38 +560,38 @@ static void	uploadFail(int _client_fd, Request &_request, int *done, fd_set &r, 
 		remove(_request.getPathTmp().c_str());
 }
 
-static bool	checkRequest(Request &_request, u_int64_t len_server, fd_set &r, fd_set &w)
+static bool	checkRequest(Request &_request, Response &response, u_int64_t len_server, fd_set &r, fd_set &w)
 {
 	if (_request.checkChunked() == 0 && _request.GetRequest().at("Content-Length").empty())
 	{
 		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
 			remove(_request.getPathTmp().c_str());
-		sendError("411", "Length required", r, w);
+		response.sendError("411", "Length required", r, w);
 		return (false);
 	}
-	if (_request.getLength() > len_server)
+	if ((u_int64_t)_request.getLength() > len_server)
 	{
 		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
 			remove(_request.getPathTmp().c_str());
-		sendError("413", "Payload too large", r, w);
+		response.sendError("413", "Payload too large", r, w);
 		return (false);
 	}
 	return (true);
 }
 
-static void	writeBody(Request _request, std::string _upload,
-						int _client_fd, fd_set &r, fd_set &w)
+static void	writeBody(Request &_request, std::string _upload,
+						int _client_fd, int *done, fd_set &r, fd_set &w)
 {
 	std::string	message;
 	
-	std::cout << GREEN << "Response 201 Created " << std::endl;
+	std::cout << "Response 201 Created " << std::endl;
     rename(_request.getPathTmp().c_str(), _upload.c_str());
     message = (char *)"HTTP/1.1 201 Created\r\nLocation: ";
     message += _upload + "\r\nContent-Length: 0\r\n\r\n";
     send(_client_fd, message.c_str(), message.size(), 0);
     FD_CLR(_client_fd, &w);
     FD_SET(_client_fd, &r);
-    done = true;
+    *done = true;
 }
 
 void Response::handler(fd_set &r, fd_set &w)
@@ -612,8 +612,8 @@ void Response::handler(fd_set &r, fd_set &w)
 			else if (tmp == "POST")
 			{
 				if (checkUpload(_server, _request, _upload)
-					&& checkRequest(_request, len_server, r, w))
-						writeBody();
+					&& checkRequest(_request, *this, len_server, r, w))
+						writeBody(_request, _upload, _client_fd, &done, r, w);
 				else
 					uploadFail(_client_fd, _request, &done, r, w);
 			}
