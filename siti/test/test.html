@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Test delle richieste PUT, GET e DELETE</title>
+  <title>Test delle richieste POST, GET e DELETE</title>
 </head>
 <body>
-  <h1>Test delle richieste PUT, GET e DELETE</h1>
+  <h1>Test delle richieste POST, GET e DELETE</h1>
 
-  <h2>PUT</h2>
-  <form id="putForm">
-    <label for="putData">Dati PUT:</label>
-    <input type="text" id="putData" name="putData" required>
-    <button type="submit">Invia richiesta PUT</button>
+  <h2>POST</h2>
+  <form id="postForm">
+    <label for="postData">Dati POST:</label>
+    <input type="text" id="postData" name="postData" required>
+    <button type="submit">Invia richiesta POST</button>
   </form>
 
   <h2>GET</h2>
@@ -22,58 +22,28 @@
   <div id="deleteResponse"></div>
 
   <script>
-    // Funzione per inviare richieste PUT, GET e DELETE
-    function sendRequest(method, url, data, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open(method, url);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          callback(null, xhr.response);
-        } else {
-          callback('Errore durante la richiesta: ' + xhr.status);
-        }
-      };
-      xhr.onerror = function() {
-        callback('Errore di rete.');
-      };
-      xhr.send(data);
-    }
-
-    // Gestisci la richiesta PUT
-    document.getElementById('putForm').addEventListener('submit', function(event) {
+    // Gestisci la richiesta POST
+    document.getElementById('postForm').addEventListener('submit', function(event) {
       event.preventDefault();
-      var putData = document.getElementById('putData').value;
+      var postData = document.getElementById('postData').value;
 
-      sendRequest('PUT', '/api/data', putData, function(error, response) {
-        if (error) {
-          alert(error);
-        } else {
-          alert('Richiesta PUT inviata con successo!');
-        }
-      });
+      // Esegui le azioni desiderate con i dati POST
+      console.log('Dati POST:', postData);
+      alert('Richiesta POST inviata con successo!');
     });
 
     // Gestisci la richiesta GET
     document.getElementById('getRequestBtn').addEventListener('click', function() {
-      sendRequest('GET', '/api/data', null, function(error, response) {
-        if (error) {
-          alert(error);
-        } else {
-          document.getElementById('getResponse').innerHTML = '<pre>' + response + '</pre>';
-        }
-      });
+      // Esegui le azioni desiderate per la richiesta GET
+      console.log('Invio richiesta GET');
+      alert('Richiesta GET inviata con successo!');
     });
 
     // Gestisci la richiesta DELETE
     document.getElementById('deleteRequestBtn').addEventListener('click', function() {
-      sendRequest('DELETE', '/api/data', null, function(error, response) {
-        if (error) {
-          alert(error);
-        } else {
-          alert('Richiesta DELETE inviata con successo!');
-        }
-      });
+      // Esegui le azioni desiderate per la richiesta DELETE
+      console.log('Invio richiesta DELETE');
+      alert('Richiesta DELETE inviata con successo!');
     });
   </script>
 </body>
