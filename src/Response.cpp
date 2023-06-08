@@ -6,11 +6,24 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 16:10:33 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 16:15:21 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
+
+std::string ft_toString(long long n)
+{
+    std::string str;
+    if (n == 0)
+        return "0";
+    while (n != 0)
+    {
+        str.insert(str.begin(), n % 10 + '0');
+        n /= 10;
+    }
+    return str;
+}
 
 static std::string deleteSpace(std::string str)
 {
@@ -366,7 +379,7 @@ void Response::sendData(fd_set &r, fd_set &w)
 			bzero(str, 1025);
 			std::string header;
 			std::cout << "200 OK" << std::endl;
-			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + std::to_string(size) + "\r\nContent-type: ";
+			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size)+ "\r\nContent-type: ";
             header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] == "") ? "" : ("\r\nSet-Cookie: " + _headers["Set-Cookie"])) + "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
             
 			write(_client_fd, header.c_str(), header.size());
