@@ -6,11 +6,25 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 18:04:35 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 12:24:07 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
+
+std::string ft_toString(long long n)
+{
+    std::string str;
+    if (n == 0)
+        return "0";
+    while (n != 0)
+    {
+        str.insert(str.begin(), n % 10 + '0');
+        n /= 10;
+    }
+    return str;
+}
+
 
 static std::string deleteSpace(std::string str)
 {
@@ -125,7 +139,7 @@ static void	errorPageNotFound(std::string &errorNbr, std::string &error, fd_set 
 	std::cout << "Response " << errorNbr << " " << error << std::endl;
 	header = "HTTP/1.1 " + errorNbr + "\r\nConnection: close\r\nContent-Length: ";
 	body = "\r\n\r\n<!DOCTYPE html><head><style>span {font-size: 120px;}</style></head><body>" + error + "</body></html>";
-	message = header + std::to_string(body.length() - 4) + body;
+	message = header + ft_toString(body.length() - 4) + body;
 	send(_client_fd, message.c_str(), message.size(), 0);
 	FD_CLR(_client_fd, &w);
 	FD_SET(_client_fd, &r);
@@ -183,8 +197,10 @@ bool Response::isValid(fd_set &r, fd_set &w)
 	if (!checkMethodAndVersion(method, version))
 	{
 		sendError("400" , "Bad Request", r, w);
+		done = true;
+		return (false);
 	}
-	return (false);
+	return (true);
 }
 
 bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
@@ -274,16 +290,18 @@ void Response::sendData(fd_set &r, fd_set &w)
 			stat(_full_path.c_str(), &fileStat);
 			size = fileStat.st_size;
 			fd = open(_full_path.c_str(), O_RDONLY);
+			std::cout << "fd: " << fd << std::endl;
 			bzero(str, 1025);
 			std::string header;
 			std::cout << "200 OK" << std::endl;
-			header = "HTTP/1.1 200 OK\r\nContent-Length: " + std::to_string(size) + "\r\nContent-Type: ";
+			header = "HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size) + "\r\nContent-Type: ";
 			header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] != "") ? ("\r\nSet-Cookie: " + _headers["Set-Cookie"]) : "");
 			header += "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
-			write(_client_fd, header.c_str(), header.length());
+			write(_client_fd, header.c_str(), header.size());
 			ok = true;
 		}
 		len = read(fd, str, 1024);
+		std::cout << "len: " << len << std::endl;
 		_send += send(_client_fd, str, len, 0);
 		res_len += _send;
 		std::cout << _send << std::endl;
@@ -357,6 +375,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			remove(_request.getPathTmp().c_str());
 	}
 	sendError("404", "Not Found", r, w);
+	done = true;
 	return false;
 }
 
@@ -427,7 +446,7 @@ bool Response::handleIndex()
 {
 	struct stat fileStat;
 	stat(_full_path.c_str(), &fileStat);
-	if (access(_full_path.c_str(), F_OK) != -1 && S_ISDIR(fileStat.st_mode))
+	if ((access(_full_path.c_str(), F_OK) != -1) && !S_ISDIR(fileStat.st_mode))
 		return true;
 	for (size_t i = 0; i < _location.getIndex().size(); i++)
 	{
@@ -435,6 +454,8 @@ bool Response::handleIndex()
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
 	}
+	std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
+	exit(1);
 	return false;
 }
 
@@ -465,7 +486,7 @@ void Response::handler(fd_set &r, fd_set &w)
 			if(tmp == "GET")
 			{
 				if (ok || (redirectPath(r,w) && checkForbidden(r,w)))
-					if(ok || handleIndex() || handleAutoIndex(r,w))
+					if(ok || handleIndex() )//|| handleAutoIndex(r,w))
 						sendData(r,w);
 			}
 			else if (tmp == "POST")
