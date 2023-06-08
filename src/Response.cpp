@@ -6,12 +6,11 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 12:58:39 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 13:11:02 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
-#include "Response.hpp"
 
 std::string ft_toString(long long n)
 {
@@ -506,7 +505,6 @@ bool Response::handleIndex()
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
 	}
-	// std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
 	return false;
 }
 
