@@ -85,10 +85,16 @@ void Server::reset(void)
 void Server::initMimeTypes(void)
 {
     std::ifstream file;
-    file.open("srcs/mime.types");
+    file.open("src/mime.types");
     std::string str;
+	int i = 0;
     while(getline(file,str))
+	{
+		std::cout << "vamos" << std::endl;
         _mimeTypes.push_back(str);
+		std::cout << _mimeTypes[i] << std::endl;
+		i++;
+	}
     file.close();
 }
 

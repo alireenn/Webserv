@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 15:04:18 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 15:10:00 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,9 +262,14 @@ bool Response::redirectPath(fd_set &r, fd_set &w)
 std::string Response::getType(std::string path)
 {
     std::string tmp = getExtension(path);
+	std::cout << "non deve essere 0:" << _server.getMimeTypes().size() << std::endl;
     for (int i = 0; i < (int)_server.getMimeTypes().size(); i++)
-        if ((int)_server.getMimeTypes()[i].find(tmp, 0) != -1)
+	{
+		int pos = _server.getMimeTypes()[i].find("|", 0);
+		std::cout << pos << std::endl;
+        if (pos != -1)
             return _server.getMimeTypes()[i].substr(0, _server.getMimeTypes()[i].find("|", 0));
+	}
     return "text/plain";
 }
 
