@@ -321,7 +321,7 @@ int Response::check_permission(fd_set &read, fd_set &write)
 
 void recDeleater(std::string to_delete)
 {
-
+(void)to_delete;
 	
 }
 
