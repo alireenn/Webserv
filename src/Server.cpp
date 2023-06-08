@@ -109,21 +109,21 @@ std::vector<std::string> &Server::getMimeTypes()
 	return _mimeTypes;
 }
 
-std::ostream &operator<<(std::ostream &out, Server &server)
-{
-	out << "Server: " << server.getPort() << std::endl;
-	out << "ServerNames: ";
-	for (size_t i = 0; i < server.getServerNames().size(); i++)
-		out << server.getServerNames()[i] << " ";
-	out << std::endl;
-	out << "Locations: ";
-	for (size_t i = 0; i < server.getLocations().size(); i++)
-		out << server.getLocations()[i] << " ";
-	out << std::endl;
-	out << "ErrorPages: ";
-	for (size_t i = 0; i < server.getErrorPages().size(); i++)
-		out << server.getErrorPages()[i].first << " " << server.getErrorPages()[i].second << " ";
-	out << std::endl;
-	out << "UploadPath: " << server.getUploadPath() << std::endl;
-	return out;
-}
+// std::ostream &operator<<(std::ostream &out, Server &server)
+// {
+// 	out << "Server: " << server.getPort() << std::endl;
+// 	out << "ServerNames: ";
+// 	for (size_t i = 0; i < server.getServerNames().size(); i++)
+// 		out << server.getServerNames()[i] << " ";
+// 	out << std::endl;
+// 	out << "Locations: ";
+// 	for (size_t i = 0; i < server.getLocations().size(); i++)
+// 		out << server.getLocations()[i] << " ";
+// 	out << std::endl;
+// 	out << "ErrorPages: ";
+// 	for (size_t i = 0; i < server.getErrorPages().size(); i++)
+// 		out << server.getErrorPages()[i].first << " " << server.getErrorPages()[i].second << " ";
+// 	out << std::endl;
+// 	out << "UploadPath: " << server.getUploadPath() << std::endl;
+// 	return out;
+// }

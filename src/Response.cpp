@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 12:24:07 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 12:58:39 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -397,6 +397,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			_location = _server.getLocations().at(i);
 			std::string tmp = _path;
 			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
+			std::cout << "checkLocation: " << _full_path << std::endl;
 			char buff[1024];
 			realpath(_full_path.c_str(), buff);
 			_full_path = buff;
@@ -519,8 +520,7 @@ bool Response::handleIndex()
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
 	}
-	std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
-	exit(1);
+	// std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
 	return false;
 }
 
