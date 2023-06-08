@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 16:41:45 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:04:35 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static void	errorPageNotFound(std::string &errorNbr, std::string &error, fd_set 
 	std::cout << "Response " << errorNbr << " " << error << std::endl;
 	header = "HTTP/1.1 " + errorNbr + "\r\nConnection: close\r\nContent-Length: ";
 	body = "\r\n\r\n<!DOCTYPE html><head><style>span {font-size: 120px;}</style></head><body>" + error + "</body></html>";
-	message = header + std::to_string(body.length()) + body;
+	message = header + std::to_string(body.length() - 4) + body;
 	send(_client_fd, message.c_str(), message.size(), 0);
 	FD_CLR(_client_fd, &w);
 	FD_SET(_client_fd, &r);
@@ -162,16 +162,17 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 		}
 	}
 	errorPageNotFound(code, message, r, w, _client_fd, &done);
+	done = 1;
 }
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
-    return (method == "GET" && method == "POST" && method == "PUT" && method == "PATCH"
-			&& method == "DELETE" && method == "COPY" && method == "HEAD"
-			&& method == "OPTIONS" && method == "LINK" && method == "UNLINK"
-			&& method == "PURGE" && method == "LOCK" && method == "UNLOCK"
-			&& method == "PROPFIND" && method == "VIEW" && version == "HTTP/1.1"
-			&& version == "HTTP/1.0" && version == "HTTP/2.0" && version == "HTTP/3.0");
+    return (!(method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
+			&& method != "DELETE" && method != "COPY" && method != "HEAD"
+			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
+			&& method != "PURGE" && method != "LOCK" && method != "UNLOCK"
+			&& method != "PROPFIND" && method != "VIEW" && version != "HTTP/1.1"
+			&& version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0"));
 }
 
 bool Response::isValid(fd_set &r, fd_set &w)
@@ -204,13 +205,60 @@ bool Response::isSubjectCompliant(fd_set &r, fd_set &w)
     return (true);
 }
 
+static std::string getExtension(std::string str)
+{
+    std::string tmp;
+    int i = str.size();
+    while (i != 0 && i--)
+    {
+        if (str[i] != '.')
+            tmp.insert(tmp.begin(), str[i]);
+        else
+            return tmp;
+    }
+    return tmp;
+}
+
+bool Response::redirectPath(fd_set &r, fd_set &w)
+{
+	struct stat		fileStat; // La struttura stat contiene i metadati relativi a un file o a una directory, come ad esempio le informazioni sulle autorizzazioni, le dimensioni, le informazioni sul timestamp e altro ancora.
+
+	stat(_full_path.c_str(), &fileStat); // la struttura stat verrà popolata con i dati corrispondenti al file specificato
+	if ((access(_full_path.c_str(),F_OK) != -1 //il file esiste?
+		&& S_ISDIR(fileStat.st_mode)) //il file è una directory?
+		&& _path != "/"  && _path[_path.length() - 1] != '/') //il path non è la root e non termina con '/'?
+	{
+		std::cout << "301 Reindirizzamento permanente trovato" << std::endl;
+		std::string response = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + _path + "/\r\nContent-Length: 0\r\n\r\n";
+		send(_client_fd, response.c_str(), response.length(), 0);
+		FD_CLR(_client_fd, &w);
+		FD_SET(_client_fd, &r);
+		done = true;
+		return false;
+	}
+	return true;
+}
+
 std::string Response::getType(std::string path)
 {
-    //std::string tmp = getExtension(path);
-    //for (int i = 0; i < (int)_server.getMimeTypes().size(); i++)
-        //if ((int)_server.getMimeTypes()[i].find(tmp, 0) != -1)
-            //return _server.getMimeTypes()[i].substr(0, _server.getMimeTypes()[i].find("|", 0));
+    std::string tmp = getExtension(path);
+    for (int i = 0; i < (int)_server.getMimeTypes().size(); i++)
+        if ((int)_server.getMimeTypes()[i].find(tmp, 0) != -1)
+            return _server.getMimeTypes()[i].substr(0, _server.getMimeTypes()[i].find("|", 0));
     return "text/plain";
+}
+
+bool Response::checkForbidden(fd_set &r, fd_set &w)
+{
+	struct stat fileStat;
+		
+	stat(_full_path.c_str(), &fileStat);
+	if(access(_full_path.c_str(),F_OK) != -1 && access(_full_path.c_str(),R_OK) == -1)
+	{
+		sendError("403","Forbidden", r, w);		
+		return false;
+	}
+	return true;
 }
 
 void Response::sendData(fd_set &r, fd_set &w)
@@ -365,6 +413,29 @@ static bool	checkUpload(Server &_server, Request &_request, std::string _upload)
 		return (true);
 	}
 	return (false);
+}
+
+bool Response::handleAutoIndex(fd_set &r, fd_set &w)
+{
+	(void)r;
+	(void)w;
+	std::cout << "HANDLE AUTOINDEX da scrivere" << std::endl;
+	return false;
+}
+
+bool Response::handleIndex()
+{
+	struct stat fileStat;
+	stat(_full_path.c_str(), &fileStat);
+	if (access(_full_path.c_str(), F_OK) != -1 && S_ISDIR(fileStat.st_mode))
+		return true;
+	for (size_t i = 0; i < _location.getIndex().size(); i++)
+	{
+		_full_path += "/" + _location.getIndex().at(i);
+		if (access(_full_path.c_str(), F_OK) != -1)
+			return true;
+	}
+	return false;
 }
 
 static void	uploadFail(fd_set &r, fd_set &w, int _client_fd, Request &_request, int *done)

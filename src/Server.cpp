@@ -79,11 +79,6 @@ void Server::reset(void)
 	_uploadPath = "";
 }
 
-std::vector<std::string> &Server::getMimeTypes(void)
-{
-    return this->_mimeTypes;
-}
-
 void Server::initMimeTypes(void)
 {
     std::ifstream file;
