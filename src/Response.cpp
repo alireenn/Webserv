@@ -321,10 +321,33 @@ int Response::check_permission(fd_set &read, fd_set &write)
 	return (1);
 }
 
-void recDeleater(std::string to_delete)
+void DirDeleater(std::string to_delete)
 {
-(void)to_delete;
-	
+    struct dirent *d;
+    struct stat s;
+    stat(to_delete.c_str(), &s);
+    to_delete += "/";
+    DIR *dir = opendir(to_delete.c_str());
+    while (S_ISDIR(s.st_mode) && (d = readdir(dir)) != NULL)
+    {
+        std::string str1 = to_delete + d->d_name;
+        struct stat s1;
+        stat(str1.c_str(), &s1);
+        if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."));
+        else
+        {
+            if (S_ISDIR(s1.st_mode))
+                DirDeleater(to_delete + d->d_name);
+            else if (!S_ISDIR(s1.st_mode))
+                unlink(((const char *)str1.c_str()));
+        }
+    }
+    if (dir)
+        closedir(dir);
+    remove(to_delete.c_str());
+	if (dir != 0)
+		closedir(dir);
+    rmdir(to_delete.c_str());
 }
 
 void Response::deleater(fd_set read, fd_set write)
@@ -334,7 +357,7 @@ void Response::deleater(fd_set read, fd_set write)
 	if (!S_ISDIR(fileStat.st_mode))
 		unlink(_full_path.c_str());
 	else
-		recDeleater(_full_path);
+		DirDeleater(_full_path);
 	sendError("204", "No Content", read, write);
 	FD_CLR(_client_fd, &write);
 	FD_SET(_client_fd, &read);
