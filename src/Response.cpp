@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 13:02:13 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 13:13:44 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,6 +279,66 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 	return true;
 }
 
+int Response::checkInside(fd_set read, fd_set write)
+{
+	if (access(_full_path.c_str(), F_OK) != -1)
+	{
+			sendError("204", "No Content", read, write);
+			FD_CLR(_client_fd, &write);
+			FD_SET(_client_fd, &read);
+			done = true;
+			if (_request.GetRequest().at("Method") == "POST")
+			{
+				if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+					remove(_request.getPathTmp().c_str());
+			}
+			return (0);
+	}
+	return (1);
+}
+
+int Response::check_permission(fd_set &read, fd_set &write)
+{
+	struct stat fileStat;
+	int status = 0;
+
+	if (S_ISDIR(fileStat.st_mode) && (access(_full_path.c_str(), W_OK) == -1 || access(_full_path.c_str(), X_OK)))
+		status = 1;
+	else if(!S_ISDIR(fileStat.st_mode) && access(_full_path.c_str(), W_OK) == -1)
+		status = 1;
+	//else
+		//DA FARE UN CHECK ULTERIORE SUL CONTENUTO DELLA DIRECTORY 
+	if (status)
+	{
+		sendError("403", "Forbidden", read, write);
+		FD_CLR(_client_fd, &write);
+		FD_SET(_client_fd, &read);
+		done = true;
+    	return (0);
+	}
+	return (1);
+}
+
+void recDeleater(std::string to_delete)
+{
+
+	
+}
+
+void Response::deleater(fd_set read, fd_set write)
+{
+	struct stat fileStat;
+	stat(_full_path.c_str(), &fileStat);
+	if (!S_ISDIR(fileStat.st_mode))
+		unlink(_full_path.c_str());
+	else
+		recDeleater(_full_path);
+	sendError("204", "No Content", read, write);
+	FD_CLR(_client_fd, &write);
+	FD_SET(_client_fd, &read);
+	done = true;
+}
+
 void Response::sendData(fd_set &r, fd_set &w)
 {
 	//startCgi();
@@ -334,6 +394,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			_location = _server.getLocations().at(i);
 			std::string tmp = _path;
 			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
+			std::cout << "checkLocation: " << _full_path << std::endl;
 			char buff[1024];
 			realpath(_full_path.c_str(), buff);
 			_full_path = buff;
@@ -458,8 +519,7 @@ bool Response::handleIndex()
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
 	}
-	std::cout <<std::endl << "\033[33m"<< _full_path << "\033[0m" << std::endl;
-	//exit(1);
+	// std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
 	return false;
 }
 
