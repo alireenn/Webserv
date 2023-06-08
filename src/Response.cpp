@@ -6,12 +6,11 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 12:41:48 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 13:02:13 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
-#include "Response.hpp"
 
 std::string ft_toString(long long n)
 {
@@ -93,11 +92,7 @@ void Response::setDone(int done)
 	this->done = done;
 }
 
-std::string Response::getFullPath()
-{
-    return std::string(_full_path);
-}
-static std::string getDate(void)
+static std::string	getDate(void)
 {
 	time_t		rawtime;
 	struct tm	*timeInfo;
@@ -284,52 +279,6 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 	return true;
 }
 
-int Response::checkInside(fd_set read, fd_set write)
-{
-	if (access(_full_path.c_str(), F_OK) != -1)
-	{
-			sendError("204", "No Content", read, write);
-			FD_CLR(_client_fd, &write);
-			FD_SET(_client_fd, &read);
-			done = true;
-			if (_request.GetRequest().at("Method") == "POST")
-			{
-				if (access(_request.getPathTmp().c_str(), F_OK) != -1)
-					remove(_request.getPathTmp().c_str());
-			}
-			return (0);
-	}
-	return (1);
-}
-
-int Response::check_permission(fd_set &read, fd_set &write)
-{
-	struct stat fileStat;
-	int status = 0;
-
-	if (S_ISDIR(fileStat.st_mode) && (access(_full_path.c_str(), W_OK) == -1 || access(_full_path.c_str(), X_OK)))
-		status = 1;
-	else if(!S_ISDIR(fileStat.st_mode) && access(_full_path.c_str(), W_OK) == -1)
-		status = 1;
-	//else
-		//DA FARE UN CHECK ULTERIORE SUL CONTENUTO DELLA DIRECTORY 
-	if (status)
-	{
-		sendError("403", "Forbidden", read, write);
-		FD_CLR(_client_fd, &write);
-		FD_SET(_client_fd, &read);
-		done = true;
-    	return (0);
-	}
-	return (1);
-}
-
-void Response::deleater(fd_set read, fd_set write)
-{
-	struct stat fileStat;
-	stat(_full_path.c_str(), &fileStat);
-}
-
 void Response::sendData(fd_set &r, fd_set &w)
 {
 	//startCgi();
@@ -498,16 +447,18 @@ bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 bool Response::handleIndex()
 {
 	struct stat fileStat;
+
 	stat(_full_path.c_str(), &fileStat);
 	if ((access(_full_path.c_str(), F_OK) != -1) && !S_ISDIR(fileStat.st_mode))
 		return true;
 	for (size_t i = 0; i < _location.getIndex().size(); i++)
 	{
+	//std::cout <<std::endl << "\033[33m"<< _location.getIndex().at(i) << "\033[0m" << std::endl;
 		_full_path += "/" + _location.getIndex().at(i);
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
 	}
-	std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
+	std::cout <<std::endl << "\033[33m"<< _full_path << "\033[0m" << std::endl;
 	//exit(1);
 	return false;
 }
@@ -551,9 +502,7 @@ void Response::handler(fd_set &r, fd_set &w)
 			}
 			else if (tmp == "DELETE")
 			{
-				if (checkInside(r, w))
-					if (check_permission(r, w))
-						deleater(r, w);
+				
 				std::cout << "DELETE da scrivere" << std::endl;
 			}
 		}
