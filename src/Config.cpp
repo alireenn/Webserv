@@ -152,8 +152,14 @@ void Config::parseLocation(std::string &line, Server &server)
 			}
 			else if (token == "index")
 			{
-				std::string index = nextToken(line);
-				tmploc.setIndex(index);
+				std::vector<std::string> index;
+				std::string indexname = nextToken(line);
+				while (!indexname.empty())
+				{
+					index.push_back(indexname);
+					indexname = nextToken(line);
+					tmploc.setIndex(index);
+				}
 			}
 			else if (token == "root")
 			{
