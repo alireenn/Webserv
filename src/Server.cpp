@@ -77,6 +77,9 @@ void Server::reset(void)
 	_locations.clear();
 	_errorPages.clear();
 	_uploadPath = "";
+	_mimeTypes.clear();
+	_cgi.clear();
+	initMimeTypes();
 }
 
 void Server::initMimeTypes(void)

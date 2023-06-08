@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 13:28:32 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 15:04:18 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,20 +354,19 @@ void Response::sendData(fd_set &r, fd_set &w)
 			stat(_full_path.c_str(), &fileStat);
 			size = fileStat.st_size;
 			fd = open(_full_path.c_str(), O_RDONLY);
-			std::cout << "fd: " << fd << std::endl;
 			bzero(str, 1025);
 			std::string header;
 			std::cout << "200 OK" << std::endl;
-			header = "HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size) + "\r\nContent-Type: ";
-			header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] != "") ? ("\r\nSet-Cookie: " + _headers["Set-Cookie"]) : "");
-			header += "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
+			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size) + "\r\nContent-type: ";
+            header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] == "") ? "" : ("\r\nSet-Cookie: " + _headers["Set-Cookie"])) + "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
+            
 			write(_client_fd, header.c_str(), header.size());
+			write(1, header.c_str(), header.size());
 			ok = true;
 		}
 		len = read(fd, str, 1024);
-		_send += send(_client_fd, str, len, 0);
+		_send = send(_client_fd, str, len, 0);
 		res_len += _send;
-		std::cout << _send << std::endl;
 		if (_send == -1)
 		{
 			FD_CLR(_client_fd, &w);
@@ -377,13 +376,11 @@ void Response::sendData(fd_set &r, fd_set &w)
 		}
 		else if (res_len >= size)
 		{
-			std::cout << "res_len: " << res_len << std::endl;
-			std::cout << "size: " << size << std::endl;
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
 			close(fd);
-			done = true;
 			res_len = 0;
+			done = true;
 		}	
 	}
 }
@@ -397,7 +394,6 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			_location = _server.getLocations().at(i);
 			std::string tmp = _path;
 			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
-			std::cout << "checkLocation: " << _full_path << std::endl;
 			char buff[1024];
 			realpath(_full_path.c_str(), buff);
 			_full_path = buff;
