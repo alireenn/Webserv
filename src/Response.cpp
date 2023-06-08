@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 13:13:44 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 13:19:57 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -519,7 +519,6 @@ bool Response::handleIndex()
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
 	}
-	// std::cout <<std::endl << "\033[33m"<<_full_path << "\033[0m" << std::endl;
 	return false;
 }
 
