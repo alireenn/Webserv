@@ -137,7 +137,7 @@ static void	errorPageNotFound(std::string &errorNbr, std::string &error, fd_set 
 	std::cout << "Response " << errorNbr << " " << error << std::endl;
 	header = "HTTP/1.1 " + errorNbr + "\r\nConnection: close\r\nContent-Length: ";
 	body = "\r\n\r\n<!DOCTYPE html><head><style>span {font-size: 120px;}</style></head><body>" + error + "</body></html>";
-	message = header + std::to_string(body.length() - 4) + body;
+	message = header + ft_toString(body.length() - 4) + body;
 	send(_client_fd, message.c_str(), message.size(), 0);
 	FD_CLR(_client_fd, &w);
 	FD_SET(_client_fd, &r);
@@ -178,6 +178,8 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
+	std::cout << "Method: " << method << std::endl;
+	std::cout << "Version: " << version << std::endl;
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
@@ -282,6 +284,7 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 
 int Response::checkInside(fd_set read, fd_set write)
 {
+		std::cout << "checkInside  "  << _full_path << std::endl;
 	if (access(_full_path.c_str(), F_OK) != -1)
 	{
 			sendError("204", "No Content", read, write);
@@ -357,7 +360,7 @@ void Response::deleater(fd_set read, fd_set write)
 		unlink(_full_path.c_str());
 	else
 		DirDeleater(_full_path);
-	sendError("204", "No Content", read, write);
+	// sendError("204", "No Content", read, write);
 	FD_CLR(_client_fd, &write);
 	FD_SET(_client_fd, &read);
 	done = true;
