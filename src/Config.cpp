@@ -317,9 +317,9 @@ void	Config::parse(void)
 	std::cout << "Numero server: " << _servers.size() << std::endl;
 
 	//stampa dei server tramite <<
-	std::cout << "\n\n\nStampa dei server tramite <<\n";
-	for (std::vector<Server>::iterator it = _servers.begin(); it != _servers.end(); it++)
-		std::cout << *it << std::endl;
+	// std::cout << "\n\n\nStampa dei server tramite <<\n";
+	// for (std::vector<Server>::iterator it = _servers.begin(); it != _servers.end(); it++)
+	// 	std::cout << *it << std::endl;
 	
 }
 

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:16:58 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/26 18:29:34 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 13:02:19 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Location
 {
 	private:
 		std::string							_root;
-		std::string							_index;
+		std::vector<std::string>			_index;
 		std::string							_autoIndex;	
 		std::string							_uploadPath;
 		std::pair<std::string, std::string>	_redirection;
@@ -33,7 +33,7 @@ class Location
 		~Location();
 
 		std::string							&getRoot();
-		std::string							&getIndex();
+		std::vector<std::string>			&getIndex();
 		std::string							&getAutoIndex();
 		std::string							&getUploadPath();
 		std::pair<std::string, std::string>	&getRedirection();
@@ -42,7 +42,7 @@ class Location
 		std::string							&getClientMaxBodySize();
 
 		void								setRoot(std::string &root);
-		void								setIndex(std::string &index);
+		void								setIndex(std::vector<std::string> &index);
 		void								setAutoIndex(std::string &autoIndex);
 		void								setUploadPath(std::string &uploadPath);
 		void								setLocationPath(std::string &locationPath);
@@ -51,7 +51,7 @@ class Location
 		void								setRedirection(std::pair<std::string, std::string> &redirection);
 };
 //operatore di overloading <<
-		std::ostream						&operator<<(std::ostream &out, Location &location);
+		// std::ostream						&operator<<(std::ostream &out, Location &location);
 
 
 #endif
