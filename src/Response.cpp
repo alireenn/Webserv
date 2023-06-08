@@ -6,25 +6,11 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 15:48:01 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 16:09:07 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
-
-std::string ft_toString(long long n)
-{
-    std::string str;
-    if (n == 0)
-        return "0";
-    while (n != 0)
-    {
-        str.insert(str.begin(), n % 10 + '0');
-        n /= 10;
-    }
-    return str;
-}
-
 
 static std::string deleteSpace(std::string str)
 {
@@ -92,11 +78,7 @@ void Response::setDone(int done)
 	this->done = done;
 }
 
-std::string Response::getFullPath()
-{
-    return std::string(_full_path);
-}
-static std::string getDate(void)
+static std::string	getDate(void)
 {
 	time_t		rawtime;
 	struct tm	*timeInfo;
@@ -129,7 +111,6 @@ void Response::test(fd_set& r, fd_set& w)
         // Not all data was sent, you may need to handle this case
         std::cerr << "Not all data was sent to client" << std::endl;
     }
-
 	done = true;
 }
 
@@ -143,7 +124,7 @@ static void	errorPageNotFound(std::string &errorNbr, std::string &error, fd_set 
 	std::cout << "Response " << errorNbr << " " << error << std::endl;
 	header = "HTTP/1.1 " + errorNbr + "\r\nConnection: close\r\nContent-Length: ";
 	body = "\r\n\r\n<!DOCTYPE html><head><style>span {font-size: 120px;}</style></head><body>" + error + "</body></html>";
-	message = header + ft_toString(body.length() - 4) + body;
+	message = header + std::to_string(body.length() - 4) + body;
 	send(_client_fd, message.c_str(), message.size(), 0);
 	FD_CLR(_client_fd, &w);
 	FD_SET(_client_fd, &r);
@@ -156,6 +137,7 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 	t_err	errorPages = this->_server.getErrorPages();
 
 	std::cout << code << " " << message << std::endl;
+	done = true;
 	for (t_err::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
 	{
 		if (it->first == code)
@@ -175,22 +157,24 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 			if (toSend.empty())
 				break ;
 			send(_client_fd, toSend.c_str(), toSend.size(), 0);
-			done = 1;
 			return ;
 		}
 	}
 	errorPageNotFound(code, message, r, w, _client_fd, &done);
-	done = 1;
 }
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
-    return (!(method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
+    if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
 			&& method != "PURGE" && method != "LOCK" && method != "UNLOCK"
 			&& method != "PROPFIND" && method != "VIEW" && version != "HTTP/1.1"
-			&& version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0"));
+			&& version != "HTTP/1.0" && version != "HTTP/2.0" && version != "HTTP/3.0")
+	{
+			return (false);
+	}
+	return (true);
 }
 
 bool Response::isValid(fd_set &r, fd_set &w)
@@ -201,7 +185,6 @@ bool Response::isValid(fd_set &r, fd_set &w)
 	if (!checkMethodAndVersion(method, version))
 	{
 		sendError("400" , "Bad Request", r, w);
-		done = true;
 		return (false);
 	}
 	return (true);
@@ -463,7 +446,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			remove(_request.getPathTmp().c_str());
 	}
 	sendError("404", "Not Found", r, w);
-	done = true;
+	//done = true;
 	return false;
 }
 
@@ -533,11 +516,13 @@ bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 bool Response::handleIndex()
 {
 	struct stat fileStat;
+
 	stat(_full_path.c_str(), &fileStat);
 	if ((access(_full_path.c_str(), F_OK) != -1) && !S_ISDIR(fileStat.st_mode))
 		return true;
 	for (size_t i = 0; i < _location.getIndex().size(); i++)
 	{
+	//std::cout <<std::endl << "\033[33m"<< _location.getIndex().at(i) << "\033[0m" << std::endl;
 		_full_path += "/" + _location.getIndex().at(i);
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
