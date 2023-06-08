@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 13:11:06 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 13:38:39 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:06:56 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ private:
         int &getSend(void);
         void initMap(void);
         void handleHostPort(void);
-        int &checkCunked(void);
+        int &checkChunked(void);
         std::string sendBody(void);
         u_int64_t &getLentFull(void);
         void writeBody(void);

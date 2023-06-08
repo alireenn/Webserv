@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:02:14 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 13:39:11 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:07:13 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ void Request::handleHostPort(void)
 	}
 }
 
-int &Request::checkCunked(void)
+int &Request::checkChunked(void)
 {
 	return (this->chunked);
 }

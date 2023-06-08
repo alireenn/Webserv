@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 15:37:43 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 19:20:32 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -532,7 +532,7 @@ bool Response::handleIndex()
 	return false;
 }
 
-static void	uploadFail(fd_set &r, fd_set &w, int _client_fd, Request &_request, int *done)
+static void	uploadFail(int _client_fd, Request &_request, int *done, fd_set &r, fd_set &w)
 {
     std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
 
@@ -545,6 +545,40 @@ static void	uploadFail(fd_set &r, fd_set &w, int _client_fd, Request &_request, 
 	// L'if("POST") lo levo, che tanto qui ci entra solo se è POST
 	if (access(_request.getPathTmp().c_str(), F_OK) != -1)
 		remove(_request.getPathTmp().c_str());
+}
+
+static bool	checkRequest(Request &_request, u_int64_t len_server, fd_set &r, fd_set &w)
+{
+	if (_request.checkChunked() == 0 && _request.GetRequest().at("Content-Length").empty())
+	{
+		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+			remove(_request.getPathTmp().c_str());
+		sendError("411", "Length required", r, w);
+		return (false);
+	}
+	if (_request.getLength() > len_server)
+	{
+		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+			remove(_request.getPathTmp().c_str());
+		sendError("413", "Payload too large", r, w);
+		return (false);
+	}
+	return (true);
+}
+
+static void	writeBody(Request _request, std::string _upload,
+						int _client_fd, fd_set &r, fd_set &w)
+{
+	std::string	message;
+	
+	std::cout << GREEN << "Response 201 Created " << std::endl;
+    rename(_request.getPathTmp().c_str(), _upload.c_str());
+    message = (char *)"HTTP/1.1 201 Created\r\nLocation: ";
+    message += _upload + "\r\nContent-Length: 0\r\n\r\n";
+    send(_client_fd, message.c_str(), message.size(), 0);
+    FD_CLR(_client_fd, &w);
+    FD_SET(_client_fd, &r);
+    done = true;
 }
 
 void Response::handler(fd_set &r, fd_set &w)
@@ -564,14 +598,14 @@ void Response::handler(fd_set &r, fd_set &w)
 			}
 			else if (tmp == "POST")
 			{
-				if (checkUpload(_server, _request, _upload))
-					std::cout << "POST da finire" << std::endl;
+				if (checkUpload(_server, _request, _upload)
+					&& checkRequest(_request, len_server, r, w))
+						writeBody();
 				else
-					uploadFail(r, w, _client_fd, _request, &done);
+					uploadFail(_client_fd, _request, &done, r, w);
 			}
 			else if (tmp == "DELETE")
 			{
-				
 				std::cout << "DELETE da scrivere" << std::endl;
 			}
 		}
