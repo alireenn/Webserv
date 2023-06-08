@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 16:09:07 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 16:10:33 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,7 +366,7 @@ void Response::sendData(fd_set &r, fd_set &w)
 			bzero(str, 1025);
 			std::string header;
 			std::cout << "200 OK" << std::endl;
-			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size) + "\r\nContent-type: ";
+			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + std::to_string(size) + "\r\nContent-type: ";
             header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] == "") ? "" : ("\r\nSet-Cookie: " + _headers["Set-Cookie"])) + "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
             
 			write(_client_fd, header.c_str(), header.size());
