@@ -19,6 +19,7 @@
 # include "Server.hpp"
 # include <iostream>
 # include <dirent.h>
+# include <string>
 
 class Response
 {

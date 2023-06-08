@@ -5,12 +5,24 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 19:20:32 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:15:21 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
+
+std::string ft_toString(long long n)
+{
+    std::string str;
+    if (n == 0)
+        return "0";
+    while (n != 0)
+    {
+        str.insert(str.begin(), n % 10 + '0');
+        n /= 10;
+    }
+    return str;
+}
 
 static std::string deleteSpace(std::string str)
 {
@@ -124,7 +136,7 @@ static void	errorPageNotFound(std::string &errorNbr, std::string &error, fd_set 
 	std::cout << "Response " << errorNbr << " " << error << std::endl;
 	header = "HTTP/1.1 " + errorNbr + "\r\nConnection: close\r\nContent-Length: ";
 	body = "\r\n\r\n<!DOCTYPE html><head><style>span {font-size: 120px;}</style></head><body>" + error + "</body></html>";
-	message = header + std::to_string(body.length() - 4) + body;
+	message = header + ft_toString(body.length() - 4) + body;
 	send(_client_fd, message.c_str(), message.size(), 0);
 	FD_CLR(_client_fd, &w);
 	FD_SET(_client_fd, &r);
@@ -165,6 +177,8 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
+	std::cout << "Method: " << method << std::endl;
+	std::cout << "Version: " << version << std::endl;
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
@@ -245,11 +259,9 @@ bool Response::redirectPath(fd_set &r, fd_set &w)
 std::string Response::getType(std::string path)
 {
     std::string tmp = getExtension(path);
-	std::cout << "non deve essere 0:" << _server.getMimeTypes().size() << std::endl;
     for (int i = 0; i < (int)_server.getMimeTypes().size(); i++)
 	{
 		int pos = _server.getMimeTypes()[i].find("|", 0);
-		std::cout << pos << std::endl;
         if (pos != -1)
             return _server.getMimeTypes()[i].substr(0, _server.getMimeTypes()[i].find("|", 0));
 	}
@@ -271,6 +283,7 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 
 int Response::checkInside(fd_set read, fd_set write)
 {
+		std::cout << "checkInside  "  << _full_path << std::endl;
 	if (access(_full_path.c_str(), F_OK) != -1)
 	{
 			sendError("204", "No Content", read, write);
@@ -346,7 +359,7 @@ void Response::deleater(fd_set read, fd_set write)
 		unlink(_full_path.c_str());
 	else
 		DirDeleater(_full_path);
-	sendError("204", "No Content", read, write);
+	// sendError("204", "No Content", read, write);
 	FD_CLR(_client_fd, &write);
 	FD_SET(_client_fd, &read);
 	done = true;
@@ -368,7 +381,7 @@ void Response::sendData(fd_set &r, fd_set &w)
 			bzero(str, 1025);
 			std::string header;
 			std::cout << "200 OK" << std::endl;
-			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size) + "\r\nContent-type: ";
+			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size)+ "\r\nContent-type: ";
             header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] == "") ? "" : ("\r\nSet-Cookie: " + _headers["Set-Cookie"])) + "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
             
 			write(_client_fd, header.c_str(), header.size());
@@ -606,7 +619,10 @@ void Response::handler(fd_set &r, fd_set &w)
 			}
 			else if (tmp == "DELETE")
 			{
-				std::cout << "DELETE da scrivere" << std::endl;
+				std::cout << "DELETE" << std::endl;
+				if (checkInside(r, w))
+					if (check_permission(r, w))
+						deleater(r, w);
 			}
 		}
 	}	
