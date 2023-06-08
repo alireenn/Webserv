@@ -17,6 +17,8 @@
 # include <sys/stat.h>
 # include "Request.hpp"
 # include "Server.hpp"
+# include <iostream>
+# include <dirent.h>
 
 class Response
 {

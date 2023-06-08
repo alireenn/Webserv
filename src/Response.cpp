@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 10:47:59 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 15:18:53 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/08 15:37:43 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,9 +245,14 @@ bool Response::redirectPath(fd_set &r, fd_set &w)
 std::string Response::getType(std::string path)
 {
     std::string tmp = getExtension(path);
+	std::cout << "non deve essere 0:" << _server.getMimeTypes().size() << std::endl;
     for (int i = 0; i < (int)_server.getMimeTypes().size(); i++)
-        if ((int)_server.getMimeTypes()[i].find(tmp, 0) != -1)
+	{
+		int pos = _server.getMimeTypes()[i].find("|", 0);
+		std::cout << pos << std::endl;
+        if (pos != -1)
             return _server.getMimeTypes()[i].substr(0, _server.getMimeTypes()[i].find("|", 0));
+	}
     return "text/plain";
 }
 
@@ -304,10 +309,33 @@ int Response::check_permission(fd_set &read, fd_set &write)
 	return (1);
 }
 
-void recDeleater(std::string to_delete)
+void DirDeleater(std::string to_delete)
 {
-(void)to_delete;
-	
+    struct dirent *d;
+    struct stat s;
+    stat(to_delete.c_str(), &s);
+    to_delete += "/";
+    DIR *dir = opendir(to_delete.c_str());
+    while (S_ISDIR(s.st_mode) && (d = readdir(dir)) != NULL)
+    {
+        std::string str1 = to_delete + d->d_name;
+        struct stat s1;
+        stat(str1.c_str(), &s1);
+        if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."));
+        else
+        {
+            if (S_ISDIR(s1.st_mode))
+                DirDeleater(to_delete + d->d_name);
+            else if (!S_ISDIR(s1.st_mode))
+                unlink(((const char *)str1.c_str()));
+        }
+    }
+    if (dir)
+        closedir(dir);
+    remove(to_delete.c_str());
+	if (dir != 0)
+		closedir(dir);
+    rmdir(to_delete.c_str());
 }
 
 void Response::deleater(fd_set read, fd_set write)
@@ -317,7 +345,7 @@ void Response::deleater(fd_set read, fd_set write)
 	if (!S_ISDIR(fileStat.st_mode))
 		unlink(_full_path.c_str());
 	else
-		recDeleater(_full_path);
+		DirDeleater(_full_path);
 	sendError("204", "No Content", read, write);
 	FD_CLR(_client_fd, &write);
 	FD_SET(_client_fd, &read);
@@ -337,21 +365,19 @@ void Response::sendData(fd_set &r, fd_set &w)
 			stat(_full_path.c_str(), &fileStat);
 			size = fileStat.st_size;
 			fd = open(_full_path.c_str(), O_RDONLY);
-			std::cout << "fd: " << fd << std::endl;
 			bzero(str, 1025);
 			std::string header;
 			std::cout << "200 OK" << std::endl;
-			header = "HTTP/1.1 200 OK\r\nContent-Length: " + std::to_string(size) + "\r\nContent-Type: ";
-			header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] != "") ? ("\r\nSet-Cookie: " + _headers["Set-Cookie"]) : "");
-			header += "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
+			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size) + "\r\nContent-type: ";
+            header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] == "") ? "" : ("\r\nSet-Cookie: " + _headers["Set-Cookie"])) + "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
+            
 			write(_client_fd, header.c_str(), header.size());
+			write(1, header.c_str(), header.size());
 			ok = true;
 		}
 		len = read(fd, str, 1024);
-		std::cout << "len: " << len << std::endl;
-		_send += send(_client_fd, str, len, 0);
+		_send = send(_client_fd, str, len, 0);
 		res_len += _send;
-		std::cout << _send << std::endl;
 		if (_send == -1)
 		{
 			FD_CLR(_client_fd, &w);
@@ -364,8 +390,8 @@ void Response::sendData(fd_set &r, fd_set &w)
 			FD_CLR(_client_fd, &w);
 			FD_SET(_client_fd, &r);
 			close(fd);
-			done = true;
 			res_len = 0;
+			done = true;
 		}	
 	}
 }
@@ -379,7 +405,6 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			_location = _server.getLocations().at(i);
 			std::string tmp = _path;
 			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
-			std::cout << "checkLocation: " << _full_path << std::endl;
 			char buff[1024];
 			realpath(_full_path.c_str(), buff);
 			_full_path = buff;

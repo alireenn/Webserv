@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 16:49:44 by ccantale          #+#    #+#             */
-/*   Updated: 2023/06/07 13:11:45 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/08 14:50:34 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,9 +293,6 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 
 		for (size_t j = 0; j < ResponseReady.size(); j++)
 		{
-
-			std::cout << "Numero di richieste pronte: " << ResponseReady.size() << std::endl;
-
 			for(size_t i=0; i<servers.size(); i++)
 			{
 
