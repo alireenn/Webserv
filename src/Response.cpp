@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
+#include "Response.hpp"
 
 std::string ft_toString(long long n)
 {
@@ -92,7 +93,11 @@ void Response::setDone(int done)
 	this->done = done;
 }
 
-static std::string	getDate(void)
+std::string Response::getFullPath()
+{
+    return std::string(_full_path);
+}
+static std::string getDate(void)
 {
 	time_t		rawtime;
 	struct tm	*timeInfo;
@@ -275,6 +280,52 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 		return false;
 	}
 	return true;
+}
+
+int Response::checkInside(fd_set read, fd_set write)
+{
+	if (access(_full_path.c_str(), F_OK) != -1)
+	{
+			sendError("204", "No Content", read, write);
+			FD_CLR(_client_fd, &write);
+			FD_SET(_client_fd, &read);
+			done = true;
+			if (_request.GetRequest().at("Method") == "POST")
+			{
+				if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+					remove(_request.getPathTmp().c_str());
+			}
+			return (0);
+	}
+	return (1);
+}
+
+int Response::check_permission(fd_set &read, fd_set &write)
+{
+	struct stat fileStat;
+	int status = 0;
+
+	if (S_ISDIR(fileStat.st_mode) && (access(_full_path.c_str(), W_OK) == -1 || access(_full_path.c_str(), X_OK)))
+		status = 1;
+	else if(!S_ISDIR(fileStat.st_mode) && access(_full_path.c_str(), W_OK) == -1)
+		status = 1;
+	//else
+		//DA FARE UN CHECK ULTERIORE SUL CONTENUTO DELLA DIRECTORY 
+	if (status)
+	{
+		sendError("403", "Forbidden", read, write);
+		FD_CLR(_client_fd, &write);
+		FD_SET(_client_fd, &read);
+		done = true;
+    	return (0);
+	}
+	return (1);
+}
+
+void Response::deleater(fd_set read, fd_set write)
+{
+	struct stat fileStat;
+	stat(_full_path.c_str(), &fileStat);
 }
 
 void Response::sendData(fd_set &r, fd_set &w)
@@ -498,7 +549,9 @@ void Response::handler(fd_set &r, fd_set &w)
 			}
 			else if (tmp == "DELETE")
 			{
-				
+				if (checkInside(r, w))
+					if (check_permission(r, w))
+						deleater(r, w);
 				std::cout << "DELETE da scrivere" << std::endl;
 			}
 		}

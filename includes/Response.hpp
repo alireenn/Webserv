@@ -53,6 +53,7 @@ class Response
 			int getClientFD() const;
 			int &getDone(void);
 			void setDone(int done);
+			std::string getFullPath();
 			void test(fd_set& r, fd_set& w);
 
 			void handler(fd_set &r, fd_set &w);
@@ -61,6 +62,9 @@ class Response
 			void sendError(std::string code, std::string message, fd_set &r, fd_set &w);
 			bool redirectPath(fd_set &r, fd_set &w);
 			bool checkForbidden(fd_set &r, fd_set &w);
+			int  checkInside(fd_set read, fd_set write);
+			void deleater(fd_set read, fd_set write);
+			int  check_permission(fd_set &read, fd_set &write);
 			bool handleAutoIndex(fd_set &r, fd_set &w);
 			bool handleIndex(void);
 			void sendData(fd_set &r, fd_set &w);
