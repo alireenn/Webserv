@@ -322,10 +322,24 @@ int Response::check_permission(fd_set &read, fd_set &write)
 	return (1);
 }
 
+void recDeleater(std::string to_delete)
+{
+
+	
+}
+
 void Response::deleater(fd_set read, fd_set write)
 {
 	struct stat fileStat;
 	stat(_full_path.c_str(), &fileStat);
+	if (!S_ISDIR(fileStat.st_mode))
+		unlink(_full_path.c_str());
+	else
+		recDeleater(_full_path);
+	sendError("204", "No Content", read, write);
+	FD_CLR(_client_fd, &write);
+	FD_SET(_client_fd, &read);
+	done = true;
 }
 
 void Response::sendData(fd_set &r, fd_set &w)
