@@ -5,11 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Updated: 2023/06/08 16:15:21 by mruizzo          ###   ########.fr       */
+/*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
+/*   Updated: 2023/06/09 13:57:00 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Response.hpp"
 
 std::string ft_toString(long long n)
 {
@@ -177,8 +177,8 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
-	std::cout << "Method: " << method << std::endl;
-	std::cout << "Version: " << version << std::endl;
+																								std::cout << "Method: " << method << std::endl;
+																								std::cout << "Version: " << version << std::endl;
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
@@ -522,10 +522,23 @@ static bool	checkUpload(Server &_server, Request &_request, std::string _upload)
 
 bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 {
-	(void)r;
-	(void)w;
-	std::cout << "HANDLE AUTOINDEX da scrivere" << std::endl;
-	return false;
+	std::ofstream file;
+	if (_location.getAutoIndex()=== "on")
+	{
+		std::string tmp = _full_path;
+		struct stat fileStat;
+		stat(_full_path.c_str(), &fileStat);
+		if (access(_full_path.c_str(), F_OK) != -1 && !S_ISDIR(fileStat.st_mode))
+			return true;
+		if (S_ISDIR(fileStat.st_mode))
+		{
+			_full_path = "www"
+		}
+	}
+	else
+	{
+		
+	}
 }
 
 bool Response::handleIndex()
@@ -537,7 +550,6 @@ bool Response::handleIndex()
 		return true;
 	for (size_t i = 0; i < _location.getIndex().size(); i++)
 	{
-	//std::cout <<std::endl << "\033[33m"<< _location.getIndex().at(i) << "\033[0m" << std::endl;
 		_full_path += "/" + _location.getIndex().at(i);
 		if (access(_full_path.c_str(), F_OK) != -1)
 			return true;
