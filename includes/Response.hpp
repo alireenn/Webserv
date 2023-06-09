@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/07 16:15:33 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/09 16:23:23 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <iostream>
 # include <dirent.h>
 # include <string>
+std::string generateAutoIndex(std::string path);
+
 
 class Response
 {

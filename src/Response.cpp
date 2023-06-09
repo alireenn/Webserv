@@ -6,10 +6,11 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/09 13:57:00 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/09 16:13:19 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/Response.hpp"
 
 std::string ft_toString(long long n)
 {
@@ -284,7 +285,7 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 int Response::checkInside(fd_set read, fd_set write)
 {
 		std::cout << "checkInside  "  << _full_path << std::endl;
-	if (access(_full_path.c_str(), F_OK) != -1)
+	if (access(_full_path.c_str(), F_OK) == -1)
 	{
 			sendError("204", "No Content", read, write);
 			FD_CLR(_client_fd, &write);
@@ -503,6 +504,7 @@ bool Response::handleMethod(fd_set &r, fd_set &w)
 		}
 		
 		sendError("405", "Method Not Allowed", r, w);
+		//done = true;
 		return false;
 	}
 	return true;
@@ -523,7 +525,7 @@ static bool	checkUpload(Server &_server, Request &_request, std::string _upload)
 bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 {
 	std::ofstream file;
-	if (_location.getAutoIndex()=== "on")
+	if (_location.getAutoIndex() == "on")
 	{
 		std::string tmp = _full_path;
 		struct stat fileStat;
@@ -532,13 +534,16 @@ bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 			return true;
 		if (S_ISDIR(fileStat.st_mode))
 		{
-			_full_path = "www"
+			_full_path = "www/autoindex/autoindex.html";
+			file.open(_full_path.c_str());
+			file.clear();
+			file << generateAutoIndex(tmp);
+			file.close();
+			return true;
 		}
 	}
-	else
-	{
-		
-	}
+	sendError("404", "Not Found", r, w);
+	return false;
 }
 
 bool Response::handleIndex()
@@ -619,7 +624,7 @@ void Response::handler(fd_set &r, fd_set &w)
 			if(tmp == "GET")
 			{
 				if (ok || (redirectPath(r,w) && checkForbidden(r,w)))
-					if(ok || handleIndex() )//|| handleAutoIndex(r,w))
+					if(ok || handleIndex() || handleAutoIndex(r,w))
 						sendData(r,w);
 			}
 			else if (tmp == "POST")

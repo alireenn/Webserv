@@ -15,6 +15,7 @@ SRC		=		main.cpp \
 				src/Request.cpp \
 				src/Response.cpp \
 				src/Client.cpp \
+				src/AutoIndex.cpp \
 
 
 OBJDIR		=		obj
