@@ -261,9 +261,7 @@ void	Config::parse(void)
 					tempServer.reset();
 					status = NO_SERVER_YET;
 					token = nextToken(line);
-					std::cout << "dio proco "<< _servers.size() << std::endl;
 				}
-				std::cout << "cazzo " << _servers.size() << std::endl;
 			}
 			else if (token == "listen")
 			{

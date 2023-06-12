@@ -229,8 +229,9 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 							}
 							else if (nread == 0)
 							{
-								FD_CLR(ClientsRequest[i].first.getSocketFd(), &fdreads[i]);
-								std::cout << "Client disconnesso" << std::endl;
+								std::cout << "Client disconnesso  1" << std::endl;
+								// FD_CLR(ClientsRequest[i].first.getSocketFd(), &fdreads[i]);
+								std::cout << "Client disconnesso  2" << std::endl;
 								close(ClientsRequest[i].first.getSocketFd());
 								ClientsRequest.erase(ClientsRequest.begin() + k);
 							}
