@@ -15,7 +15,11 @@
 
 # include <iostream>
 # include <vector>
+# include <sys/stat.h>
 # include <dirent.h>
+# include <sstream>
+# include <string>
+# include <iomanip>
 
 typedef std::vector<std::pair<std::pair<std::string, std::string>, int> > t_dir;
 typedef std::pair<std::string, std::string> t_spair;

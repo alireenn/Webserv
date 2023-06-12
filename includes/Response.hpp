@@ -20,6 +20,7 @@
 # include <iostream>
 # include <dirent.h>
 # include <string>
+# include "AutoIndex.hpp"
 
 class Response
 {

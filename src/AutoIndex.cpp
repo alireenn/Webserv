@@ -12,9 +12,30 @@
 
 #include "../includes/AutoIndex.hpp"
 
-static string getSize(long long st_size)
-{
-	
+static std::string getSize(long long st_size) // dimensione in byte
+{	// restituisce una stringa formattata 
+	//che rappresenta la dimensione in unità di misura più comuni
+	std::string ret;
+	std::stringstream stream; //manipolare e formattare le stringhe come se fossero uno stream di input/output
+
+	if (st_size < 1048576) // n di byte di un kilobyte
+	{
+		stream << std::fixed << std::setprecision(2) << (long double)(st_size) / 1024;
+		ret = stream.str();
+		return (ret + "K");
+	}
+	else if (st_size < 524288000)
+	{
+		stream << std::fixed << std::setprecision(2) << (long double)(st_size) / 1048576;
+		ret = stream.str();
+		return (ret + "M");
+	}
+	else
+	{
+		stream << std::fixed << std::setprecision(2) << (long double)(st_size) / 1073741824;
+		ret = stream.str();
+		return (ret + "M");
+	}
 }
 
 static t_dir showDirContent(std::string path)
@@ -25,9 +46,9 @@ static t_dir showDirContent(std::string path)
 	if (dir)
 	{
 		struct dirent *dirStat;//è una struttura dati in C che viene utilizzata per rappresentare le informazioni di una voce all'interno di una directory in un sistema operativo Unix
-		while ((dirStat = readdir(dir)) != NULL)
+		while ((dirStat = readdir(dir)))
 		{
-			if (dir->d_type != DT_DIR && dir->d_name[0] != '.')//non deve essere ne una directory ne un file nascosto
+			if (dirStat->d_type != DT_DIR && dirStat->d_name[0] != '.')//non deve essere ne una directory ne un file nascosto
 			{
 				struct stat fileStat;
 				stat((std::string(path) + "/" + std::string(dirStat->d_name)).c_str(), &fileStat);
