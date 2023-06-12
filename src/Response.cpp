@@ -346,9 +346,6 @@ void DirDeleater(std::string to_delete)
     }
     if (dir)
         closedir(dir);
-    remove(to_delete.c_str());
-	if (dir != 0)
-		closedir(dir);
     rmdir(to_delete.c_str());
 }
 
@@ -360,10 +357,13 @@ void Response::deleater(fd_set read, fd_set write)
 		unlink(_full_path.c_str());
 	else
 		DirDeleater(_full_path);
-	// sendError("204", "No Content", read, write);
 	FD_CLR(_client_fd, &write);
 	FD_SET(_client_fd, &read);
 	done = true;
+	std::cout << "200 OK" << std::endl;
+	std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 130\r\n\r\n";
+	response += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>File deleted</span>\n</body>\n</html>";
+	send(_client_fd, response.c_str(), response.length(), 0);
 }
 
 void Response::sendData(fd_set &r, fd_set &w)
