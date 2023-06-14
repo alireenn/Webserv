@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/09 16:13:19 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/14 12:44:18 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -510,18 +510,6 @@ bool Response::handleMethod(fd_set &r, fd_set &w)
 	return true;
 }
 
-static bool	checkUpload(Server &_server, Request &_request, std::string _upload)
-{
-	if (!_server.getUploadPath().empty())
-	{
-		std::string request_str = _request.GetRequest().at("PATH");
-
-		_upload = _server.getUploadPath() + request_str.substr(utils::last_slash(request_str));
-		return (true);
-	}
-	return (false);
-}
-
 bool Response::handleAutoIndex(fd_set &r, fd_set &w)
 {
 	std::ofstream file;
@@ -562,6 +550,20 @@ bool Response::handleIndex()
 	return false;
 }
 
+static bool	checkUpload(Server &_server, Request &_request, std::string _upload)
+{
+	std::string request_str;
+
+	if (_server.getUploadPath().empty())
+	{
+		return (false);
+	}
+	else
+		request_str = _request.GetRequest().at("path");
+	_upload = _server.getUploadPath() + request_str.substr(utils::last_slash(request_str));
+	return (true);
+}
+
 static void	uploadFail(int _client_fd, Request &_request, int *done, fd_set &r, fd_set &w)
 {
     std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
@@ -572,7 +574,6 @@ static void	uploadFail(int _client_fd, Request &_request, int *done, fd_set &r, 
 	FD_CLR(_client_fd, &w);
 	FD_SET(_client_fd, &r);
     *done = 1;
-	// L'if("POST") lo levo, che tanto qui ci entra solo se è POST
 	if (access(_request.getPathTmp().c_str(), F_OK) != -1)
 		remove(_request.getPathTmp().c_str());
 }
@@ -592,6 +593,7 @@ static bool	checkRequest(Request &_request, Response &response,
 		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
 			remove(_request.getPathTmp().c_str());
 		response.sendError("413", "Payload too large", r, w);
+		std::cerr << "AAAAAAAAAAAAAAAAAAA 2" << std::endl;
 		return (false);
 	}
 	return (true);
