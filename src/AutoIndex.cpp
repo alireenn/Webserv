@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 15:36:48 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/15 12:42:08 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/15 15:26:24 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,15 +96,13 @@ std::string generateAutoIndex(std::string path)
 		autoIndex += "<!DOCTYPE html>\n<html>\n<head>\n<title>Index of " + path.substr(1) + "</title>\n</head>";
 		autoIndex += "<body>\n<h1>Index of " + path.substr(1) + "</h1>\n";
 		autoIndex += "<table>\n<tr>\n<th>Name</th>\n<th>Size</th>\n</tr>\n";
-		for (t_dir::iterator it = dir.begin(); it != dir.end(); it++)
+		for (size_t i = 0; i < dir.size(); i++)
 		{
-			autoIndex += "<tr>\n<td>\n";
-			if (it->second == 1)
-				autoIndex += "<img src=\"" + std::string(folder_icon) + "\" alt=\"folder\" width=\"20\" height=\"20\">\n";
-			else
-				autoIndex += "<img src=\"" + std::string(file_icon) + "\" alt=\"file\" width=\"20\" height=\"20\">\n";
-			autoIndex += "<a href=\"" + path + "/" + it->first.first + "\">" + it->first.first + "</a>\n</td>\n";
-			autoIndex += "<td>" + it->first.second + "</td>\n</tr>\n";
+			autoIndex += "<tr>";
+     		autoIndex += "<td valign='top'><img src='" + ((dir[i].second == 2) ? std::string(file_icon) : std::string(folder_icon)) + "' alt='[DIR]'></td>";
+      		autoIndex += "<td><a href='" + dir[i].first.first + "'>" + dir[i].first.first + "</a></td>";
+      		autoIndex += "<td align='right'> " + dir[i].first.second + " </td>";
+      		autoIndex += "<td>&nbsp;</td>";
 		}
 		autoIndex += "</table>\n</body>\n</html>";
 	}
