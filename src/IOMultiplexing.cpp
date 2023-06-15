@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 16:49:44 by ccantale          #+#    #+#             */
-/*   Updated: 2023/06/15 15:18:55 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/15 16:18:05 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,11 +229,10 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 							}
 							else if (nread == 0)
 							{
-								std::cout << "Client disconnesso  1" << std::endl;
-								// FD_CLR(ClientsRequest[i].first.getSocketFd(), &fdreads[i]);
-								std::cout << "Client disconnesso  2" << std::endl;
+								std::cout << "Client disconnesso" << std::endl;
+								FD_CLR(ClientsRequest[i].first.getSocketFd(), &fdreads[i]);
 								close(ClientsRequest[i].first.getSocketFd());
-								ClientsRequest.erase(ClientsRequest.begin() + k);
+								ClientsRequest.erase(ClientsRequest.begin() + i);//prima era k
 							}
 							else
 							{
@@ -300,7 +299,6 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 				if(FD_ISSET(ResponseReady[j].getClientFD(), &fdwrites[i]))
 				{
 					ResponseReady[j].handler(fdwrites[i], fdreads[i]);
-					// ResponseReady[j].test(fdwrites[i], fdreads[i]);
 					if (ResponseReady[j].getDone() == true)
 					{
 						ResponseReady.erase(ResponseReady.begin() + j);
