@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/15 14:51:05 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/15 15:16:01 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,6 @@ static void	errorPageNotFound(std::string &errorNbr, std::string &error, fd_set 
 
 void Response::sendError(std::string errorCode, std::string message, fd_set &r, fd_set &w)
 {
-ucciso_se	
 	for (size_t i = 0; i < _server.getErrorPages().size(); i++)
 	{
 		if(_server.getErrorPages().at(i).first == errorCode)
@@ -169,7 +168,7 @@ ucciso_se
 			}	
 		}
 	}
-	errorPageNotFound(code, message, r, w, _client_fd, &done);
+	errorPageNotFound(errorCode, message, r, w, _client_fd, &done);
 }
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)

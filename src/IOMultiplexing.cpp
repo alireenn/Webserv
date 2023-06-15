@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 16:49:44 by ccantale          #+#    #+#             */
-/*   Updated: 2023/06/08 15:57:12 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/15 15:18:55 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 			int fdmax = fdmaxs[i];
 			std::vector<epoll_event>& server_events = events[i];
 
-			int fd_pronti = epoll_wait(epoll_fd, server_events.data(), fdmax + 1, 500);
+			int fd_pronti = epoll_wait(epoll_fd, server_events.data(), fdmax + 1, 10);
 			if (fd_pronti == -1)
 			{
 				std::cerr << "Errore nella chiamata a epoll_wait per il server " << i << std::endl;
