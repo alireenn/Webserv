@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/15 14:03:14 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/15 14:51:05 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ void Response::test(fd_set& r, fd_set& w)
 	(void)w;
 
 	std::string	date = getDate();
-    std::string response = "HTTP/1.1 200 OK\rContent-Type: text/html\r\nDate: " + date + "\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
+    std::string response = "HTTP/1.1 200 OK\rContent-Type: text/html\r\nDate: " + date
+			+ "\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
 
 	std::cout << date << std::endl;
     const char* response_data = response.c_str();
@@ -144,39 +145,12 @@ static void	errorPageNotFound(std::string &errorNbr, std::string &error, fd_set 
 	*done = 1;
 }
 
-void Response::sendError(std::string code, std::string message, fd_set &r, fd_set &w)
+void Response::sendError(std::string errorCode, std::string message, fd_set &r, fd_set &w)
 {
-	// typedef std::vector<std::pair<std::string, std::string> > t_err;
-	// t_err	errorPages = this->_server.getErrorPages();
-
-	// std::cout << code << " " << message << std::endl;
-	// done = true;
-	// for (t_err::iterator it = errorPages.begin(); it != errorPages.end(); ++it)
-	// {
-	// 	if (it->first == code)
-	// 	{
-	// 		std::ifstream	page(it->second.c_str(), std::ifstream::in);
-	// 		std::string		toSend;
-	// 		std::string		line;
-
-	// 		if (!page.is_open())
-	// 			break ;
-	// 		do
-	// 		{
-	// 			toSend += line;
-	// 			std::getline(page, line);
-	// 		} while (!line.empty());
-	// 		page.close();
-	// 		if (toSend.empty())
-	// 			break ;
-	// 		send(_client_fd, toSend.c_str(), toSend.size(), 0);
-	// 		return ;
-	// 	}
-	// }
-	//sopra non funziona
+ucciso_se	
 	for (size_t i = 0; i < _server.getErrorPages().size(); i++)
 	{
-		if(_server.getErrorPages().at(i).first == code)
+		if(_server.getErrorPages().at(i).first == errorCode)
 		{
 			if(access(_server.getErrorPages().at(i).second.c_str(), F_OK) !=-1)
 			{
@@ -186,7 +160,7 @@ void Response::sendError(std::string code, std::string message, fd_set &r, fd_se
 				struct stat filestat;
 				stat(_server.getErrorPages().at(i).second.c_str(), &filestat);
 				fd_error = open(_server.getErrorPages().at(i).second.c_str(), O_RDONLY);
-				response = "HTTP/1.1 " + code + " " + message + "\r\nContent-Type: text/html\r\nContent-Length: " + ft_toString(filestat.st_size) + "\r\n\r\n";
+				response = "HTTP/1.1 " + errorCode + " " + message + "\r\nContent-Type: text/html\r\nContent-Length: " + ft_toString(filestat.st_size) + "\r\n\r\n";
 				send(_client_fd, response.c_str(), response.size(), 0);
 				int len = read(fd_error, buffer, 10024);
 				send(_client_fd, buffer, len, 0);
