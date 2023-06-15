@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/15 16:18:43 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:56:00 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -595,10 +595,9 @@ static void	writeBody(Request &_request, std::string _upload,
 {
 	std::string	message;
 	
-
 	std::cout << "Response 201 Created " << std::endl;
     rename(_request.getPathTmp().c_str(), _upload.c_str());
-    message = (char *)"HTTP/1.1 201 Created\r\nLocation: ";
+    message = "HTTP/1.1 201 Created\r\nLocation: ";
     message += _upload + "\r\nContent-Length: 131\r\n\r\n";
 	message += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>File uploaded</span>\n</body>\n</html>";
     send(_client_fd, message.c_str(), message.size(), 0);
