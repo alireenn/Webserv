@@ -6,11 +6,14 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 15:36:48 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/12 14:30:55 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/15 12:42:08 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/AutoIndex.hpp"
+
+#define file_icon "https://img.icons8.com/fluency/48/file.png"
+#define folder_icon "https://img.icons8.com/color/48/folder-invoices--v1.png" 
 
 static std::string getSize(long long st_size) // dimensione in byte
 {	// restituisce una stringa formattata 
@@ -95,7 +98,12 @@ std::string generateAutoIndex(std::string path)
 		autoIndex += "<table>\n<tr>\n<th>Name</th>\n<th>Size</th>\n</tr>\n";
 		for (t_dir::iterator it = dir.begin(); it != dir.end(); it++)
 		{
-			autoIndex += "<tr>\n<td><a href=\"" + path + "/" + it->first.first + "\">" + it->first.first + "</a></td>\n";
+			autoIndex += "<tr>\n<td>\n";
+			if (it->second == 1)
+				autoIndex += "<img src=\"" + std::string(folder_icon) + "\" alt=\"folder\" width=\"20\" height=\"20\">\n";
+			else
+				autoIndex += "<img src=\"" + std::string(file_icon) + "\" alt=\"file\" width=\"20\" height=\"20\">\n";
+			autoIndex += "<a href=\"" + path + "/" + it->first.first + "\">" + it->first.first + "</a>\n</td>\n";
 			autoIndex += "<td>" + it->first.second + "</td>\n</tr>\n";
 		}
 		autoIndex += "</table>\n</body>\n</html>";
