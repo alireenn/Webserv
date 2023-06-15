@@ -6,18 +6,18 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:04:09 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/05/30 18:23:15 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/15 15:09:50 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/Webserv.hpp"
-
 
 int main(int argc, char** argv, char** env)
 {
 	Config conf(env);
 	IOMultiplexing io;
 
+	std::cout << conf.getEnv()[0] << std::endl;
 	amc::init();
 
 	signal(SIGPIPE, SIG_IGN);//La chiamata a signal(SIGPIPE, SIG_IGN) 
