@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/15 16:56:00 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:13:15 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,8 +173,8 @@ void Response::sendError(std::string errorCode, std::string message, fd_set &r, 
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
-																								std::cout << "Method: " << method << std::endl;
-																								std::cout << "Version: " << version << std::endl;
+// 																								std::cout << "Method: " << method << std::endl;
+// 																								std::cout << "Version: " << version << std::endl;
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
@@ -279,7 +279,7 @@ bool Response::checkForbidden(fd_set &r, fd_set &w)
 
 int Response::checkInside(fd_set read, fd_set write)
 {
-		std::cout << "checkInside  "  << _full_path << std::endl;
+		// std::cout << "checkInside  "  << _full_path << std::endl;
 	if (access(_full_path.c_str(), F_OK) == -1)
 	{
 			sendError("204", "No Content", read, write);
@@ -545,7 +545,7 @@ bool Response::handleIndex()
 	return false;
 }
 
-static bool	checkUpload(Server &_server, Request &_request, std::string _upload)
+static bool	checkUpload(Server &_server, Request &_request, std::string &_upload)
 {
 	std::string request_str;
 
@@ -623,11 +623,16 @@ void Response::handler(fd_set &r, fd_set &w)
 			}
 			else if (tmp == "POST")
 			{
-				if (checkUpload(_server, _request, _upload)
-					&& checkRequest(_request, *this, len_server, r, w))
-						writeBody(_request, _upload, _client_fd, &done, r, w);
+				if (checkUpload(_server, _request, _upload)	&& checkRequest(_request, *this, len_server, r, w))
+				{
+					std::cout <<"porco dio" <<_upload << std::endl;
+					writeBody(_request, _upload, _client_fd, &done, r, w);
+				}
 				else
+				{
+					std::cout << "Response 500 Internal Server Error " << std::endl;
 					uploadFail(_client_fd, _request, &done, r, w);
+				}
 			}
 			else if (tmp == "DELETE")
 			{
