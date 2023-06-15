@@ -62,6 +62,7 @@ class Server
 		void		setCgi(std::pair <std::string, std::string> cgi);
 		void		setServerNames(std::vector<std::string> serverNames);
 		void		setErrorPages(std::vector<std::pair <std::string, std::string> > errorPages);
+		void		setEnv(char **env);
 
 		std::string	getUploadPath(void);
 		void		reset(void);

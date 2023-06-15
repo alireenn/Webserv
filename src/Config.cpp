@@ -256,6 +256,7 @@ void	Config::parse(void)
 				else if (curlyBruh == 0)
 				{
 					/* here we push the configured new server */
+					tempServer.setEnv(_env);
 					_servers.push_back(tempServer);
 					///qui temp_andrebbe svuotato
 					tempServer.reset();

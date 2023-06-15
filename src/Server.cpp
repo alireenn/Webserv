@@ -79,6 +79,7 @@ void Server::reset(void)
 	_uploadPath = "";
 	_mimeTypes.clear();
 	_cgi.clear();
+	_env = NULL;
 	initMimeTypes();
 }
 
@@ -111,6 +112,12 @@ std::vector<std::string> &Server::getMimeTypes()
 {
 	return _mimeTypes;
 }
+
+void Server::setEnv(char** env)
+{
+	_env = env;
+}
+
 
 // std::ostream &operator<<(std::ostream &out, Server &server)
 // {
