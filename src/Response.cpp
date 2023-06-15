@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/15 14:03:14 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/15 14:45:41 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ void Response::test(fd_set& r, fd_set& w)
 	(void)w;
 
 	std::string	date = getDate();
-    std::string response = "HTTP/1.1 200 OK\rContent-Type: text/html\r\nDate: " + date + "\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
+    std::string response = "HTTP/1.1 200 OK\rContent-Type: text/html\r\nDate: " + date
+			+ "\r\n\r\n<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>Vamos!</span>\n</body>\n</html>";
 
 	std::cout << date << std::endl;
     const char* response_data = response.c_str();
