@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/16 20:33:12 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/16 21:04:48 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ std::string Response::getType(std::string path)
     std::string tmp = getExtension(path);
     for (int i = 0; i < (int)_server.getMimeTypes().size(); i++)
 	{
-		int pos = _server.getMimeTypes()[i].find("|", 0);
+		int pos = _server.getMimeTypes()[i].find(tmp, 0);
         if (pos != -1)
             return _server.getMimeTypes()[i].substr(0, _server.getMimeTypes()[i].find("|", 0));
 	}
@@ -401,7 +401,6 @@ void Response::startCgi()
 	{
 		if(_server.getCgi().at(i).second.find(getExtension(_full_path)) != std::string::npos)
 		{
-			std::cout << "CGI 2" << std::endl;
 			loadEnv(_server.getEnv());
 			for (std::map<std::string, std::string>::iterator it = _request.GetRequest().begin(); it != _request.GetRequest().end(); it++)
 				_env.push_back("HTTP_" + ft_toUpper(it->first) + "=" + stringtrim(it->second));//ft_toUpper da creare
@@ -479,6 +478,7 @@ void Response::sendData(fd_set &r, fd_set &w)
 			bzero(str, 1025);
 			std::string header;
 			std::cout << "200 OK" << std::endl;
+			std::cout << _full_path << std::endl;
 			header = (char *)"HTTP/1.1 200 OK\r\nContent-Length: " + ft_toString(size)+ "\r\nContent-type: ";
             header += deleteSpace(getType(_full_path)) + ((_headers["Set-Cookie"] == "") ? "" : ("\r\nSet-Cookie: " + _headers["Set-Cookie"])) + "\r\nConnection: " + deleteSpace(_request.GetRequest().at("Connection")) + "\r\n\r\n";
             
