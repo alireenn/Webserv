@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/09 18:06:43 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/16 14:48:37 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 # define RESPONSE_HPP
 
 # include <fstream>
+# include <sys/wait.h>
 # include <sys/stat.h>
 # include "Request.hpp"
 # include "Server.hpp"
 # include <iostream>
 # include <dirent.h>
 # include <string>
+# include <map>
 # include "AutoIndex.hpp"
 
 class Response
@@ -48,6 +50,7 @@ class Response
 		std::string status_code;
 		Location _location;
 		std::map<std::string, std::string> _headers; //serve per cookie e cgi
+		std::vector<std::string> _env;
 
 	public:
 			Response();
@@ -76,6 +79,7 @@ class Response
 			bool handleRedirection(fd_set &r, fd_set &w);
 			bool handleMethod(fd_set &r, fd_set &w);
 			std::string getType(std::string path);
+			void startCgi();
 
 };
 

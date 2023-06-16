@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/15 17:13:15 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/16 14:52:07 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,9 +361,57 @@ void Response::deleater(fd_set read, fd_set write)
 	send(_client_fd, response.c_str(), response.length(), 0);
 }
 
+static std::string stringtrim(std::string str)
+{
+	std::string str1;
+	for (size_t i = 0; i < str.size(); i++)
+		if (str[i] != ' ')
+			str1 += str[i];
+	return str1;
+}
+
+void Response::startCgi()
+{
+	for (size_t i = 0; i < _server.getCgi().size(); i++)
+	{
+		if(_server.getCgi().at(i).second.find(getExtension(_full_path)) != std::string::npos)
+		{
+			loadEnv(_server.getEnv());//da crearae
+			for (std::map<std::string, std::string>::iterator it = _request.GetRequest().begin(); it != _request.GetRequest().end(); it++)
+			{
+				_env.push_back("HTTP_" + ft_toUpper(it->first) + "=" + stringtrim(it->second));//ft_toUpper da creare
+				char **env = createEnv(_env);//da creare
+				char *argv[] = { (char *)_server.getCgi().at(i).first.c_str(), 
+					(char *)_full_path.c_str(), NULL };
+				unlink("/tmp/cgi_output");//da capire
+				unlink("/tmp/cgi_output.html");//da capire
+				int fd;
+				if ((pid_t pid = fork()) == 0)
+				{
+					fd = open("/tmp/cgi_output", O_CREAT | O_RDWR, 0666);
+					dup2(fd, 1);
+					execve(*argv, argv, env);
+					close(fd);
+				}
+				else
+					waitpid(pid, NULL, 0);
+				std::ifstream file("/tmp/cgi_output");
+				if (getExtension(_full_path) == "php")
+				{
+					if (file.is_open())
+					{
+						
+					}
+				}
+			}
+		}
+	}
+	
+}
+
 void Response::sendData(fd_set &r, fd_set &w)
 {
-	//startCgi();
+	startCgi();
 	struct stat fileStat;
 
 	stat(_full_path.c_str(), &fileStat);
