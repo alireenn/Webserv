@@ -118,6 +118,15 @@ void Server::setEnv(char** env)
 	_env = env;
 }
 
+std::vector<std::pair<std::string,std::string> >		getCgi()
+{
+	return _cgi;
+}
+
+char** Server::getEnv()
+{
+	return _env;
+}
 
 // std::ostream &operator<<(std::ostream &out, Server &server)
 // {
