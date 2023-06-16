@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/16 16:28:04 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/16 17:17:15 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ std::string ft_toString(long long n)
         str.insert(str.begin(), n % 10 + '0');
         n /= 10;
     }
-    return str;
+	return str;
 }
 
 static std::string deleteSpace(std::string str)
