@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:02:14 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/08 16:07:13 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/16 16:04:27 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,7 +266,7 @@ void Request::handleRequest(char *str)
 					request.insert(std::pair<std::string, std::string>(value.substr(0, i), value.substr(i + 1, value.size() - i)));
 				value.clear();
 				index = hold + 2;
-			} while (buffer.substr(buffer.find(delimiter, index - 2), buffer.size()) != last);
+			} while (static_cast<size_t>(index) < buffer.size());
 		}
 		finished = 1;
 
