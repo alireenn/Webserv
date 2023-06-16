@@ -65,7 +65,7 @@ class Server
 		void		setEnv(char **env);
 		char		**getEnv(void);
 
-		std::vector<std::pair<std::string,std::string> >		getCgi();
+		std::vector<std::pair<std::string,std::string> >		&getCgi();
 		std::string	getUploadPath(void);
 		void		reset(void);
 		void		initMimeTypes(void);

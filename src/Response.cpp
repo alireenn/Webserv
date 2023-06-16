@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/16 17:21:52 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/16 20:33:12 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,43 +370,97 @@ static std::string stringtrim(std::string str)
 	return str1;
 }
 
+void Response::loadEnv(char **env)
+{
+	std::string str;
+	_env.clear();
+	for (size_t i = 0; env[i]; i++)
+		_env.push_back(env[i]);
+}
+
+static std::string ft_toUpper(std::string str)
+{
+	std::string str1;
+	for (size_t i = 0; i < str.size(); i++)
+		str1 += toupper(str[i]);
+	return str1;
+}
+
+char **createEnv(std::vector<std::string> _env)
+{
+	char **env = new char *[_env.size() + 1];
+	for (size_t i = 0; i < _env.size(); i++)
+		env[i] = strdup(_env[i].c_str());
+	env[_env.size()] = NULL;
+	return env;
+}
+
 void Response::startCgi()
 {
 	for (size_t i = 0; i < _server.getCgi().size(); i++)
 	{
 		if(_server.getCgi().at(i).second.find(getExtension(_full_path)) != std::string::npos)
 		{
-			loadEnv(_server.getEnv());//da crearae
+			std::cout << "CGI 2" << std::endl;
+			loadEnv(_server.getEnv());
 			for (std::map<std::string, std::string>::iterator it = _request.GetRequest().begin(); it != _request.GetRequest().end(); it++)
-			{
 				_env.push_back("HTTP_" + ft_toUpper(it->first) + "=" + stringtrim(it->second));//ft_toUpper da creare
-				char **env = createEnv(_env);//da creare
-				char *argv[] = { (char *)_server.getCgi().at(i).first.c_str(), 
-					(char *)_full_path.c_str(), NULL };
-				unlink("/tmp/cgi_output");//da capire
-				unlink("/tmp/cgi_output.html");//da capire
-				int fd;
-				if ((pid_t pid = fork()) == 0)
+			char **env = createEnv(_env);//da creare
+			char *argv[] = { (char *)_server.getCgi().at(i).first.c_str(), 
+				(char *)_full_path.c_str(), NULL };
+			unlink("/tmp/cgi_output");//da capire
+			unlink("/tmp/cgi_output.html");//da capire
+			int fd;
+			pid_t pid = fork();
+			if (pid == 0)
+			{
+				fd = open("/tmp/cgi_output", O_CREAT | O_RDWR, 0666);
+				dup2(fd, 1);
+				execve(*argv, argv, env);
+				close(fd);
+			}
+			else
+				waitpid(pid, NULL, 0);
+			std::ifstream file("/tmp/cgi_output");
+			if (getExtension(_full_path) == "php")
+			{
+				if (file.is_open())
 				{
-					fd = open("/tmp/cgi_output", O_CREAT | O_RDWR, 0666);
-					dup2(fd, 1);
-					execve(*argv, argv, env);
-					close(fd);
-				}
-				else
-					waitpid(pid, NULL, 0);
-				std::ifstream file("/tmp/cgi_output");
-				if (getExtension(_full_path) == "php")
-				{
-					if (file.is_open())
+					std::string line;
+					while (getline(file, line))
 					{
-						
+						std::string key = line.substr(0, line.find(":"));
+						std::string value = line.substr(line.find(":") + 1, line.length());
+						_headers.insert(std::pair<std::string, std::string>(key, value));
+						if (line.length() ==  1 && line.find("\r") != std::string::npos)
+							break;
 					}
 				}
+				if (file.eof())
+					file.close();
 			}
+			std::ofstream myfile("/tmp/cgi_output.html");
+			if (file.is_open())
+			{
+				if (!file.is_open())
+					file.open("/tmp/cgi_output");
+				std::string line;
+				while (getline(file, line))
+				{
+					if (line.length() ==  1 && line.find("\r") != std::string::npos)
+						break;
+					myfile << line;
+				}
+				myfile.close();
+				file.close();
+			}
+			for (size_t i = 0; i < _env.size(); i++)
+				delete env[i];
+			delete[] env;
+			
+			_full_path = "/tmp/cgi_output.html";
 		}
 	}
-	
 }
 
 void Response::sendData(fd_set &r, fd_set &w)

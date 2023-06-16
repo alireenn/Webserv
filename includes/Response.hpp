@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:27:00 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/16 14:48:37 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/16 19:51:56 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ class Response
 			bool handleMethod(fd_set &r, fd_set &w);
 			std::string getType(std::string path);
 			void startCgi();
+			void loadEnv(char **env);
 
 };
 

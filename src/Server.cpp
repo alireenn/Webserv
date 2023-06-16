@@ -118,7 +118,7 @@ void Server::setEnv(char** env)
 	_env = env;
 }
 
-std::vector<std::pair<std::string,std::string> >		getCgi()
+std::vector<std::pair<std::string,std::string> >		&Server::getCgi()
 {
 	return _cgi;
 }
