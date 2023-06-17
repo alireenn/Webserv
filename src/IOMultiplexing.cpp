@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 16:49:44 by ccantale          #+#    #+#             */
-/*   Updated: 2023/06/17 16:01:24 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/17 16:17:24 by ccantale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,7 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 								std::cout << "Client disconnesso" << std::endl;
 								FD_CLR(ClientsRequest[k].first.getSocketFd(), &fdreads[k]);
 								close(ClientsRequest[k].first.getSocketFd());
-								ClientsRequest.erase(ClientsRequest.begin() + k);//prima era k
+								ClientsRequest.erase(ClientsRequest.begin() + k); //prima era k
 							}
 							else
 							{
