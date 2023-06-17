@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/16 21:04:48 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/17 22:48:18 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -407,20 +407,20 @@ void Response::startCgi()
 			char **env = createEnv(_env);//da creare
 			char *argv[] = { (char *)_server.getCgi().at(i).first.c_str(), 
 				(char *)_full_path.c_str(), NULL };
-			unlink("/tmp/cgi_output");//da capire
-			unlink("/tmp/cgi_output.html");//da capire
+			unlink("tmp/cgi_output");//da capire
+			unlink("tmp/cgi_output.html");//da capire
 			int fd;
 			pid_t pid = fork();
 			if (pid == 0)
 			{
-				fd = open("/tmp/cgi_output", O_CREAT | O_RDWR, 0666);
+				fd = open("tmp/cgi_output", O_CREAT | O_RDWR, 0666);
 				dup2(fd, 1);
 				execve(*argv, argv, env);
 				close(fd);
 			}
 			else
 				waitpid(pid, NULL, 0);
-			std::ifstream file("/tmp/cgi_output");
+			std::ifstream file("tmp/cgi_output");
 			if (getExtension(_full_path) == "php")
 			{
 				if (file.is_open())
@@ -438,11 +438,11 @@ void Response::startCgi()
 				if (file.eof())
 					file.close();
 			}
-			std::ofstream myfile("/tmp/cgi_output.html");
+			std::ofstream myfile("tmp/cgi_output.html");
 			if (file.is_open())
 			{
 				if (!file.is_open())
-					file.open("/tmp/cgi_output");
+					file.open("tmp/cgi_output");
 				std::string line;
 				while (getline(file, line))
 				{
@@ -457,7 +457,7 @@ void Response::startCgi()
 				delete env[i];
 			delete[] env;
 			
-			_full_path = "/tmp/cgi_output.html";
+			_full_path = "tmp/cgi_output.html";
 		}
 	}
 }
@@ -717,6 +717,7 @@ void Response::handler(fd_set &r, fd_set &w)
 		if(ok || (handleRedirection(r,w) && handleMethod(r,w)))
 		{
 			std::string tmp = deleteSpace(_request.GetRequest().at("Method"));
+			// std::cout << "Method: " << tmp << std::endl;
 			if(tmp == "GET")
 			{
 				if (ok || (redirectPath(r,w) && checkForbidden(r,w)))
@@ -727,7 +728,6 @@ void Response::handler(fd_set &r, fd_set &w)
 			{
 				if (checkUpload(_server, _request, _upload)	&& checkRequest(_request, *this, len_server, r, w))
 				{
-					std::cout <<"porco dio" <<_upload << std::endl;
 					writeBody(_request, _upload, _client_fd, &done, r, w);
 				}
 				else

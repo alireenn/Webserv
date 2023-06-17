@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 16:49:44 by ccantale          #+#    #+#             */
-/*   Updated: 2023/06/17 18:19:41 by ccantale         ###   ########.fr       */
+/*   Updated: 2023/06/17 22:57:14 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,8 +223,8 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 							int nread = recv(fd, buffer, 10000, 0);
 							if (nread == -1)
 							{
-								FD_CLR(ClientsRequest[i].first.getSocketFd(), &fdreads[i]);
-								close(ClientsRequest[i].first.getSocketFd());
+								FD_CLR(ClientsRequest[k].first.getSocketFd(), &fdreads[k]);
+								close(ClientsRequest[k].first.getSocketFd());
 								ClientsRequest.erase(ClientsRequest.begin() + k);
 							}
 							else if (nread == 0)
