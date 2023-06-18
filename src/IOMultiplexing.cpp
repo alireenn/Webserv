@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 16:49:44 by ccantale          #+#    #+#             */
-/*   Updated: 2023/06/17 22:57:14 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/18 14:00:09 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,8 +245,8 @@ void IOMultiplexing::EventLoop(std::vector<Server>& servers)
 									std::cout << "Richiesta ricevuta sul server " << i << std::endl;
 									bool found = false;
 									Response response;
-									FD_CLR(fd, &fdreads[i]);
-									FD_SET(fd, &fdwrites[i]);
+									FD_CLR(fd, &fdreads[k]);
+									FD_SET(fd, &fdwrites[k]);
 									for (size_t l = 0; l < servers.size(); l++)
 									{
 										for (size_t x = 0; x < servers[l].getServerNames().size(); x++)

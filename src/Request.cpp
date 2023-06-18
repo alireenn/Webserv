@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:02:14 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/17 22:55:19 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/18 14:07:22 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ Request::Request()
 	this->chunked = 0;
 	this->full = 0;
 	this->ok = 0;
-	this->path_tmp = "";
 	this->lent_chunked = 0;
 	this->skip = 0;
 }
@@ -108,7 +107,7 @@ std::string Request::getHeader(std::string str)
 {
 	std::string tmp;
 
-	for (int i = 0; str[i] != '\r'; i++)
+	for (int i = 0; str[i]; i++)
 	{
 		if (str[i] == '\r' && str[i + 1] == '\n' && str[i + 2] == '\r' && str[i + 3] == '\n')
 		{
@@ -176,7 +175,7 @@ void Request::handleHostPort(void)
 	if (i !=-1)
 	{
 		request.at("Host") = tmp.substr(0, i);
-		request.at("Port") = tmp.substr(i + 1,4);
+		request.at("Port") = tmp.substr(i + 1, 4);
 	}
 }
 
@@ -258,7 +257,7 @@ void Request::handleRequest(char *str)
 				if ((int) value.find("chunked", 0) != -1)
 					chunked = 1;
 				i = value.find(": ", 0);
-				if ((int) value.find("Content-Length", 0) != -1)
+				if ((int) value.find("Content-Length") != -1)
 					request.at("Content-Length") = value.substr(i + 1, value.size() - i);
 				if ((int) value.find("Host") != -1)
 					request.at("Host") = value.substr(i + 1, value.size() - i);
@@ -266,7 +265,7 @@ void Request::handleRequest(char *str)
 					request.insert(std::pair<std::string, std::string>(value.substr(0, i), value.substr(i + 1, value.size() - i)));
 				value.clear();
 				index = hold + 2;
-			} while (static_cast<size_t>(index) < buffer.size()); // while (buffer.substr(buffer.find(delimiter, index - 2), buffer.size()) != last);
+			}/* while (static_cast<size_t>(index) < buffer.size()); */ while (buffer.substr(buffer.find(delimiter, index - 2), buffer.size()) != last);
 		}
 		finished = 1;
 
@@ -308,10 +307,6 @@ int Request::getOk(void)
 void Request::TransferChunked(void)
 {
 	char buff;
-//     std::string tmp;
-    // int bl_tmp;
-	// bl_tmp = 0;
-//     (void) a;
 	if(lent_chunked > (int) body.length())
 	{
 		write(fd, body.c_str(), body.length());
@@ -393,7 +388,7 @@ int Request::getLentChunked(std::string str)
 				tmp.push_back(str[i++]);
 				skip++;
 			}
-			if(tmp.empty())
+			if(!tmp.empty())
 			{
 				skip += 2;
 				return hex_dec((char *)tmp.c_str());

@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/17 22:48:18 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/06/18 14:11:33 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,8 +173,8 @@ void Response::sendError(std::string errorCode, std::string message, fd_set &r, 
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
 {
-// 																								std::cout << "Method: " << method << std::endl;
-// 																								std::cout << "Version: " << version << std::endl;
+																					std::cout << "Version: " << version << std::endl;
+																					std::cout << "Method: " << method << std::endl;
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
