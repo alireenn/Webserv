@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/18 14:11:33 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/07/03 13:24:19 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -656,6 +656,11 @@ static bool	checkUpload(Server &_server, Request &_request, std::string &_upload
 		return (false);
 	request_str = _request.GetRequest().at("Path");
 	_upload = _server.getUploadPath() + request_str.substr(utils::last_slash(request_str));
+	if (_request.GetRequest().at("Method") == "POST")
+	{
+		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+			remove(_request.getPathTmp().c_str());
+	}
 	return (true);
 }
 
@@ -700,7 +705,7 @@ static void	writeBody(Request &_request, std::string _upload,
 	
 	std::cout << "Response 201 Created " << std::endl;
     rename(_request.getPathTmp().c_str(), _upload.c_str());
-    message = "HTTP/1.1 201 Created\r\nLocation: ";
+    message = (char *)"HTTP/1.1 201 Created\r\nLocation: ";
     message += _upload + "\r\nContent-Length: 131\r\n\r\n";
 	message += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>File uploaded</span>\n</body>\n</html>";
     printf("%s\n", _upload.c_str());
