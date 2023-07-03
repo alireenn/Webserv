@@ -151,10 +151,10 @@ void Response::sendError(std::string errorCode, std::string message, fd_set &r, 
 	{
 		if(_server.getErrorPages().at(i).first == errorCode)
 		{
-			if(access(_server.getErrorPages().at(i).second.c_str(), F_OK) !=-1)
+			if(access(_server.getErrorPages().at(i).second.c_str(), F_OK) != -1)
 			{
 				std::string response;
-				std::cout << "Error page found" << std::endl;
+				std::cout << "Error: page not found" << std::endl;
 				char buffer[10024];
 				struct stat filestat;
 				stat(_server.getErrorPages().at(i).second.c_str(), &filestat);
@@ -557,6 +557,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 	{
 		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
 			remove(_request.getPathTmp().c_str());
+		return true;
 	}
 	sendError("404", "Not Found", r, w);
 	//done = true;
