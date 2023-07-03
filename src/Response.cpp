@@ -703,7 +703,8 @@ static void	writeBody(Request &_request, std::string _upload,
     message = "HTTP/1.1 201 Created\r\nLocation: ";
     message += _upload + "\r\nContent-Length: 131\r\n\r\n";
 	message += "<!DOCTYPE html>\n<html>\n<head>\n<style>\nspan {\nfont-size: 120px;\n}\n</style>\n</head>\n<body>\n<span>File uploaded</span>\n</body>\n</html>";
-    send(_client_fd, message.c_str(), message.size(), 0);
+    printf("%s\n", _upload.c_str());
+	send(_client_fd, message.c_str(), message.size(), 0);
     FD_CLR(_client_fd, &w);
     FD_SET(_client_fd, &r);
     *done = true;
