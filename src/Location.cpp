@@ -1,6 +1,6 @@
 #include "../includes/Location.hpp"
 
-Location::Location()
+Location::Location() : _clientMaxBodySize("")
 {}
 
 Location::Location(Location const &obj)
