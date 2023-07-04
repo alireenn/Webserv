@@ -29,6 +29,7 @@ Request::Request()
 	this->ok = 0;
 	this->lent_chunked = 0;
 	this->skip = 0;
+	// this->path_tmp = "./tmp";
 }
 
 Request::~Request()

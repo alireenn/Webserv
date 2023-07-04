@@ -21,6 +21,8 @@
 #include "Server.hpp"
 #include "utils.h"
 
+std::string ft_toString(long long n);
+
 class Config
 {
 private:

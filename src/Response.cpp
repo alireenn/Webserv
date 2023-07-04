@@ -656,27 +656,25 @@ static bool	checkUpload(Server &_server, Request &_request, std::string &_upload
 		return (false);
 	request_str = _request.GetRequest().at("Path");
 	_upload = _server.getUploadPath() + request_str.substr(utils::last_slash(request_str));
-	if (_request.GetRequest().at("Method") == "POST")
-	{
-		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
-			remove(_request.getPathTmp().c_str());
-	}
+	printf("getpath: %s\n", _server.getUploadPath().c_str());
+	if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+		remove(_request.getPathTmp().c_str());
 	return (true);
 }
 
-static void	uploadFail(int _client_fd, Request &_request, int *done, fd_set &r, fd_set &w)
-{
-    std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
+// static void	uploadFail(int _client_fd, Request &_request, int *done, fd_set &r, fd_set &w)
+// {
+//     std::string response = "HTTP/1.1 500 \r\nConnection: close\r\nContent-Length: 85";
 
-	std::cout << "Response 500 Internal Server Error " << std::endl;
-    response += "\r\n\r\n<!DOCTYPE html><head><title>Internal Server Error</title></head><body> </body></html>";
-    send(_client_fd, response.c_str(), response.length(), 0);
-	FD_CLR(_client_fd, &w);
-	FD_SET(_client_fd, &r);
-    *done = 1;
-	if (access(_request.getPathTmp().c_str(), F_OK) != -1)
-		remove(_request.getPathTmp().c_str());
-}
+// 	std::cout << "Response 500 Internal Server Error " << std::endl;
+//     response += "\r\n\r\n<!DOCTYPE html><head><title>Internal Server Error</title></head><body> </body></html>";
+//     send(_client_fd, response.c_str(), response.length(), 0);
+// 	FD_CLR(_client_fd, &w);
+// 	FD_SET(_client_fd, &r);
+//     *done = 1;
+// 	if (access(_request.getPathTmp().c_str(), F_OK) != -1)
+// 		remove(_request.getPathTmp().c_str());
+// }
 
 static bool	checkRequest(Request &_request, Response &response,
 							u_int64_t len_server, fd_set &r, fd_set &w)
@@ -690,6 +688,8 @@ static bool	checkRequest(Request &_request, Response &response,
 	}
 	if ((u_int64_t)_request.getLength() > len_server)
 	{
+		std::cout << "len server : " << len_server << std::endl;
+		std::cout << "request lengsb : " << _request.getLength() << std::endl;
 		if (access(_request.getPathTmp().c_str(), F_OK) != -1)
 			remove(_request.getPathTmp().c_str());
 		response.sendError("413", "Payload too large", r, w);
@@ -717,6 +717,7 @@ static void	writeBody(Request &_request, std::string _upload,
 
 void Response::handler(fd_set &r, fd_set &w)
 {
+	std::cout << "Handler" << std::endl;
 	if (!ok)
 		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
 	if (ok || (isValid(r,w) && isSubjectCompliant(r,w) && checkLocation(r,w)))
@@ -737,11 +738,8 @@ void Response::handler(fd_set &r, fd_set &w)
 				{
 					writeBody(_request, _upload, _client_fd, &done, r, w);
 				}
-				else
-				{
-					std::cout << "Response 500 Internal Server Error " << std::endl;
-					uploadFail(_client_fd, _request, &done, r, w);
-				}
+				// else
+					// uploadFail(_client_fd, _request, &done, r, w);
 			}
 			else if (tmp == "DELETE")
 			{

@@ -196,7 +196,20 @@ void Config::parseLocation(std::string &line, Server &server)
 				if (client_max_body_size.empty())
 					std::cout << "Error: Size not valid\n";
 				else
+				{
+					if (client_max_body_size[client_max_body_size.length() - 1] == 'k')
+					{
+						client_max_body_size = client_max_body_size.substr(0, client_max_body_size.length() - 1);
+						client_max_body_size = ft_toString(utils::myStoi(client_max_body_size) * 1024);
+					}
+					else if (client_max_body_size[client_max_body_size.length() - 1] == 'm')
+					{
+						client_max_body_size = client_max_body_size.substr(0, client_max_body_size.length() - 1);
+						client_max_body_size = ft_toString(utils::myStoi(client_max_body_size) * 1024 * 1024);
+					}
+					std::cout << "client_max_body_size: " << client_max_body_size << std::endl;
 					tmploc.setClientMaxBodySize(client_max_body_size);
+				}
 			}
 			if (token == "redirection")
 			{
