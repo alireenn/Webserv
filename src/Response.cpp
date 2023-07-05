@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:15:21 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/07/05 16:02:29 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/07/05 16:43:31 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,9 +172,7 @@ void Response::sendError(std::string errorCode, std::string message, fd_set &r, 
 }
 
 static bool	checkMethodAndVersion(std::string &method, std::string &version)
-{
-																					std::cout << "Version: " << version << std::endl;
-																					std::cout << "Method: " << method << std::endl;
+{				
     if (method != "GET" && method != "POST" && method != "PUT" && method != "PATCH"
 			&& method != "DELETE" && method != "COPY" && method != "HEAD"
 			&& method != "OPTIONS" && method != "LINK" && method != "UNLINK"
@@ -306,7 +304,7 @@ int Response::check_permission(fd_set &read, fd_set &write)
 	else if(!S_ISDIR(fileStat.st_mode) && access(_full_path.c_str(), W_OK) == -1)
 		status = 1;
 	//else
-		//DA FARE UN CHECK ULTERIORE SUL CONTENUTO DELLA DIRECTORY 
+		//DA FARE UN CHECK ULTERIORE SUL CONTENUTO DELLA DIRECTORY (nella ref si chiama check_all)
 	if (status)
 	{
 		sendError("403", "Forbidden", read, write);
@@ -516,7 +514,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			_location = _server.getLocations().at(i);
 			std::string tmp = _path;
 			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
-			char buff[1024];
+			char buff[1025];
 			realpath(_full_path.c_str(), buff);
 			_full_path = buff;
 			if (_request.GetRequest().at("Method") == "DELETE")
@@ -539,7 +537,7 @@ bool Response::checkLocation(fd_set &r, fd_set &w)
 			_location = _server.getLocations().at(i);
 			std::string tmp = _path;
 			_full_path = _location.getRoot() + tmp.replace(tmp.find(_server.getLocations().at(i).getLocationPath()), _server.getLocations().at(i).getLocationPath().length(), "");
-			char buff[1024];
+			char buff[1025];
 			realpath(_full_path.c_str(), buff);
 			_full_path = buff;
 			if (_request.GetRequest().at("Method") == "DELETE")
@@ -586,7 +584,7 @@ bool Response::handleMethod(fd_set &r, fd_set &w)
 	if (_path.find(_location.getLocationPath()) != std::string::npos)
 	{
 		if (!_location.getClientMaxBodySize().empty())
-			len_server = strtoul(_location.getClientMaxBodySize().c_str(), NULL, 10);
+			len_server = strtoull(_location.getClientMaxBodySize().c_str(), NULL, 10);
 		else
 			len_server = -1;
 		for (size_t i = 0; i < _location.getAllowedMethods().size(); i++)
@@ -688,7 +686,7 @@ static bool	checkRequest(Request &_request, Response &response,
 		response.sendError("411", "Length required", r, w);
 		return (false);
 	}
-	if ((u_int64_t)_request.getLength() > len_server)
+	if ((u_int64_t)_request.getLength() > len_server && _request.checkChunked() == 0)
 	{
 		std::cout << "len server : " << len_server << std::endl;
 		std::cout << "request lengsb : " << _request.getLength() << std::endl;
@@ -718,22 +716,19 @@ static void	writeBody(Request &_request, std::string _upload,
 
 void Response::handler(fd_set &r, fd_set &w)
 {
-	std::cout << "Handler" << std::endl;
 	if (!ok)
 		_full_path = _path = deleteSpace(_request.GetRequest().at("Path"));
 	if (ok || (isValid(r,w) && isSubjectCompliant(r,w) && checkLocation(r,w)))
 	{
 		if(ok || (handleRedirection(r,w) && handleMethod(r,w)))
 		{
-			std::string tmp = deleteSpace(_request.GetRequest().at("Method"));
-			// std::cout << "Method: " << tmp << std::endl;
-			if(tmp == "GET")
+			if(deleteSpace(_request.GetRequest().at("Method")) == "GET")
 			{
 				if (ok || (redirectPath(r,w) && checkForbidden(r,w)))
 					if(ok || handleIndex() || handleAutoIndex(r,w))
 						sendData(r,w);
 			}
-			else if (tmp == "POST")
+			else if (deleteSpace(_request.GetRequest().at("Method")) == "POST")
 			{
 				if (checkUpload(_server, _request, _upload)	&& checkRequest(_request, *this, len_server, r, w))
 				{
@@ -742,7 +737,7 @@ void Response::handler(fd_set &r, fd_set &w)
 				// else
 					// uploadFail(_client_fd, _request, &done, r, w);
 			}
-			else if (tmp == "DELETE")
+			else if (deleteSpace(_request.GetRequest().at("Method")) == "DELETE")
 			{
 				std::cout << "DELETE" << std::endl;
 				if (checkInside(r, w))

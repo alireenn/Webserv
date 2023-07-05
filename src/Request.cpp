@@ -6,7 +6,7 @@
 /*   By: mruizzo <mruizzo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:02:14 by mruizzo           #+#    #+#             */
-/*   Updated: 2023/06/18 14:07:22 by mruizzo          ###   ########.fr       */
+/*   Updated: 2023/07/05 16:36:28 by mruizzo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,10 +338,9 @@ void Request::TransferChunked(void)
 			if (lent_chunked == 0)
 			{
 				lent_chunked = getLentChunked(body.substr(i));
-				// bl_tmp = body.length() - i;
 				if (lent_chunked == 0)
 				{
-					lent_chunked = getLentChunked(body.substr(i));
+					// lent_chunked = getLentChunked(body.substr(i));
 					if (lent_chunked == 0)
 					{
 						close(fd);
