@@ -44,6 +44,10 @@ kill: clean fclean
 test:
 	siege -c 100 -t 60 http://localhost:8080/
 
+
+test2:
+	siege -c 100 -t 60 http://localhost:8081/
+
 re: fclean all
 
 r:
