@@ -1,4 +1,6 @@
-Set-Cookie: user=un%20pirata%2C%20un%20monaco%20e%20una%20maga
 Content-type: text/html; charset=UTF-8
 
-Cookie is set
+Array
+(
+    [user] => un pirata, un monaco e una maga
+)
