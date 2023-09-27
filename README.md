@@ -79,3 +79,4 @@ In pratica, Telnet consente di accedere a un computer remoto e di utilizzarlo co
 Telnet è stato ampiamente utilizzato in passato come mezzo di accesso remoto ai computer, ma oggi è stato in gran parte sostituito da protocolli più sicuri, come SSH (Secure Shell).
 
 In sintesi, Telnet è un protocollo di rete che consente di connettersi e comunicare con un altro computer tramite Internet o una rete locale, ma non è considerato un protocollo sicuro per la comunicazione remota.
+# Webserv
